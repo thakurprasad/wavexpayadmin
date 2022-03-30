@@ -1,0 +1,115 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CountriesController;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+
+Route::get('/', 'HomeController@index');
+
+Route::get('/ckeditor', 'CkeditorController@index');
+Route::post('ckeditor/image_upload', 'CKEditorController@upload')->name('upload');
+
+Auth::routes();
+
+Route::group(['middleware' => ['auth']], function() {
+
+    Route::get('/admin', function () {
+        return redirect('/home');
+    });
+    //Dashboard
+	Route::get('/home', 'HomeController@index')->name('home');
+
+    //Countries
+    Route::get('countries/changestatus', 'CountriesController@changeStatus');
+    Route::resource('countries', 'CountriesController');
+
+    //States
+    Route::resource('states','StatesController');
+
+    //Users
+    Route::get('users/changestatus', 'UserController@changeStatus');
+    Route::resource('users','UserController');
+
+    Route::get('profile_update', 'UserController@profile_update')->name('user.profile');
+    Route::post('profile_update', 'UserController@store_profile')->name('change.profile');
+    Route::get('/profile_update/getStates/{id}', 'UserController@getStates');
+
+    //Change Password
+    Route::get('change-password', 'ChangePasswordController@index');
+    Route::post('change-password', 'ChangePasswordController@store')->name('change.password');
+
+    //Roles
+    Route::resource('roles','RoleController');
+
+    //Payment Templates
+    Route::get('payment-templates/changestatus', 'PaymentTemplateController@changeStatus');
+    Route::resource('payment-templates','PaymentTemplateController');
+
+    //Email Templates
+    Route::resource('email-templates','EmailTemplateController');
+
+    //Pages
+    Route::resource('pages','PageController');
+
+    //Merchants
+    Route::get('merchants/changestatus', 'MerchantController@changeStatus');
+    Route::resource('merchants','MerchantController');
+
+    Route::resource('merchant-keys','MerchantKeyController');
+
+
+
+    // Route::get('customers/changestatus', 'CustomerController@changeStatus');
+    // Route::resource('customers','CustomerController');
+
+    // Route::get('branches/changestatus', 'BranchController@changeStatus');
+    // Route::resource('branches','BranchController');
+
+    // Route::get('items/changestatus', 'ItemController@changeStatus');
+    // Route::get('items/price/{id}', 'ItemController@price');
+    // Route::post('items/updateprice/{id}', 'ItemController@updateprice');
+    // Route::post('items/getprices', 'ItemController@getprices');
+    // Route::resource('items','ItemController');
+
+    // Route::get('services/changestatus', 'ServiceController@changeStatus');
+    // Route::resource('services','ServiceController');
+
+    // Route::get('order_statuses/changestatus', 'OrderStatusController@changeStatus');
+    // Route::resource('order_statuses','OrderStatusController');
+
+    // Route::get('cost_types/changestatus', 'CostTypeController@changeStatus');
+    // Route::resource('cost_types','CostTypeController');
+
+
+    // Route::resource('costs','CostController');
+
+
+
+    #Route::get('orders/{id}', 'OrderController@show');
+    // Route::resource('orders','OrderController');
+    // Route::get('order-print/{id}','OrderController@order_print')->name('order.print');
+    // Route::post('order_payment','OrderController@updatepayment')->name('order.payment');
+    // Route::post('order_status','OrderController@updatestatus')->name('order.status');
+
+    // Route::get('cutomers/getcustomer', 'CustomerController@getcustomer');
+
+
+
+    // Route::get('order_items', 'ReportController@index')->name('order_items.index');
+    // Route::get('payments', 'ReportController@payments')->name('payments.index');
+    // Route::get('monthly_statement', 'ReportController@monthly_statement')->name('monthly_statement.index');
+    //Route::get('cron', 'ReportController@cron')->name('cron');
+
+
+
+
+});

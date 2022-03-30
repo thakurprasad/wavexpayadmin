@@ -1,0 +1,113 @@
+@extends('layouts.admin')
+@section('content_header')
+<div class="row mb-2">
+	<div class="col-sm-6">
+	<h1>Page Management</h1>
+	</div>
+	<div class="col-sm-6">
+	<ol class="breadcrumb float-sm-right">
+		<li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('pages.index') }}">Pages</a></li>
+		<li class="breadcrumb-item active">Create</li>
+	</ol>
+	</div>
+</div>
+@endsection
+@section('content')
+	@if ($message = Session::get('success'))
+	<div class="alert alert-success">
+		<ul class="margin-bottom-none padding-left-lg">
+			<li>{{ $message }}</li>
+		</ul>
+	</div>
+	@endif
+    @if ($errors->any())
+	<div class="alert alert-danger">
+		<strong>Whoops!</strong> There were some problems with your input.<br><br>
+		<ul>
+		@foreach ($errors->all() as $error)
+			<li>{{ $error }}</li>
+		@endforeach
+		</ul>
+	</div>
+	@endif
+	<div class="card">
+		<div class="card-header">
+			<div class="pull-left">
+	            <h4>Create New Page</h4>
+	        </div>
+        </div>
+
+		<div class="card-body">
+        <form method="post" action="{{ route('pages.store') }}" enctype="multipart/form-data">
+        @csrf
+        <div class="row">
+            <div class="col-md-6">
+				<div class="form-group">
+					<label for="page_title">Page Title</label>
+					<input type="text" class="form-control" name="page_title" id="page_title" required value="{{ old('page_title') }}"/>
+				</div>
+				<div class="form-group">
+					<label for="meta_title">Meta Title</label>
+					<input type="text" class="form-control" name="meta_title" id="meta_title" required value="{{ old('meta_title') }}"/>
+				</div>
+				<div class="form-group">
+					<label for="meta_description">Meta Description</label>
+					<input type="text" class="form-control" name="meta_description" id="meta_description" required value="{{ old('meta_description') }}"/>
+				</div>
+                <div class="form-group">
+					<label for="banner_text">Banner Text</label>
+					<input type="text" class="form-control" name="banner_text" id="banner_text" required value="{{ old('banner_text') }}"/>
+				</div>
+            </div>
+            <div class="col-md-6">
+				<div class="form-group">
+					<label for="url_aliase">URL Aliase</label>
+					<input type="text" class="form-control" name="url_aliase" id="url_aliase" required value="{{ old('url_aliase') }}"/>
+				</div>
+                <div class="form-group">
+					<label for="meta_keywords">Meta Keywords</label>
+					<input type="text" class="form-control" name="meta_keywords" id="meta_keywords" required value="{{ old('meta_keywords') }}"/>
+				</div>
+                <div class="form-group">
+                    <label for="banner_image">Banner</label><br/>
+					<div class="btn btn-default btn-file">
+						<i class="fas fa-paperclip"></i> Upload
+						<input type="file" id="banner_image" name="banner_image">
+                  	</div>
+				</div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+					<label for="content">Content</label>
+					<textarea name="content" id="content" rows="10" cols="80" style="visibility: hidden; display: none;">{{ old('content') }}</textarea><br/>
+				</div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a class="btn btn-warning" href="{{ route('pages.index') }}"> Back</a>
+            </div>
+		</div>
+        </form>
+	</div>
+
+@endsection
+@section('css')
+@endsection
+@section('js')
+<script>
+    CKEDITOR.replace( 'content', {
+        filebrowserUploadUrl: "{{route('upload', ['_token' => csrf_token() ])}}",
+        filebrowserUploadMethod: 'form',
+		allowedContent: {
+		// Allow all content.
+		$1: {
+			elements: CKEDITOR.dtd,
+			attributes: true,
+			styles: true,
+			classes: true
+			}
+		},
+    });
+</script>
+@endsection
