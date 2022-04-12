@@ -66,6 +66,12 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('merchant-keys','MerchantKeyController');
 
+    //Transactions
+    Route::get('payments','TransactionController@payments')->name('payments.index');
+    Route::get('refunds','TransactionController@refunds')->name('refunds.index');
+    Route::get('batch-refunds','TransactionController@batchrefunds')->name('batch-refunds.index');
+    Route::get('orders','TransactionController@orders')->name('orders.index');
+    Route::get('disputes','TransactionController@disputes')->name('disputes.index');
 
 
     // Route::get('customers/changestatus', 'CustomerController@changeStatus');

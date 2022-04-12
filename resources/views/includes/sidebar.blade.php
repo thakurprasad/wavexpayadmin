@@ -38,6 +38,25 @@
             <li class="nav-item">
                 <a href="#" class="nav-link {{ in_array(Request::segment(1),array('invoices')) ? 'active' : '' }}"> <i class="nav-icon fas fa-copy"></i> <p>Invoices</p> </a>
             </li>
+
+            <li class="nav-item {{ in_array(Request::segment(1),array('merchants','merchant-keys')) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('merchants','merchant-keys')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Merchants <i class="right fas fa-angle-left"></i></p> </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="{{ route('merchants.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchants')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-success"></i> <p>Merchants</p> </a> </li>
+                    <li class="nav-item"><a href="{{ route('merchant-keys.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-keys')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Keys</p> </a> </li>
+                </ul>
+            </li>
+            <li class="nav-header">Transactions</li>
+            <li class="nav-item {{ in_array(Request::segment(1),array('payments','refunds','batch-refunds','orders','disputes')) ? 'menu-open' : '' }}">
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('payments','refunds','batch-refunds','orders','disputes')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users"></i> <p>Transactions <i class="right fas fa-angle-left"></i></p> </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="{{ route('payments.index') }}" class="nav-link {{ Request::segment(1) === 'payments' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Payments</p> </a> </li>
+                    <li class="nav-item"><a href="{{ route('refunds.index') }}" class="nav-link {{ Request::segment(1) === 'refunds' ? 'active' : null }}"><i class="nav-icon far fa-circle text-warning"></i><p>Refunds</p> </a></li>
+                    <li class="nav-item"><a href="{{ route('batch-refunds.index') }}" class="nav-link {{ Request::segment(1) === 'batch-refunds' ? 'active' : null }}"><i class="nav-icon far fa-circle text-info"></i><p>Batch Refunds</p> </a></li>
+                    <li class="nav-item"><a href="{{ route('orders.index') }}" class="nav-link {{ Request::segment(1) === 'orders' ? 'active' : null }}"><i class="nav-icon far fa-circle text-primary"></i><p>Orders</p> </a></li>
+                    <li class="nav-item"><a href="{{ route('disputes.index') }}" class="nav-link {{ Request::segment(1) === 'disputes' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Disputes</p> </a></li>
+                </ul>
+            </li>
             <li class="nav-header">Management</li>
             <li class="nav-item {{ in_array(Request::segment(1),array('users','roles')) ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ in_array(Request::segment(1),array('users','roles')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users"></i> <p>Users & Role <i class="right fas fa-angle-left"></i></p> </a>
