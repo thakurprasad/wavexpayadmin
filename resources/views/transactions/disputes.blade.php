@@ -28,8 +28,6 @@
 		</ul>
 	</div>
 	@endif
-
-
 	<div class="card">
 		<div class="card-header">
 			<div class="pull-left">
@@ -40,30 +38,29 @@
 	        </div>
         </div>
 
-
-
 		<div class="card-body">
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
 					<tr class="text-center">
+						<th>Dispute Id</th>
 						<th>Payment Id</th>
-						<th>Order Id</th>
 						<th>Amount</th>
-						<th>Email</th>
-						<th>Contact</th>
+                        <th>Type</th>
+                        <th>Respond By</th>
                         <th>Created At</th>
                         <th>Status</th>
                         <th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-				@foreach ($data['items'] as $key => $value)
+                @if(!empty($data->items))
+				@foreach ($data->items as $key => $value)
 				<tr>
 					<td>{{ $value->id }}</td>
-					<td>{{ $value->order_id }}</td>
-					<td>{{ $value->amount }} </td>
-                    <td>{{ $value->email }} </td>
-                    <td>{{ $value->contact }} </td>
+					<td>{{ $value->payment_id }}</td>
+                    <td>{{ $value->amount }}</td>
+                    <td>{{ $value->entity }}</td>
+                    <td>{{ $value->respond_by }}</td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
 
                     <td>{{ $value->status }} </td>
@@ -75,6 +72,7 @@
 					</td>
 				</tr>
 				@endforeach
+                @endif
 				</tbody>
 			</table>
 		</div>

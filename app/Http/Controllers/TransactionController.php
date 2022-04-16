@@ -37,6 +37,7 @@ class TransactionController extends Controller
 
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
+
         return view('transactions.payments',compact('data'));
     }
 
@@ -68,6 +69,39 @@ class TransactionController extends Controller
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         return view('transactions.orders',compact('data'));
+    }
+
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function disputes(Request $request)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/disputes');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+        curl_setopt($ch, CURLOPT_USERPWD, "rzp_test_YRAqXZOYgy9uyf:uSaaMQw3jHK0MPtOnXCSSg51");
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $data = curl_exec($ch);
+
+        // $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
+        // $data = $api->disputes->all();
+
+        //Pageheader set true for breadcrumbs
+        $pageConfigs = ['pageHeader' => true];
+
+        return view('transactions.disputes',compact('data'));
+    }
+
+    public function getAPI()
+    {
+        $userid = auth()->user()->id;
+
+        $mrchant_id = '';
     }
 
 }
