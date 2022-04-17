@@ -39,7 +39,36 @@
         </div>
 
 		<div class="card-body">
-			<table class="table table-bordered table-sm" id="datatable">
+			<div class="row">
+				<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchorder">
+					@csrf
+					<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
+					<div class="row">
+						<div class="col-md-3">
+							<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<select class="form-control" name="status">
+								<option value="" disabled selected>Choose your option</option>
+								<option value="created">Created</option>
+								<option value="accepted">Accepted</option>
+								<option value="paid">Paid</option>
+							</select>
+						</div>
+						<div class="col-md-3" style="margin-top:18px;">                          
+							<button class="btn btn-sm btn-info" type="button" onclick="search_order()" name="action">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<br clear="all"><br clear="all">
+			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
 						<th>Order Id</th>
@@ -48,10 +77,9 @@
                         <th>Receipt</th>
                         <th>Created At</th>
                         <th>Status</th>
-                        <th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="table_container">
 				@foreach ($data['items'] as $key => $value)
 				<tr>
 					<td>{{ $value->id }}</td>
@@ -59,14 +87,7 @@
                     <td>{{ $value->attempts }}</td>
                     <td>{{ $value->receipt }}</td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
-
-                    <td>{{ $value->status }} </td>
-                    <td class="text-center">
-						@can('setting-edit')
-						<a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-
-					</td>
+                    <td><a class="btn btn-sm btn-default">{{ $value->status }}</a></td>
 				</tr>
 				@endforeach
 				</tbody>
@@ -78,4 +99,59 @@
 @section('css')
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#datatable1').DataTable({
+        "searching": false
+    });
+} );
+
+function get_table_data(){
+	var header_merchant_id = $("#header_merchant_id").val();
+	$("#hidden_merchant_id").val(header_merchant_id);
+	setTimeout(get_orders_data, 1000);
+}
+
+
+function get_orders_data(){
+	$("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+	var merchant_id = $("#hidden_merchant_id").val();
+	$.ajax({
+        url: '{{url("getorderdata")}}',
+        data: {'merchant_id': merchant_id},
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+
+
+function search_order(){
+    $("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+    $.ajax({
+        url: '{{url("searchorder")}}',
+        data: $("#search_form").serialize(),
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+</script>
 @endsection

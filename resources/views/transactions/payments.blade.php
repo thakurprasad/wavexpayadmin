@@ -39,7 +39,44 @@
         </div>
 
 		<div class="card-body">
-			<table class="table table-bordered table-sm" id="datatable">
+			<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchpayments">
+				@csrf
+				<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
+				<div class="row">
+					<div class="col-md-3">
+						<input placeholder="Payment ID" name="payment_id" id="payment_id" type="text" class="form-control">
+					</div>
+					<div class="col-md-3">
+						<input placeholder="Email" id="email" name="email" type="text" class="form-control">
+					</div>
+					<div class="col-md-3">
+						<select class="form-control" name="status">
+							<option value="">Select Status</option>
+							<option value="authorized">Authorized</option>
+							<option value="captured">Captured</option>
+							<option value="refunded">Refunded</option>
+							<option value="failed">Failed</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3" style="margin-top:20px;">
+						Start Date  <input id="start_date" name="start_date" type="date" class="form-control">
+					</div>
+					<div class="col-md-3" style="margin-top:20px;">
+						End Date  <input id="end_date" name="end_date" type="date" class="form-control">
+					</div>
+					<div class="col-md-3" style="margin-top:18px;"> 
+						<label>&nbsp;&nbsp;</label> <br>                        
+						<button class="btn btn-sm btn-info" onclick="search_payment()" type="button" name="action">Submit</button>
+					</div>
+				</div>
+			</form>
+			<br clear="all"><br clear="all">
+			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
 						<th>Payment Id</th>
@@ -52,7 +89,7 @@
                         <th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="table_container">
 				@foreach ($data['items'] as $key => $value)
 				<tr>
 					<td>{{ $value->id }}</td>
@@ -80,4 +117,58 @@
 @section('css')
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#datatable1').DataTable({
+        "searching": false
+    });
+} );
+
+function get_table_data(){
+	var header_merchant_id = $("#header_merchant_id").val();
+	$("#hidden_merchant_id").val(header_merchant_id);
+	setTimeout(get_payment_data, 1000);
+}
+
+function get_payment_data(){
+	$("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+	var merchant_id = $("#hidden_merchant_id").val();
+	$.ajax({
+        url: '{{url("getpaymentdata")}}',
+        data: {'merchant_id': merchant_id},
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+
+
+function search_payment(){
+    $("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+    $.ajax({
+        url: '{{url("searchpayment")}}',
+        data: $("#search_form").serialize(),
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+</script>
 @endsection

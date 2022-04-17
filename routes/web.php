@@ -68,10 +68,24 @@ Route::group(['middleware' => ['auth']], function() {
 
     //Transactions
     Route::get('payments','TransactionController@payments')->name('payments.index');
+    Route::post('getpaymentdata','TransactionController@getpaymentdata')->name('getpaymentdata');
+    Route::post('searchpayment','TransactionController@searchpayment')->name('searchpayment');
     Route::get('refunds','TransactionController@refunds')->name('refunds.index');
+    Route::post('searchrefund','TransactionController@searchrefund')->name('searchrefund');
     Route::get('batch-refunds','TransactionController@batchrefunds')->name('batch-refunds.index');
     Route::get('orders','TransactionController@orders')->name('orders.index');
+    Route::post('searchorder','TransactionController@searchorder')->name('searchorder');
     Route::get('disputes','TransactionController@disputes')->name('disputes.index');
+    Route::post('searchdispute','TransactionController@searchdispute')->name('searchdispute');
+
+
+    //Invoice
+    Route::get('invoice','InvoiceController@invoices')->name('invoice.index');
+    Route::get('invoice/{id}','InvoiceController@showInvoice');
+    Route::post('searchinvoice','InvoiceController@searchInvoice')->name('searchinvoice');
+    Route::get('item','InvoiceController@items')->name('item.index');
+
+    Route::get('settlements','SettlementController@settlements')->name('settlements.index');
 
 
     // Route::get('customers/changestatus', 'CustomerController@changeStatus');

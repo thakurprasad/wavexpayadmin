@@ -29,17 +29,38 @@
 	</div>
 	@endif
 	<div class="card">
-		<div class="card-header">
-			<div class="pull-left">
-
-	        </div>
-	        <div class="pull-right">
-
-	        </div>
-        </div>
-
 		<div class="card-body">
-			<table class="table table-bordered table-sm" id="datatable">
+			<div class="row">
+				<form class="col s12" id="search_form" method="POST" action="{{ url('/') }}/transactions/searchrefunds">
+					@csrf
+					<div class="row">
+					<div class="col-md-3">
+							<input placeholder="Refund ID" name="refund_id" id="refund_id" type="text" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<input placeholder="Payment ID" name="payment_id" id="payment_id" type="text" class="form-control">
+						</div>
+						<div class="col-md-3">
+							<select class="form-control" name="status">
+							<option value="">Choose your option</option>
+							<option value="processed">Processed</option>
+							<option value="processing">Processing</option>
+							<option value="failed">Failed</option>
+							</select>
+						</div>
+						<div class="col-md-3">
+							<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
+						</div>
+						<div class="col-md-3" style="margin-top:18px;">                          
+							<button class="btn btn-sm btn-info" onclick="search_refund()" type="button" name="action">Submit</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<br clear="all">
+			<br clear="all">
+			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
 						<th>Refund Id</th>
@@ -47,24 +68,16 @@
 						<th>Amount</th>
                         <th>Created At</th>
                         <th>Status</th>
-                        <th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="table_container">
 				@foreach ($data['items'] as $key => $value)
 				<tr>
 					<td>{{ $value->id }}</td>
-					<td> </td>
+					<td>{{ $value->payment_id }} </td>
 					<td>{{ $value->amount }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
-
-                    <td>{{ $value->status }} </td>
-                    <td class="text-center">
-						@can('setting-edit')
-						<a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-
-					</td>
+                    <td><a class="btn btn-sm btn-default">{{ $value->status }}</a></td>
 				</tr>
 				@endforeach
 				</tbody>
@@ -76,4 +89,32 @@
 @section('css')
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script>
+$(document).ready( function () {
+    $('#datatable1').DataTable({
+        "searching": false
+    });
+} );
+
+
+function search_refund(){
+    $("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+    $.ajax({
+        url: '{{url("searchrefund")}}',
+        data: $("#search_form").serialize(),
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+</script>
 @endsection

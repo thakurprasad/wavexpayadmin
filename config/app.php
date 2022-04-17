@@ -233,7 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'Helpers' => App\Helpers\Helpers::class,
     ],
 
 ];
