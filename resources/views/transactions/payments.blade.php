@@ -28,6 +28,8 @@
 		</ul>
 	</div>
 	@endif
+
+
 	<div class="card">
 		<div class="card-header">
 			<div class="pull-left">
@@ -37,6 +39,8 @@
 
 	        </div>
         </div>
+
+
 
 		<div class="card-body">
 			<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchpayments">

@@ -38,6 +38,7 @@ class TransactionController extends Controller
         $data['items'] = []; 
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
+
         return view('transactions.payments',compact('data'));
     }
 
