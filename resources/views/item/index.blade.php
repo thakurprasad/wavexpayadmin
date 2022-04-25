@@ -37,7 +37,7 @@
 
 	        </div>
         </div>
-
+		<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
 		<div class="card-body">
 			<table class="table table-bordered table-sm" id="datatable">
                 <thead>
@@ -52,7 +52,7 @@
                     @if(!empty($data->items))
                     @foreach($data->items as $titem)
                     <tr id="item{{$titem['id']}}">
-                        <th scope="row">{{$titem['id']}}</th>
+                        <td>{{$titem['id']}}</td>
                         <td>{{$titem['name']}}</td>
                         <td>{{$titem['description']}}</td>
                         <td>{{number_format(($titem['amount']/100),2)}}</td>
@@ -68,5 +68,32 @@
 @section('css')
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script>
+function get_table_data(){
+	var header_merchant_id = $("#header_merchant_id").val();
+	$("#hidden_merchant_id").val(header_merchant_id);
+	setTimeout(get_item_data, 1000);
+}
 
+function get_item_data(){
+	$("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+	var merchant_id = $("#hidden_merchant_id").val();
+	$.ajax({
+        url: '{{url("getitemdata")}}',
+        data: {'merchant_id': merchant_id},
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
+</script>
 @endsection

@@ -41,6 +41,7 @@
 		<div class="card-body">
             <form class="col s12" method="POST" id="search_form" action="<?php url('/') ?>/searchinvoice">
                 @csrf
+                <input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
                 <div class="row">
                     <div class="col-md-3">
                         <input placeholder="Invoice ID" name="invoice_id" id="invoice_id" type="text" class="form-control">
@@ -90,7 +91,7 @@
                     @if(!empty($data->items))
                     @foreach($data->items as $invoice)
                     <tr>
-                        <th scope="row"><a href="{{ url('/invoice',$invoice->id) }}">{{$invoice->id}}</a></th>
+                        <td><a href="{{ url('/invoice',$invoice->id) }}">{{$invoice->id}}</a></th>
                         <td>{{number_format(($invoice->line_items[0]->net_amount)/100,2)}}</td>
                         <td>{{$invoice->receipt}}</td>
                         <td>{{date('Y-m-d',$invoice->created_at)}}</td>
@@ -122,6 +123,33 @@ $(document).ready( function () {
         "searching": false
     });
 } );
+
+
+function get_table_data(){
+	var header_merchant_id = $("#header_merchant_id").val();
+	$("#hidden_merchant_id").val(header_merchant_id);
+	setTimeout(get_invoice_data, 1000);
+}
+
+function get_invoice_data(){
+	$("#table_container").LoadingOverlay("show", {
+        background  : "rgba(165, 190, 100, 0.5)"
+    });
+	var merchant_id = $("#hidden_merchant_id").val();
+	$.ajax({
+        url: '{{url("getinvoicedata")}}',
+        data: {'merchant_id': merchant_id},
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").LoadingOverlay("hide", true);
+            $("#table_container").html(data.html);
+            $('#datatable1').DataTable();
+        }
+    });
+}
 
 
 function search_invoice(){

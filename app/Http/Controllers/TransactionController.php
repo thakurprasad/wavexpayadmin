@@ -176,6 +176,33 @@ class TransactionController extends Controller
         return response()->json(array('html'=>$html));
     }
 
+
+    public function getorderdata(Request $request){
+        $merchant_id = $request->merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+        $api = $api = new Api($api_key, $api_secret);
+        $html = '';
+        $options = array('count'=>10,'skip'=>0);
+        $all_orders = $api->order->all($options);
+        if(!empty($all_orders->items)){
+            foreach($all_orders->items as $order){
+                $html.='<tr>
+                    <td>'.$order['id'].'</th>
+                    <td>'.number_format($order['amount']/100,2).'</td>
+                    <td>'.$order['attempts'].'</td>
+                    <td>'.$order['receipt'].'</td>
+                    <td>'.date("jS F, Y", $order['created_at']).'</td>
+                    <td>
+                        <a class="btn btn-sm btn-default">'.$order['status'].'</a>
+                    </td>
+                </tr>';
+            }
+        }
+        return response()->json(array('html'=>$html));
+    }
+
     public function searchorder(Request $request){
         $order_id = $request->order_id;
         $reciept = $request->reciept;
@@ -183,14 +210,18 @@ class TransactionController extends Controller
         $notes = $request->notes;
         $html = '';
         
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
+        $hidden_merchant_id = $request->hidden_merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+        $api = $api = new Api($api_key, $api_secret);
         $all_orders = $api->order->all();
 
         if(!empty($all_orders->items)){
             foreach($all_orders->items as $order){
                 if($order_id==$order['id'] || $reciept==$order['receipt'] ||  $status==$order['status']){
                     $html.='<tr>
-                        <th scope="row">'.$order['id'].'</th>
+                        <td>'.$order['id'].'</th>
                         <td>'.number_format($order['amount']/100,2).'</td>
                         <td>'.$order['attempts'].'</td>
                         <td>'.$order['receipt'].'</td>
@@ -205,21 +236,52 @@ class TransactionController extends Controller
         return response()->json(array('html'=>$html));
     }
 
+
+    public function getrefunddata(Request $request){
+        $merchant_id = $request->merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+        $api = $api = new Api($api_key, $api_secret);
+        $html = '';
+        $options = array('count'=>10,'skip'=>0);
+        $all_refunds = $api->refund->all($options);
+        if(!empty($all_refunds->items)){
+            foreach($all_refunds->items as $refund){
+                $html.='<tr>
+                    <td>'.$refund['id'].'</th>
+                    <td>'.$refund['payment_id'].'</th>
+                    <td>'.number_format($refund['amount']/100,2).'</td>
+                    <td>'.date("jS F, Y", $refund['created_at']).'</td>
+                    <td>
+                        <a class="btn btn-sm btn-default">'.$refund['status'].'</a>
+                    </td>
+                </tr>';
+            }
+        }
+        return response()->json(array('html'=>$html));
+    }
+
     public function searchrefund(Request $request){
         $payment_id = $request->payment_id;
         $refund_id = $request->refund_id;
         $status = $request->status;
         $notes = $request->notes;
         $html = '';
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
+
+        $hidden_merchant_id = $request->hidden_merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+        $api = $api = new Api($api_key, $api_secret);
         $all_refunds = $api->refund->all();
 
         if(!empty($all_refunds->items)){
             foreach($all_refunds->items as $refund){
                 if($payment_id==$refund['payment_id'] || $refund_id==$refund['id'] || $status==$refund['status'] || $notes==$refund['notes']){
                     $html.='<tr>
-                        <th scope="row">'.$refund['id'].'</th>
-                        <th scope="row">'.$refund['payment_id'].'</th>
+                        <td>'.$refund['id'].'</th>
+                        <td>'.$refund['payment_id'].'</th>
                         <td>'.number_format($refund['amount']/100,2).'</td>
                         <td>'.date("jS F, Y", $refund['created_at']).'</td>
                         <td>
@@ -227,6 +289,50 @@ class TransactionController extends Controller
                         </td>
                     </tr>';
                 }
+            }
+        }
+        return response()->json(array('html'=>$html));
+    }
+
+    public function getdisputedata(Request $request){
+        $merchant_id = $request->merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+        $api = $api = new Api($api_key, $api_secret);
+        $html = '';
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/disputes');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        curl_setopt($ch, CURLOPT_USERPWD, $api_key . ':' . $api_secret);
+
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        $all_disputes = json_decode($result, TRUE);
+        curl_close($ch);
+
+        if(!empty($all_disputes['items'])){
+            foreach($all_disputes['items'] as $dispute){
+                $html.='<tr>
+                    <th scope="row">'.$dispute['id'].'</th>
+                    <th scope="row">'.$dispute['payment_id'].'</th>
+                    <td>'.number_format($dispute['amount'],2).'</td>
+                    <td>'.$dispute['reason_code'].'</td>
+                    <td>'.date("jS F, Y", $dispute['respond_by']).'</td>
+                    <td>'.date("jS F, Y", $dispute['created_at']).'</td>
+                    <td>
+                        <a class="waves-effect waves-light btn-small">'.$dispute['status'].'</a>
+                    </td>
+                </tr>';
             }
         }
         return response()->json(array('html'=>$html));
@@ -241,6 +347,12 @@ class TransactionController extends Controller
         $end_date = $request->end_date;
 
 
+        $hidden_merchant_id = $request->hidden_merchant_id;
+        $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
+        $api_key = $get_merchant_key_details->api_key;
+        $api_secret = $get_merchant_key_details->api_secret;
+
+
 
         $ch = curl_init();
 
@@ -248,7 +360,7 @@ class TransactionController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
-        curl_setopt($ch, CURLOPT_USERPWD, 'rzp_test_YRAqXZOYgy9uyf' . ':' . 'uSaaMQw3jHK0MPtOnXCSSg51');
+        curl_setopt($ch, CURLOPT_USERPWD, $api_key . ':' . $api_secret);
 
         $headers = array();
         $headers[] = 'Content-Type: application/json';

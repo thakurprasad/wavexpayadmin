@@ -71,20 +71,24 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('getpaymentdata','TransactionController@getpaymentdata')->name('getpaymentdata');
     Route::post('searchpayment','TransactionController@searchpayment')->name('searchpayment');
     Route::get('refunds','TransactionController@refunds')->name('refunds.index');
+    Route::post('getrefunddata','TransactionController@getrefunddata')->name('getrefunddata');
     Route::post('searchrefund','TransactionController@searchrefund')->name('searchrefund');
     Route::get('batch-refunds','TransactionController@batchrefunds')->name('batch-refunds.index');
     Route::get('orders','TransactionController@orders')->name('orders.index');
+    Route::post('getorderdata','TransactionController@getorderdata')->name('getorderdata');
     Route::post('searchorder','TransactionController@searchorder')->name('searchorder');
     Route::get('disputes','TransactionController@disputes')->name('disputes.index');
+    Route::post('getdisputedata','TransactionController@getdisputedata')->name('getdisputedata');
     Route::post('searchdispute','TransactionController@searchdispute')->name('searchdispute');
 
 
     //Invoice
     Route::get('invoice','InvoiceController@invoices')->name('invoice.index');
+    Route::post('getinvoicedata','InvoiceController@getinvoicedata')->name('getinvoicedata');
     Route::get('invoice/{id}','InvoiceController@showInvoice');
     Route::post('searchinvoice','InvoiceController@searchInvoice')->name('searchinvoice');
     Route::get('item','InvoiceController@items')->name('item.index');
-
+    Route::post('getitemdata','InvoiceController@getitemdata')->name('getitemdata');
     Route::get('settlements','SettlementController@settlements')->name('settlements.index');
 
 
