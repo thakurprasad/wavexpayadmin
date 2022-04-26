@@ -159,7 +159,6 @@ class TransactionController extends Controller
 
         if(!empty($data['items'])){
             foreach($data['items'] as $key => $value){
-                if($payment_id==$value->id || $email==$value->email ||  $status==$value->status){
                     $html.='<tr>
                         <td>'.$value->id.'</td>
                         <td>'.$value->order_id.'</td>
@@ -170,7 +169,6 @@ class TransactionController extends Controller
                         <td>'.$value->status.'</td>
                         <td class="text-center"><a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a></td>
                     </tr>';
-                }
             }
         }
         return response()->json(array('html'=>$html));

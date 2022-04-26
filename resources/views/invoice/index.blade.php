@@ -43,6 +43,21 @@
                 @csrf
                 <input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
                 <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            @php 
+                            $get_all_merchants = Helpers::get_all_merchants();
+                            @endphp
+                            @if(!empty($get_all_merchants))
+                            <select class="form-control" id="header_merchant_id" onchange="get_table_data()">
+                            <option value="">Select Merchant</option>
+                            @foreach($get_all_merchants as $merchants)
+                            <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
+                            @endforeach
+                            </select>
+                            @endif
+                        </div>
+                    </div>
                     <div class="col-md-3">
                         <input placeholder="Invoice ID" name="invoice_id" id="invoice_id" type="text" class="form-control">
                     </div>
@@ -59,15 +74,15 @@
                         <input placeholder="Customer Email" name="customer_email" id="customer_email" type="text" class="form-control">
                     </div>
 
-                    <div class="col-md-3" style="margin-top:20px;">
+                    <div class="col-md-3">
                         <input placeholder="Notes" name="notes" id="notes" type="text" class="form-control">
                     </div>
                     
-                    <div class="col-md-1" style="margin-top:20px;">                          
+                    <div class="col-md-1">                          
                         <button class="btn btn-sm btn-info" type="button" name="action" onclick="search_invoice()">Submit</button>
                     </div>
 
-                    <div class="col-md-3" style="margin-top:20px;">                          
+                    <div class="col-md-3">                          
                         <button class="btn btn-sm btn-default" type="button" name="action" onclick="reload_page()">Reset
                         </button>
                     </div>
@@ -128,10 +143,15 @@ $(document).ready( function () {
 function get_table_data(){
 	var header_merchant_id = $("#header_merchant_id").val();
 	$("#hidden_merchant_id").val(header_merchant_id);
-	setTimeout(get_invoice_data, 1000);
+	//setTimeout(get_invoice_data, 1000);
 }
 
 function get_invoice_data(){
+    var merchant_id = $("#header_merchant_id").val();
+    if(merchant_id==''){
+        alert('Please Select Merchant Id');
+        return false;
+    }
 	$("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
@@ -153,6 +173,11 @@ function get_invoice_data(){
 
 
 function search_invoice(){
+    var merchant_id = $("#header_merchant_id").val();
+    if(merchant_id==''){
+        alert('Please Select Merchant Id');
+        return false;
+    }
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });

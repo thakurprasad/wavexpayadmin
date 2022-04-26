@@ -20,6 +20,8 @@ Route::post('ckeditor/image_upload', 'CKEditorController@upload')->name('upload'
 
 Auth::routes();
 
+Route::get('/logout', 'LoginController@logout')->name('logout');
+
 Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/admin', function () {

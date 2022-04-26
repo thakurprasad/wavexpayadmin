@@ -38,6 +38,25 @@
 	        </div>
         </div>
 		<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
+		<div class="row">
+			<div class="card-body">
+				<div class="col-lg-3">
+					<div class="form-group">
+						@php 
+						$get_all_merchants = Helpers::get_all_merchants();
+						@endphp
+						@if(!empty($get_all_merchants))
+						<select class="form-control" id="header_merchant_id" onchange="get_table_data()">
+						<option value="">Select Merchant</option>
+						@foreach($get_all_merchants as $merchants)
+						<option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
+						@endforeach
+						</select>
+						@endif
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="card-body">
 			<table class="table table-bordered table-sm" id="datatable">
                 <thead>
@@ -70,6 +89,13 @@
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script>
+
+
+$("input#search").keyup(function () {
+      alert("input#search");
+});
+
+
 function get_table_data(){
 	var header_merchant_id = $("#header_merchant_id").val();
 	$("#hidden_merchant_id").val(header_merchant_id);

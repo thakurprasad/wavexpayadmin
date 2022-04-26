@@ -56,7 +56,7 @@ class InvoiceController extends Controller
     {
         $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
         $data = $api->item->all();
-        //$data->items = [];
+        $data->items = [];
         //Pageheader set true for breadcrumbs
         $pageConfigs = ['pageHeader' => true];
         return view('item.index',compact('data'));
