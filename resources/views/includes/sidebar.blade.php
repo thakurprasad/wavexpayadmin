@@ -66,7 +66,7 @@
                     <li class="nav-item"><a href="{{ route('merchant-keys.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-keys')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Keys</p> </a> </li>
                 </ul>
             </li>
-            <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages')) ? 'menu-open' : '' }}">
+            <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages','dashboardheader')) ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ in_array(Request::segment(1),array('settings','countries','states')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Settings <i class="right fas fa-angle-left"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('payment-templates.index') }}" class="nav-link {{ Request::segment(1) === 'payment-templates' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Payment Templates</p> </a> </li>
@@ -74,6 +74,7 @@
                     <li class="nav-item"><a href="{{ route('countries.index') }}" class="nav-link {{ Request::segment(1) === 'countries' ? 'active' : null }}"><i class="nav-icon far fa-circle text-info"></i><p>Countries</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('states.index') }}" class="nav-link {{ Request::segment(1) === 'states' ? 'active' : null }}"><i class="nav-icon far fa-circle text-primary"></i><p>States</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('pages.index') }}" class="nav-link {{ Request::segment(1) === 'pages' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Pages</p> </a> </li>
+                    <li class="nav-item"><a href="{{ route('dashboardheader.index') }}" class="nav-link {{ Request::segment(1) === 'dashboardheader' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Dashboard Header</p> </a> </li>
                 </ul>
             </li>
 

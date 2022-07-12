@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('merchant-keys','MerchantKeyController');
 
+    Route::resource('dashboardheader','DashboardHeaderController');
+
     //Transactions
     Route::get('payments','TransactionController@payments')->name('payments.index');
     Route::post('getpaymentdata','TransactionController@getpaymentdata')->name('getpaymentdata');
