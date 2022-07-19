@@ -19,6 +19,6 @@ class Merchant extends Model
      * @var array
      */
     protected $fillable = [
-        'merchant_name', 'access_salt',  'contact_name', 'contact_phone', 'status', 'created_at', 'updated_at'
+        'merchant_name', 'access_salt',  'contact_name', 'contact_phone', 'status', 'merchant_payment_method', 'created_at', 'updated_at'
     ];
 }

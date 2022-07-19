@@ -48,6 +48,7 @@
 						<th>Contact Persone</th>
 						<th>Phone</th>
 						<th>Status</th>
+						<th>Payment Method</th>
 						<th>Updated At</th>
 						<th>Action</th>
 					</tr>
@@ -59,6 +60,7 @@
 					<td>{{ $value->contact_name }}</td>
 					<td>{{ $value->contact_phone }} </td>
 					<td class="text-center"> <input data-id="{{$value->id}}" class="toggle-class  btn-sm" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ ($value->status=="Active")? "checked" : "" }} data-size="xs"> </td>
+					<td class="text-center">{{ ucwords($value->merchant_payment_method) }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->updated_at)) }}">{{ date('d-m-Y',strtotime($value->updated_at)) }}</td>
 					<td class="text-center">
 						@can('setting-edit')

@@ -55,6 +55,15 @@
 					<label for="contact_phone">Contact Phone</label>
 					<input type="text" class="form-control" name="contact_phone" id="contact_phone" required value="{{ old('contact_phone') }}"/>
 				</div>
+				<div class="form-group">
+                    <label for="merchant_logo">Merchant Payment Method</label><br/>
+					<select name="merchant_payment_method" class="form-control">
+						<option value="" disabled selected>Select</option>
+						<option value="razorpay">Razorpay</option>
+						<option value="cashfree">Cashfree</option>
+						<option value="paytm">Paytm</option>
+					</select>
+				</div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -72,6 +81,7 @@
 						<input type="file" id="merchant_logo" name="merchant_logo">
                   	</div>
 				</div>
+				
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <button type="submit" class="btn btn-primary">Save</button>

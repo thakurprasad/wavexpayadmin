@@ -64,7 +64,7 @@ class MerchantController extends Controller
         if ($files = $request->file('merchant_logo')) {
             // Define upload path
             $destinationPath = public_path('/storage/logo/'); // upload path
-         // Upload Orginal Image
+            // Upload Orginal Image
             $uploadedImage = 'logo_'.date('YmdHis') . "." . $files->getClientOriginalExtension();
             $files->move($destinationPath, $uploadedImage);
             $input['merchant_logo'] = $uploadedImage;

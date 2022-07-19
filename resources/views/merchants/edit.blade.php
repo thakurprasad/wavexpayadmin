@@ -56,6 +56,15 @@
 					<label for="contact_phone">Contact Phone</label>
 					<input type="text" class="form-control" name="contact_phone" id="contact_phone" required value="{{ $data->contact_phone }}"/>
 				</div>
+				<div class="form-group">
+                    <label for="merchant_logo">Merchant Payment Method</label><br/>
+					<select name="merchant_payment_method" class="form-control">
+						<option value="">Select</option>
+						<option value="razorpay" <?php if($data->merchant_payment_method=='razorpay') { echo 'selected'; } ?>>Razorpay</option>
+						<option value="cashfree" <?php if($data->merchant_payment_method=='cashfree') { echo 'selected'; } ?>>Cashfree</option>
+						<option value="paytm" <?php if($data->merchant_payment_method=='paytm') { echo 'selected'; } ?>>Paytm</option>
+					</select>
+				</div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
