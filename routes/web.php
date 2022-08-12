@@ -137,7 +137,7 @@ Route::group(['middleware' => ['auth']], function() {
     // Route::get('monthly_statement', 'ReportController@monthly_statement')->name('monthly_statement.index');
     //Route::get('cron', 'ReportController@cron')->name('cron');
 
-
+    Route::post('getsuccesstransactiongraphdata','HomeController@getSuccessTransactionGraphData');
 
 
 });
