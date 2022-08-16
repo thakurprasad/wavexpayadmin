@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountriesController;
+use App\Http\Controllers\TransactionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -138,6 +139,9 @@ Route::group(['middleware' => ['auth']], function() {
     //Route::get('cron', 'ReportController@cron')->name('cron');
 
     Route::post('getsuccesstransactiongraphdata','HomeController@getSuccessTransactionGraphData');
+
+
+    Route::get('transactions/payments/status',  [TransactionController::class, 'statusWisePayment'] );
 
 
 });

@@ -408,4 +408,18 @@ class TransactionController extends Controller
         return response()->json(array('html'=>$html));
     }
 
+
+    public function statusWisePayment(Request $request)
+    {
+        $merchant_id =  $request->merchant;
+        $status = $request->status;
+        if($status=='all'){
+            $all_payments = DB::table('payments')->get();
+        }else{
+            $all_payments = DB::table('payments')->where('merchant_id',$merchant_id)->where('status',$status)->get();
+        }
+        
+        return view('transactions.paymentsstatus', compact('all_payments'));
+    }
+
 }

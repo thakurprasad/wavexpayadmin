@@ -356,4 +356,18 @@ function create_ajax_order_chart(oxValues,oyValues){
 
 }
 </script>
+
+<script>
+    $(function(){
+      $('#status_filter').on('change', function () {
+          var merchant = $("#merchant").val();
+          var url = $(this).val(); 
+          if (url) { 
+              //window.location = '{{ url("/") }}/transactions/payments/status?status='+url; // redirect
+			        window.open('{{ url("/") }}/transactions/payments/status?status='+url+'&merchant='+merchant, '_blank');
+          }
+          return false;
+      });
+    });
+</script>
 @endsection
