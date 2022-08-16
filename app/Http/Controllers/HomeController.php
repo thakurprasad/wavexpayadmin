@@ -138,6 +138,7 @@ class HomeController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $status_filter = $request->status_filter;
+        $merchant_id = $request->merchant_id;
 
         $paymentxvalue1='';
         $paymentyvalue1='';
@@ -145,43 +146,64 @@ class HomeController extends Controller
         $orderxvalue1='';
         $orderyvalue1='';
 
-        $merchant_id =  session()->get('merchant');
+        
 
 
         if($status_filter=='' || $status_filter=='all'){
-            $payment_data = DB::table('payments')->select(
+            $query = DB::table('payments')->select(
                 DB::raw("(SUM(amount)) as total_amount"),
                 DB::raw("DATE(payment_created_at) as date")
-            )
-            ->whereYear('payment_created_at', date('Y'))
-            ->whereBetween('payment_created_at', [$start_date, $end_date])
-            ->orderBy('payment_created_at', 'DESC')
-            ->groupBy('date')
-            ->get();
+            );
+
+            if(isset($merchant_id) && $merchant_id!='')
+            {
+                $query->where('merchant_id',$merchant_id);
+            }
+
+            $query->whereYear('payment_created_at', date('Y'));
+            $query->whereBetween('payment_created_at', [$start_date, $end_date]);
+            $query->orderBy('payment_created_at', 'DESC');
+            $query->groupBy('date');
+
+            $payment_data = $query->get();
         }else{
-            $payment_data = DB::table('payments')->select(
+            $query = DB::table('payments')->select(
                 DB::raw("(SUM(amount)) as total_amount"),
                 DB::raw("DATE(payment_created_at) as date")
-            )
-            ->whereYear('payment_created_at', date('Y'))
-            ->whereBetween('payment_created_at', [$start_date, $end_date])
-            ->orderBy('payment_created_at', 'DESC')
-            ->groupBy('date')
-            ->where('status',$status_filter)
-            ->get();
+            );
+
+            if(isset($merchant_id) && $merchant_id!='')
+            {
+                $query->where('merchant_id',$merchant_id);
+            }
+
+            $query->whereYear('payment_created_at', date('Y'));
+            $query->whereBetween('payment_created_at', [$start_date, $end_date]);
+            $query->orderBy('payment_created_at', 'DESC');
+            $query->groupBy('date');
+            $query->where('status',$status_filter);
+
+            $payment_data = $query->get();
         }
 
 
 
-        $order_data = DB::table('orders')->select(
+        $order_query = DB::table('orders')->select(
             DB::raw("(SUM(amount)) as total_amount"),
             DB::raw("DATE(order_created_at) as date")
-        )
-        ->whereYear('order_created_at', date('Y'))
-        ->whereBetween('order_created_at', [$start_date, $end_date])
-        ->orderBy('order_created_at', 'DESC')
-        ->groupBy('date')
-        ->get();
+        );
+
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $order_query->where('merchant_id',$merchant_id);
+        }
+
+        $order_query->whereYear('order_created_at', date('Y'));
+        $order_query->whereBetween('order_created_at', [$start_date, $end_date]);
+        $order_query->orderBy('order_created_at', 'DESC');
+        $order_query->groupBy('date');
+        
+        $order_data = $order_query->get();
 
 
         $total_order = count($order_data);

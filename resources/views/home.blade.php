@@ -259,12 +259,13 @@ $(document).ready(function() {
   $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
     var start_date = picker.startDate.format('YYYY-MM-DD');
     var end_date = picker.endDate.format('YYYY-MM-DD');
+	  var status_filter = $("#status_filter").val();
 
-	var status_filter = $("#status_filter").val();
+    var merchant_id = $("#merchant").val();
 	
-	$.ajax({
+	  $.ajax({
         url: '{{url("getsuccesstransactiongraphdata")}}',
-        data: {start_date : start_date, end_date: end_date, status_filter: status_filter},
+        data: {start_date : start_date, end_date: end_date, status_filter: status_filter, merchant_id: merchant_id},
         type: "POST",
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
