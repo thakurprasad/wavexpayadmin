@@ -5,7 +5,7 @@ use DB;
 class Helpers
 {
     public static function get_all_merchants(){
-        $get_all_merchants = DB::table('merchants')->get();
+        $get_all_merchants = DB::table('merchants')->orderBy('created_at','DESC')->get();
         return $get_all_merchants;
     } 
 }

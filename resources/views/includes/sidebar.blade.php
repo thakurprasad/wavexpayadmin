@@ -1,5 +1,5 @@
 
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4 overflow-auto">
     <!-- Brand Logo -->
 
     <a href="{{ route('home')}}" class="brand-link">
@@ -27,12 +27,12 @@
         <ul class="nav nav-pills nav-sidebar flex-column nav-compact text-sm nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
 
             <li class="nav-item">
-                <a href="{{ route('home') }}" class="nav-link {{ in_array(Request::segment(1),array('home')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Dashboard</p> </a>
+                <a href="{{ route('home') }}" class="nav-link {{ in_array(Request::segment(1),array('home')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt" style="color: #f41811;"></i> <p>Dashboard</p> </a>
             </li>
             
 
             <li class="nav-item {{ in_array(Request::segment(1),array('payments','refunds','batch-refunds','orders','disputes')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('payments','refunds','batch-refunds','orders','disputes')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users"></i> <p>Transactions <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('payments','refunds','batch-refunds','orders','disputes')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users" style="color:#82a6e4;"></i> <p>Transactions <i class="right fas fa-angle-left" style="color:#82a6e4;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('payments.index') }}" class="nav-link {{ Request::segment(1) === 'payments' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Payments</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('refunds.index') }}" class="nav-link {{ Request::segment(1) === 'refunds' ? 'active' : null }}"><i class="nav-icon far fa-circle text-warning"></i><p>Refunds</p> </a></li>
@@ -42,10 +42,10 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="{{ route('settlements.index') }}" class="nav-link {{ in_array(Request::segment(1),array('settlements')) ? 'active' : '' }}"> <i class="nav-icon far fa-plus-square"></i> <p>Settlements</p> </a>
+                <a href="{{ route('settlements.index') }}" class="nav-link {{ in_array(Request::segment(1),array('settlements')) ? 'active' : '' }}"> <i class="nav-icon far fa-plus-square" style="color: #f411c7;"></i> <p>Settlements</p> </a>
             </li>
             <li class="nav-item {{ in_array(Request::segment(1),array('invoice','item')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('invoice','item')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users"></i> <p>Invoice <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('invoice','item')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users" style="color: #40f75f;"></i> <p>Invoice <i class="right fas fa-angle-left" style="color: #40f75f;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('invoice.index') }}" class="nav-link {{ Request::segment(1) === 'invoice' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Invoice</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('item.index') }}" class="nav-link {{ Request::segment(1) === 'item' ? 'active' : null }}"><i class="nav-icon far fa-circle text-warning"></i><p>Item</p> </a></li>
@@ -53,21 +53,21 @@
             </li>
             <li class="nav-header">Management</li>
             <li class="nav-item {{ in_array(Request::segment(1),array('users','roles')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('users','roles')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users"></i> <p>Users & Role <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('users','roles')) ? 'active' : '' }}"> <i class="nav-icon fas fa-users" style="color: #12e7fc;"></i> <p>Users & Role <i class="right fas fa-angle-left" style="color: #12e7fc;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('users.index') }}" class="nav-link {{ Request::segment(1) === 'users' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Users</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('roles.index') }}" class="nav-link {{ Request::segment(1) === 'roles' ? 'active' : null }}"><i class="nav-icon far fa-circle text-warning"></i><p>Roles</p> </a></li>
                 </ul>
             </li>
             <li class="nav-item {{ in_array(Request::segment(1),array('merchants','merchant-keys')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('merchants','merchant-keys')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Merchants <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('merchants','merchant-keys')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt" style="color: #1106f6;"></i> <p>Merchants <i class="right fas fa-angle-left" style="color: #1106f6;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('merchants.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchants')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-success"></i> <p>Merchants</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('merchant-keys.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-keys')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Keys</p> </a> </li>
                 </ul>
             </li>
             <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages','dashboardheader')) ? 'menu-open' : '' }}">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('settings','countries','states')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Settings <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('settings','countries','states')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt" style="color: #39fc12;"></i> <p>Settings <i class="right fas fa-angle-left" style="color: #39fc12;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('payment-templates.index') }}" class="nav-link {{ Request::segment(1) === 'payment-templates' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Payment Templates</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('email-templates.index') }}" class="nav-link {{ Request::segment(1) === 'email-templates' ? 'active' : null }}"><i class="nav-icon far fa-circle text-warning"></i><p>Email Templates</p> </a> </li>
@@ -79,7 +79,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('reports')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt"></i> <p>Reports <i class="right fas fa-angle-left"></i></p> </a>
+                <a href="#" class="nav-link {{ in_array(Request::segment(1),array('reports')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt" style="color: #f1fc12;"></i> <p>Reports <i class="right fas fa-angle-left" style="color: #f1fc12;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-circle text-success"></i><p>Report A</p> </a> </li>
                     <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon far fa-circle text-warning"></i><p>Report B</p> </a> </li>
@@ -91,7 +91,7 @@
             <li class="nav-header">Account</li>
             <li class="nav-item has-treeview {{ in_array(Request::segment(1),array('profile_update','change-password')) ? 'menu-open' : null }}">
                 <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-user-circle"></i> <p>My Account <i class="right fas fa-angle-left"></i> </p>
+                    <i class="nav-icon fas fa-user-circle" style="color: #f22323;"></i> <p>My Account <i class="right fas fa-angle-left" style="color: #f22323;"></i> </p>
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('user.profile') }}" class="nav-link {{ Request::segment(1) === 'profile_update' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Profile Update</p> </a> </li>

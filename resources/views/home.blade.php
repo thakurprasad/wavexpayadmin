@@ -1,5 +1,22 @@
 @extends('layouts.admin')
 
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+.select2-selection__rendered {
+    line-height: 31px;
+}
+.select2-selection .select2-selection--single {
+    height: 35px;
+}
+.select2-selection__arrow {
+    height: 34px;
+}
+</style>
+@endsection
+
+
 @section('content')
 <section class="content">
   <div class="container-fluid">
@@ -11,11 +28,10 @@
               $get_all_merchants = Helpers::get_all_merchants();
               @endphp
               <label for="first_name">Select Merchant</label>
-              <select class="form-control" style="width: 300px;" id="merchant">
-                <option value="" disabled selected>Select Merchant</option>
+              <select class="select2" id="merchant">
                 @if(!empty($get_all_merchants))
                 @foreach($get_all_merchants as $merchants)
-                <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
+                  <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
                 @endforeach
                 @endif
               </select>
@@ -30,9 +46,8 @@
             <div class="col-md-4">
               <label for="first_name"><strong>Transaction Filter</strong><For></For></label>
               <select class="form-control" id="status_filter">
-                <option value="" disabled selected>Select Transaction Status</option>
-                <option value="failed">Failed</option>
                 <option value="authorized">Successful</option>
+                <option value="failed">Failed</option>
                 <option value="pending">Pending</option>
                 <option value="all">All</option>
               </select>
@@ -140,6 +155,9 @@
     </div><!-- /.container-fluid -->
   <div>
 </section>
+
+<input type="hidden" id="datepicker_start_date" name="datepicker_start_date" />
+<input type="hidden" id="datepicker_end_date" name="datepicker_end_date" />
 @endsection
 
 @section('js')
@@ -152,13 +170,18 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 <script type="text/javascript">
 $(function() {
-    /*var start = moment().subtract(29, 'days');
-  var end = moment();*/
-  var start = moment().startOf('month');
+  /*var start = moment().subtract(29, 'days');
   var end = moment();
+  var start = moment().startOf('month');*/
+  var start = moment();
+  var end = moment();
+
+  
 
   function cb(start, end) {
       $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -183,6 +206,16 @@ $(function() {
 
 <script>
 $(document).ready(function() {
+
+  $('.select2').select2();
+  $("#merchant").select2({ width: '300px', dropdownCssClass: "bigdrop" });
+
+  var start = moment();
+  var end = moment();
+  $("#datepicker_start_date").val(start.format('MMMM D, YYYY'));
+  $("#datepicker_end_date").val(end.format('MMMM D, YYYY'));
+
+
   var ctx = $("#chart-line");
   var myLineChart = new Chart(ctx, {
       type: 'bar',
@@ -259,8 +292,12 @@ $(document).ready(function() {
   $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
     var start_date = picker.startDate.format('YYYY-MM-DD');
     var end_date = picker.endDate.format('YYYY-MM-DD');
-	  var status_filter = $("#status_filter").val();
 
+    $("#datepicker_start_date").val(picker.startDate.format('YYYY-MM-DD'));
+    $("#datepicker_end_date").val(picker.endDate.format('YYYY-MM-DD'));
+
+
+	  var status_filter = $("#status_filter").val();
     var merchant_id = $("#merchant").val();
 	
 	  $.ajax({
@@ -280,6 +317,32 @@ $(document).ready(function() {
         }
     });
 });
+
+
+$('#merchant').on('change', function(ev, picker) {
+    var start_date = $("#datepicker_start_date").val();
+    var end_date = $("#datepicker_end_date").val();
+	  var status_filter = $("#status_filter").val();
+    var merchant_id = $("#merchant").val();
+	  $.ajax({
+        url: '{{url("getsuccesstransactiongraphdata")}}',
+        data: {start_date : start_date, end_date: end_date, status_filter: status_filter, merchant_id: merchant_id},
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){      
+			console.log(data);    
+			create_ajax_payment_chart(data.paymentxvalue1,data.paymentyvalue1);
+			create_ajax_order_chart(data.orderxvalue1,data.orderyvalue1);
+			$("#order_count").html(data.total_order);
+			$("#total_payment_amount").html('₹'+(data.total_payment_amount).toFixed(2));
+			$("#success_rate_container").html(data.success_perc+'<sup style="font-size: 20px">%</sup>');
+        }
+    });
+});
+
+
 
 
 function create_ajax_payment_chart(xValues,yValues){

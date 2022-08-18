@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 use Auth;
+use Helpers;
+
+
+
+
 class HomeController extends Controller
 {
     /**
@@ -31,23 +36,66 @@ class HomeController extends Controller
 
         $dashboard_header = DB::table('dashboardheader')->first();
 
+
+        $merchant_id = '';
+        $get_all_merchants = Helpers::get_all_merchants();
+        if(count($get_all_merchants)>0)
+        {
+            $merchant_id = $get_all_merchants[0]->id;
+        }
+        
+
         $payments = DB::table('payments')->get();
         $orders = DB::table('orders')->get();
         $disputes = DB::table('disputes')->get();
         $refunds = DB::table('refunds')->get();
         $users = DB::table('users')->get();
 
+
+        if($merchant_id!=''){
+            $payments = DB::table('payments')->where('merchant_id',$merchant_id)->get();
+            $orders = DB::table('orders')->where('merchant_id',$merchant_id)->get();
+            $disputes = DB::table('disputes')->where('merchant_id',$merchant_id)->get();
+            $refunds = DB::table('refunds')->where('merchant_id',$merchant_id)->get();
+        }
+
+
+
         
 
         /*****************payment value calculation for payment line graph***********************/
-        $payment_current_month_data = DB::table('payments')->whereMonth('payment_created_at', date('m'))
-        ->whereYear('payment_created_at', date('Y'))
-        ->get(['amount','payment_created_at']);
+        $query = DB::table('payments')->whereMonth('payment_created_at', date('m'));
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query->where('merchant_id',$merchant_id);
+        }
+        $query->whereYear('payment_created_at', date('Y'));
+
+        $payment_current_month_data = $query->get(['amount','payment_created_at']);
 
         //print_r($payment_current_month_data);exit;
+        $query2 = DB::table('payments')->orderBy('amount', 'desc');
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query2->where('merchant_id',$merchant_id);
+        }
+        $paymentmaxValue = $query->value('amount');
 
-        $paymentmaxValue = DB::table('payments')->orderBy('amount', 'desc')->value('amount');
-        $paymentminValue = DB::table('payments')->orderBy('amount', 'asc')->value('amount');
+
+
+
+        $query3 = DB::table('payments')->orderBy('amount', 'asc');
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query3->where('merchant_id',$merchant_id);
+        }
+        $paymentminValue = $query3->value('amount');
+
+
+
+
+
+
 
         $paymentxvalue1='[';
         $paymentyvalue1='[';
@@ -67,13 +115,34 @@ class HomeController extends Controller
 
 
         /*****************order value calculation for total line graph***********************/
-        $order_current_month_data = DB::table('orders')->whereMonth('order_created_at', date('m'))
-        ->whereYear('order_created_at', date('Y'))
-        ->get(['amount','order_created_at']);
+        $query4 = DB::table('orders')->whereMonth('order_created_at', date('m'));
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query4->where('merchant_id',$merchant_id);
+        }
+        $query4->whereYear('order_created_at', date('Y'));
+        $order_current_month_data = $query4->get(['amount','order_created_at']);
 
 
-        $ordermaxValue = DB::table('orders')->whereMonth('order_created_at', date('m'))->whereYear('order_created_at', date('Y'))->orderBy('amount', 'desc')->value('amount');
-        $orderminValue = DB::table('orders')->whereMonth('order_created_at', date('m'))->whereYear('order_created_at', date('Y'))->orderBy('amount', 'asc')->value('amount');
+        $query5 = DB::table('orders')->whereMonth('order_created_at', date('m'));
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query5->where('merchant_id',$merchant_id);
+        }
+        $query5->whereYear('order_created_at', date('Y'))->orderBy('amount', 'desc');
+        $ordermaxValue = $query5->value('amount');
+
+
+
+        $query6 = DB::table('orders')->whereMonth('order_created_at', date('m'));
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query6->where('merchant_id',$merchant_id);
+        }
+        $query6->whereYear('order_created_at', date('Y'))->orderBy('amount', 'asc');
+        $orderminValue = $query6->value('amount');
+
+
 
         $orderxvalue1='[';
         $orderyvalue1='[';
@@ -102,13 +171,18 @@ class HomeController extends Controller
         /*************************** Bar Chart Data For Payment ************************************/
         $xValue='[';
         $yValue='[';
-        $payment_month_data = DB::table('payments')->select(
+        $query7 = DB::table('payments')->select(
             DB::raw("(SUM(amount)) as total_amount"),
             DB::raw("MONTHNAME(payment_created_at) as month_name")
-        )
-        ->whereYear('payment_created_at', date('Y'))
-        ->groupBy('month_name')
-        ->get();
+        );
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $query7->where('merchant_id',$merchant_id);
+        }
+        $query7->whereYear('payment_created_at', date('Y'));
+        $query7->groupBy('month_name');
+       
+        $payment_month_data = $query7->get();
         
         foreach($payment_month_data as $pd)
         {
@@ -126,8 +200,14 @@ class HomeController extends Controller
         //var yValues = [200, 58, 125, 110, 175, 148, 221, 315, 112];
         //var barColors = ["red", "green","blue","orange","brown", "black", "beige", "yellow"];
         /*************************** End Bar Chart Data For Payment ********************************/
-
-        $success_perc = number_format(((count($payments)*100)/(count($payments)+count($orders)+count($disputes)+count($refunds))),2);
+        if(count($payments)>0)
+        {
+            $success_perc = number_format(((count($payments)*100)/(count($payments)+count($orders)+count($disputes)+count($refunds))),2);
+        }
+        else
+        {
+            $success_perc = 0;
+        }
 
         return view('home', compact('payments','orders','disputes','refunds','users','success_perc','paymentxvalue1','paymentyvalue1','paymentmaxValue','paymentminValue','ordermaxValue','orderminValue','orderxvalue1','orderyvalue1','new_pie_chart_volume_data','xValue','yValue','dashboard_header'));
     }
@@ -232,7 +312,15 @@ class HomeController extends Controller
         $disputes = DB::table('disputes')->whereBetween('created_at', [$start_date, $end_date])->get();
         $refunds = DB::table('refunds')->whereBetween('created_at', [$start_date, $end_date])->get();
 
-        $success_perc = number_format(((count($payments)*100)/(count($payments)+count($orders)+count($disputes)+count($refunds))),2);
+        if(count($payments)>0)
+        {
+            $success_perc = number_format(((count($payments)*100)/(count($payments)+count($orders)+count($disputes)+count($refunds))),2);
+        }
+        else
+        {
+            $success_perc = 0;
+        }
+        
         //end success percentage calculation
         
 
