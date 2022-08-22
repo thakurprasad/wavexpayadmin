@@ -242,7 +242,7 @@ class HomeController extends Controller
 
             $query->whereYear('payment_created_at', date('Y'));
             $query->whereBetween('payment_created_at', [$start_date, $end_date]);
-            $query->orderBy('payment_created_at', 'DESC');
+            $query->orderBy('date', 'DESC');
             $query->groupBy('date');
 
             $payment_data = $query->get();
@@ -259,7 +259,7 @@ class HomeController extends Controller
 
             $query->whereYear('payment_created_at', date('Y'));
             $query->whereBetween('payment_created_at', [$start_date, $end_date]);
-            $query->orderBy('payment_created_at', 'DESC');
+            $query->orderBy('date', 'DESC');
             $query->groupBy('date');
             $query->where('status',$status_filter);
 
@@ -280,7 +280,7 @@ class HomeController extends Controller
 
         $order_query->whereYear('order_created_at', date('Y'));
         $order_query->whereBetween('order_created_at', [$start_date, $end_date]);
-        $order_query->orderBy('order_created_at', 'DESC');
+        $order_query->orderBy('date', 'DESC');
         $order_query->groupBy('date');
         
         $order_data = $order_query->get();

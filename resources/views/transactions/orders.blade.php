@@ -50,7 +50,7 @@
 								$get_all_merchants = Helpers::get_all_merchants();
 								@endphp
 								@if(!empty($get_all_merchants))
-								<select class="form-control" id="header_merchant_id" onchange="get_table_data()">
+								<select class="form-control" name="header_merchant_id" id="header_merchant_id" onchange="get_table_data()">
 								<option value="">Select Merchant</option>
 								@foreach($get_all_merchants as $merchants)
 								<option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
@@ -83,7 +83,7 @@
 				</form>
 			</div>
 			<br clear="all"><br clear="all">
-			<table class="table table-bordered table-sm" id="datatable1">
+			<table class="table table-bordered table-sm" id="datatable2">
 				<thead>
 					<tr class="text-center">
 						<th>Order Id</th>
@@ -95,7 +95,7 @@
 					</tr>
 				</thead>
 				<tbody id="table_container">
-				@foreach ($data['items'] as $key => $value)
+				@foreach ($data as $value)
 				<tr>
 					<td>{{ $value->id }}</td>
 					<td>{{ $value->amount }}</td>
@@ -117,7 +117,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script>
 $(document).ready( function () {
-    $('#datatable1').DataTable({
+    $('#datatable2').DataTable({
         "searching": false
     });
 } );
@@ -144,7 +144,7 @@ function get_orders_data(){
         success: function(data){
             $("#table_container").LoadingOverlay("hide", true);
             $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+            $('#datatable2').DataTable();
         }
     });
 }
@@ -152,10 +152,10 @@ function get_orders_data(){
 
 function search_order(){
 	var merchant_id = $("#header_merchant_id").val();
-    if(merchant_id==''){
+    /*if(merchant_id==''){
         alert('Please Select Merchant Id');
         return false;
-    }
+    }*/
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
@@ -173,5 +173,13 @@ function search_order(){
         }
     });
 }
+</script>
+
+<script>
+    $(function(){
+      $('#header_merchant_id').on('change', function () {
+		get_orders_data();
+      });
+    });
 </script>
 @endsection

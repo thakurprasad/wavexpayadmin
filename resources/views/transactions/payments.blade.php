@@ -96,33 +96,26 @@
 			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
+						<th>Id</th>
 						<th>Payment Id</th>
-						<th>Order Id</th>
 						<th>Amount</th>
 						<th>Email</th>
 						<th>Contact</th>
                         <th>Created At</th>
                         <th>Status</th>
-                        <th>Action</th>
 					</tr>
 				</thead>
 				<tbody id="table_container">
-				@foreach ($data['items'] as $key => $value)
+				@foreach ($data as  $value)
 				<tr>
 					<td>{{ $value->id }}</td>
-					<td>{{ $value->order_id }}</td>
-					<td>{{ $value->amount }} </td>
+					<td>{{ $value->payment_id }}</td>
+					<td>₹{{ $value->amount }} </td>
                     <td>{{ $value->email }} </td>
                     <td>{{ $value->contact }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
 
                     <td>{{ $value->status }} </td>
-                    <td class="text-center">
-						@can('setting-edit')
-						<a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-
-					</td>
 				</tr>
 				@endforeach
 				</tbody>
@@ -171,10 +164,10 @@ function get_payment_data(){
 
 function search_payment(){
 	var merchant_id = $("#header_merchant_id").val();
-    if(merchant_id==''){
+    /*if(merchant_id==''){
         alert('Please Select Merchant Id');
         return false;
-    }
+    }*/
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
@@ -192,5 +185,14 @@ function search_payment(){
         }
     });
 }
+</script>
+
+
+<script>
+    $(function(){
+      $('#header_merchant_id').on('change', function () {
+		get_payment_data();
+      });
+    });
 </script>
 @endsection

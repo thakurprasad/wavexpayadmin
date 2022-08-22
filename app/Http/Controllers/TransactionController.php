@@ -33,10 +33,11 @@ class TransactionController extends Controller
     public function payments(Request $request)
     {
         $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
-        $data = $api->payment->all();
+        //$data = $api->payment->all();
 
-        $data['items'] = []; 
-        //Pageheader set true for breadcrumbs
+        $data = DB::table('payments')->get();
+
+        //$data['items'] = []; 
         $pageConfigs = ['pageHeader' => true];
 
         return view('transactions.payments',compact('data'));
@@ -64,11 +65,10 @@ class TransactionController extends Controller
 
     public function orders(Request $request)
     {
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
+        /*$api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
         $data = $api->order->all();
-        //dd($data);
-        //Pageheader set true for breadcrumbs
-        $data['items'] = [];
+        $data['items'] = [];*/
+        $data = DB::table('orders')->get();
         $pageConfigs = ['pageHeader' => true];
         return view('transactions.orders',compact('data'));
     }
@@ -98,24 +98,25 @@ class TransactionController extends Controller
 
     function getpaymentdata(Request $request){
         $merchant_id = $request->merchant_id;
-        $get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
+        $html = '';
+        /*$get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
         $api_key = $get_merchant_key_details->api_key;
         $api_secret = $get_merchant_key_details->api_secret;
         $api = $api = new Api($api_key, $api_secret);
         $html = '';
         $options = array('count'=>10,'skip'=>0);
-        $data = $api->payment->all($options);
-        if(!empty($data['items'])){
-            foreach($data['items'] as $key => $value){
+        $data = $api->payment->all($options);*/
+        $data = DB::table('payments')->where('merchant_id',$merchant_id)->get();
+        if(!empty($data)){
+            foreach($data as $value){
                 $html.='<tr>
                     <td>'.$value->id.'</td>
-                    <td>'.$value->order_id.'</td>
-                    <td>'.$value->amount.'</td>
+                    <td>'.$value->payment_id.'</td>
+                    <td>₹'.$value->amount.'</td>
                     <td>'.$value->email.'</td>
                     <td>'.$value->contact.'</td>
                     <td class="text-center" data-sort="'.date('d-m-Y',strtotime($value->created_at)).'">'.date('d-m-Y',strtotime($value->created_at)).'</td>
                     <td>'.$value->status.'</td>
-                    <td class="text-center"><a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a></td>
                 </tr>';
             }
         }
@@ -125,6 +126,7 @@ class TransactionController extends Controller
 
     public function searchpayment(Request $request){
         //search parameter
+        $merchant_id = $request->header_merchant_id;
         $payment_id = $request->payment_id;
         $email = $request->email;
         $status = $request->status;
@@ -145,30 +147,37 @@ class TransactionController extends Controller
             $e_date = $end_date->getTimestamp();
         }
 
-        $hidden_merchant_id = $request->hidden_merchant_id;
+        /*$hidden_merchant_id = $request->hidden_merchant_id;
         $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
-        //get all payments data
-        //$api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
         $api_key = $get_merchant_key_details->api_key;
         $api_secret = $get_merchant_key_details->api_secret;
         $api = $api = new Api($api_key, $api_secret);
         
-        $data = $api->payment->all();
-        //print_r($data['items']);exit;
+        $data = $api->payment->all();*/
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $data = DB::table('payments')->where('merchant_id',$merchant_id)->get();
+        }
+        else 
+        {
+            $data = DB::table('payments')->get();
+        }
+        
         $html = '';
 
-        if(!empty($data['items'])){
-            foreach($data['items'] as $key => $value){
+        if(!empty($data)){
+            foreach($data as $value){
+                if($merchant_id==$value->merchant_id || $payment_id==$value->payment_id || $email==$value->email ||  $status==$value->status){
                     $html.='<tr>
                         <td>'.$value->id.'</td>
-                        <td>'.$value->order_id.'</td>
-                        <td>'.$value->amount.'</td>
+                        <td>'.$value->payment_id.'</td>
+                        <td>₹'.$value->amount.'</td>
                         <td>'.$value->email.'</td>
                         <td>'.$value->contact.'</td>
                         <td class="text-center" data-sort="'.date('d-m-Y',strtotime($value->created_at)).'">'.date('d-m-Y',strtotime($value->created_at)).'</td>
                         <td>'.$value->status.'</td>
-                        <td class="text-center"><a class="btn btn-primary btn-sm" href="#"  title="Edit"><i class="fas fa-edit"></i></a></td>
                     </tr>';
+                }
             }
         }
         return response()->json(array('html'=>$html));
@@ -177,23 +186,25 @@ class TransactionController extends Controller
 
     public function getorderdata(Request $request){
         $merchant_id = $request->merchant_id;
-        $get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
+        $html = '';
+        /*$get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
         $api_key = $get_merchant_key_details->api_key;
         $api_secret = $get_merchant_key_details->api_secret;
         $api = $api = new Api($api_key, $api_secret);
         $html = '';
         $options = array('count'=>10,'skip'=>0);
-        $all_orders = $api->order->all($options);
-        if(!empty($all_orders->items)){
-            foreach($all_orders->items as $order){
+        $all_orders = $api->order->all($options);*/
+        $all_orders = DB::table('orders')->where('merchant_id',$merchant_id)->get();
+        if(!empty($all_orders)){
+            foreach($all_orders as $order){
                 $html.='<tr>
-                    <td>'.$order['id'].'</th>
-                    <td>'.number_format($order['amount']/100,2).'</td>
-                    <td>'.$order['attempts'].'</td>
-                    <td>'.$order['receipt'].'</td>
-                    <td>'.date("jS F, Y", $order['created_at']).'</td>
+                    <td>'.$order->id.'</th>
+                    <td>'.$order->amount.'</td>
+                    <td>'.$order->attempts.'</td>
+                    <td>'.$order->receipt.'</td>
+                    <td>'.$order->created_at.'</td>
                     <td>
-                        <a class="btn btn-sm btn-default">'.$order['status'].'</a>
+                        <a class="btn btn-sm btn-default">'.$order->status.'</a>
                     </td>
                 </tr>';
             }
@@ -206,26 +217,34 @@ class TransactionController extends Controller
         $reciept = $request->reciept;
         $status = $request->status;
         $notes = $request->notes;
-        $html = '';
-        
-        $hidden_merchant_id = $request->hidden_merchant_id;
-        $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
+        $html = '';       
+        $merchant_id = $request->header_merchant_id;
+        /*$get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
         $api_key = $get_merchant_key_details->api_key;
         $api_secret = $get_merchant_key_details->api_secret;
         $api = $api = new Api($api_key, $api_secret);
-        $all_orders = $api->order->all();
+        $all_orders = $api->order->all();*/
 
-        if(!empty($all_orders->items)){
-            foreach($all_orders->items as $order){
-                if($order_id==$order['id'] || $reciept==$order['receipt'] ||  $status==$order['status']){
+        if(isset($merchant_id) && $merchant_id!='')
+        {
+            $data = DB::table('orders')->where('merchant_id',$merchant_id)->get();
+        }
+        else 
+        {
+            $data = DB::table('orders')->get();
+        }
+
+        if(!empty($data)){
+            foreach($data as $order){
+                if($merchant_id==$order->merchant_id || $order_id==$order->id || ($reciept==$order->receipt && $order->receipt!='') ||  $status==$order->status){
                     $html.='<tr>
-                        <td>'.$order['id'].'</th>
-                        <td>'.number_format($order['amount']/100,2).'</td>
-                        <td>'.$order['attempts'].'</td>
-                        <td>'.$order['receipt'].'</td>
-                        <td>'.date("jS F, Y", $order['created_at']).'</td>
+                        <td>'.$order->id.'</th>
+                        <td>'.$order->amount.'</td>
+                        <td>'.$order->attempts.'</td>
+                        <td>'.$order->receipt.'</td>
+                        <td>'.$order->created_at.'</td>
                         <td>
-                            <a class="btn btn-sm btn-default">'.$order['status'].'</a>
+                            <a class="btn btn-sm btn-default">'.$order->status.'</a>
                         </td>
                     </tr>';
                 }
