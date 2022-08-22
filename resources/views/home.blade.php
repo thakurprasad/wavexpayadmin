@@ -141,15 +141,14 @@
 
 
 
-          <div class="row" style="margin-top: 30px;">
+          <!--<div class="row" style="margin-top: 30px;">
             <div class="col-lg-6 col-6">
-              <!--<canvas id="myChart" style="width:100%;max-width:600px"></canvas>-->
               <div id="myPlot" style="width:100%;max-width:700px"></div>
             </div>
             <div class="col-lg-6 col-6">
               <div id="piechart"></div>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
     </div><!-- /.container-fluid -->
