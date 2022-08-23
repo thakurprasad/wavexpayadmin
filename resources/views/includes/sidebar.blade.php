@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
 
     <a href="{{ route('home')}}" class="brand-link">
-      <img src="{{ asset('/images/logo/materialize-logo.png')}}"
+      <img src="{{ asset('/images/logo/wave_x_pay.png')}}"
            alt="{{ config('app.name') }}"
            style="width:40%;border:0;align:center; margin:0 13px;">
            <span class="brand-text">WaveXPay</span>
