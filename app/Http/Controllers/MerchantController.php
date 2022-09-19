@@ -153,4 +153,27 @@ class MerchantController extends Controller
 
         return response()->json(['success'=>'Status changed successfully.']);
     }
+
+    public function changePartnerStatus(Request $request)
+    {
+        $data = Merchant::find($request->id);
+        $data->is_partner = $request->status;
+        $data->save();
+
+        return response()->json(['success'=>'Partner Status changed successfully.']);
+    }
+
+    public function merchantRewards(Request $request)
+    {
+        $data = Merchant::where('is_partner','yes')->orderBy('merchant_name','ASC')->get();
+        return view('merchants.partner',compact('data'));
+    }
+
+    public function changeRewardValue(Request $request)
+    {
+        $data = Merchant::find($request->id);
+        $data->reward_value = $request->reward;
+        $data->save();
+        return response()->json(['success'=>'Reward Value Updated successfully.']);
+    }
 }

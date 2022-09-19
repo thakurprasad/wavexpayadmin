@@ -3,12 +3,12 @@
 @section('content_header')
 <div class="row mb-2">
 	<div class="col-sm-6">
-	<h1>Merchant Management</h1>
+	<h1>Merchant Reward Management</h1>
 	</div>
 	<div class="col-sm-6">
 	<ol class="breadcrumb float-sm-right">
 		<li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-		<li class="breadcrumb-item active">Merchants</li>
+		<li class="breadcrumb-item active">Merchant Reward Point</li>
 	</ol>
 	</div>
 </div>
@@ -29,17 +29,6 @@
 	</div>
 	@endif
 	<div class="card">
-		<div class="card-header">
-			<div class="pull-left">
-
-	        </div>
-	        <div class="pull-right">
-			@can('setting-create')
-	            <a class="btn btn-success" href="{{ route('merchants.create') }}"> Create New Merchant</a>
-			@endcan
-	        </div>
-        </div>
-
 		<div class="card-body">
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
@@ -47,11 +36,8 @@
 						<th>Merchant Name</th>
 						<th>Contact Persone</th>
 						<th>Phone</th>
-						<th>Status</th>
 						<th>Payment Method</th>
-						<th>Updated At</th>
-						<th>Is Partner?</th>
-						<th>Action</th>
+                        <th>Reward Value</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -60,22 +46,8 @@
 					<td>{{ $value->merchant_name }}</td>
 					<td>{{ $value->contact_name }}</td>
 					<td>{{ $value->contact_phone }} </td>
-					<td class="text-center"> <input data-id="{{$value->id}}" class="toggle-class  btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ ($value->status=="Active")? "checked" : "" }} data-size="xs"> </td>
-					<td class="text-center">{{ ucwords($value->merchant_payment_method) }} </td>
-					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->updated_at)) }}">{{ date('d-m-Y',strtotime($value->updated_at)) }}</td>
-					<td class="text-center"> <input data-partner="{{$value->id}}" class="toggle-class partner-toggle btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="yes" data-off="no" {{ ($value->is_partner=="yes")? "checked" : "" }} data-size="xs"> </td>
-					<td class="text-center">
-						@can('setting-edit')
-						<a class="btn btn-primary btn-sm" href="{{ route('merchants.edit',$value->id) }}"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-						@can('setting-delete')
-						<form method="post" action="{{ route('merchants.destroy',$value->id) }}" style='display:inline' >
-        				@csrf
-                  		@method('DELETE')
-						<button type="submit"  onclick="return confirm('Are you sure to Delete the data?');" class="btn btn-danger btn-sm"  title="Delete" ><i class="fas fa-trash"></i></button>
-						</form>
-						@endcan
-					</td>
+					<td class="text-center">{{ ucwords($value->merchant_payment_method) }}</td>
+                    <td>₹{{ $value->reward_value }}<br clear="all"><div id="update_div{{$value->id}}" style="display:none;"><input type="text" id="reward{{$value->id}}"><button class="btn btn-sm btn-success" onclick="update_reward_value('{{$value->id}}')">Update</button></div><button class="btn btn-sm btn-info" id="set_reward_button{{$value->id}}" onclick="set_reward_value('{{$value->id}}')">Update Reward Value</button></td>
 				</tr>
 				@endforeach
 				</tbody>
@@ -88,7 +60,7 @@
 <link href="{{ asset('/css/bootstrap-toggle.min.css')}}" rel="stylesheet">
 @endsection
 @section('js')
-<script src="{{ asset("/js/bootstrap-toggle.min.js") }}"></script>
+<script src="{{ asset('/js/bootstrap-toggle.min.js') }}"></script>
 <script>
   $(function() {
     $('.toggle-class').change(function() {
@@ -124,5 +96,27 @@
 
 
   })
+
+
+  function set_reward_value(id)
+  {
+    $("#update_div"+id).show();
+    $("#set_reward_button"+id).hide();
+  }
+
+  function update_reward_value(id)
+  {
+    var reward = $("#reward"+id).val();
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "{{url('/merchants/changerewardvalue')}}",
+        data: {'reward': reward, 'id': id},
+        success: function(data){
+            alert(data.success);
+            window.location.reload();
+        }
+    });
+  }
 </script>
 @endsection

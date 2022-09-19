@@ -63,6 +63,7 @@
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('merchants.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchants')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-success"></i> <p>Merchants</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('merchant-keys.index') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-keys')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Keys</p> </a> </li>
+                    <li class="nav-item"><a href="{{ url('merchant-rewards') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-rewards')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Rewards</p> </a> </li>
                 </ul>
             </li>
             <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages','dashboardheader')) ? 'menu-open' : '' }}">
