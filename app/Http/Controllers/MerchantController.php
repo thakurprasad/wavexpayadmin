@@ -95,7 +95,9 @@ class MerchantController extends Controller
      */
     public function edit($id)
     {
-        $data = Merchant::find($id);
+        $data = Merchant::select('merchants.*','merchant_users.*')->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')->where('merchants.id',$id)->get();
+        $data = $data[0];
+        //print_r($data);exit;
         return view('merchants.edit',compact('data'));
     }
 
@@ -116,17 +118,67 @@ class MerchantController extends Controller
         ]);
 
         $input = $request->all();
+
+
+        $merchant_input = array();
         $input['status']= (isset($input['status']) && $input['status']=='on')?'Active':'Inactive';
-        if ($files = $request->file('merchant_logo')) {
-            // Define upload path
-            $destinationPath = public_path('/storage/logo/'); // upload path
-         // Upload Orginal Image
-            $uploadedImage = 'logo_'.date('YmdHis') . "." . $files->getClientOriginalExtension();
-            $files->move($destinationPath, $uploadedImage);
-            $input['merchant_logo'] = $uploadedImage;
+        if ($request->hasFile('merchant_logo')){
+            $file= $request->file('merchant_logo');
+            $filename= date('YmdHi').$file->getClientOriginalName();
+            $image_path = public_path().'/uploads/logo/';
+            $file->move($image_path, $filename);
+            $merchant_input['merchant_logo'] = $filename;
         }
-        $data = Merchant::find($id);
-        $data->update($input);
+        $merchant_input['merchant_name'] = $input['merchant_name'];
+        $merchant_input['contact_name'] = $input['contact_name'];
+        $merchant_input['contact_phone'] = $input['contact_phone'];
+        $merchant_input['merchant_payment_method'] = $input['merchant_payment_method'];
+        $merchant_input['status'] = $input['status'];
+        Merchant::where('id',$id)->update($merchant_input);
+
+
+        $merchant_users_input = array();
+        $merchant_users_input['beneficiary_name'] = $input['beneficiary_name'];
+        $merchant_users_input['ifsc_code'] = $input['ifsc_code'];
+        $merchant_users_input['account_number'] = $input['account_number'];
+        $merchant_users_input['business_type'] = $input['business_type'];
+        $merchant_users_input['business_category'] = $input['business_category'];
+        $merchant_users_input['business_description'] = $input['business_description'];
+        $merchant_users_input['pan_holder_name'] = $input['pan_holder_name'];
+        $merchant_users_input['billing_label'] = $input['billing_label'];
+        $merchant_users_input['billing_city'] = $input['billing_city'];
+        $merchant_users_input['billing_address'] = $input['billing_address'];
+        $merchant_users_input['billing_pincode'] = $input['billing_pincode'];
+        $merchant_users_input['billing_state'] = $input['billing_state'];
+        $merchant_users_input['address_proof'] = $input['address_proof'];
+        $merchant_users_input['aadhar_front_image_status'] = $input['aadhar_front_image_status'];
+        $merchant_users_input['aadhar_back_image_status'] = $input['aadhar_back_image_status'];
+        if(isset($input['aadhar_front_image_reject_reason']))
+        {
+            $merchant_users_input['aadhar_front_image_reject_reason'] = $input['aadhar_front_image_reject_reason'];
+        }
+        if(isset($input['aadhar_back_image_reject_reason']))
+        {
+            $merchant_users_input['aadhar_back_image_reject_reason'] = $input['aadhar_back_image_reject_reason'];
+        }
+
+
+        if ($request->hasFile('aadhar_front')){
+            $file2 = $request->file('aadhar_front');
+            $filename2 = date('YmdHi').$file2->getClientOriginalName();
+            $image_path2 = public_path().'/uploads/aadharimage/';
+            $file2->move($image_path2, $filename2);
+            $merchant_users_input['aadhar_front_image'] = $filename2;
+        }
+        if ($request->hasFile('aadhar_back')){
+            $file3 = $request->file('aadhar_back');
+            $filename3 = date('YmdHi').$file3->getClientOriginalName();
+            $image_path3 = public_path().'/uploads/aadharimage/';
+            $file3->move($image_path3, $filename3);
+            $merchant_users_input['aadhar_back_image'] = $filename3;
+        }
+        MerchantUser::where('merchant_id',$id)->update($merchant_users_input);
+
 
         return redirect()->route('merchants.index')
                         ->with('success','Updated successfully');
