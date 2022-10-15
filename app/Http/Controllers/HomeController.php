@@ -30,6 +30,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Pages"], ['name' => "Blank Page"],
         ];

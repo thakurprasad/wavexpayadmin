@@ -28,10 +28,11 @@
               $get_all_merchants = Helpers::get_all_merchants();
               @endphp
               <label for="first_name">Select Merchant</label>
+              <x-Merchants/>
               <select class="select2" id="merchant">
                 @if(!empty($get_all_merchants))
                 @foreach($get_all_merchants as $merchants)
-                  <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
+                  <option value="{{$merchants->id}}">{{$merchants->merchant_name .' | ' . $merchants->contact_phone }}</option>
                 @endforeach
                 @endif
               </select>
