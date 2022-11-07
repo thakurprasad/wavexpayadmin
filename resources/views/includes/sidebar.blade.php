@@ -66,7 +66,7 @@
                     <li class="nav-item"><a href="{{ url('merchant-rewards') }}" class="nav-link {{ in_array(Request::segment(1),array('merchant-rewards')) ? 'active' : '' }}"><i class="nav-icon far fa-circle text-warning"></i> <p>Merchant Rewards</p> </a> </li>
                 </ul>
             </li>
-            <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages','dashboardheader')) ? 'menu-open' : '' }}">
+            <li class="nav-item {{ in_array(Request::segment(1),array('settings','countries','states','payment-templates','email-templates','pages','dashboardheader', 'gateway')) ? 'menu-open' : '' }}">
                 <a href="#" class="nav-link {{ in_array(Request::segment(1),array('settings','countries','states')) ? 'active' : '' }}"> <i class="nav-icon fas fa-tachometer-alt" style="color: #39fc12;"></i> <p>Settings <i class="right fas fa-angle-left" style="color: #39fc12;"></i></p> </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item"><a href="{{ route('payment-templates.index') }}" class="nav-link {{ Request::segment(1) === 'payment-templates' ? 'active' : null }}"><i class="nav-icon far fa-circle text-success"></i><p>Payment Templates</p> </a> </li>
@@ -75,6 +75,8 @@
                     <li class="nav-item"><a href="{{ route('states.index') }}" class="nav-link {{ Request::segment(1) === 'states' ? 'active' : null }}"><i class="nav-icon far fa-circle text-primary"></i><p>States</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('pages.index') }}" class="nav-link {{ Request::segment(1) === 'pages' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Pages</p> </a> </li>
                     <li class="nav-item"><a href="{{ route('dashboardheader.index') }}" class="nav-link {{ Request::segment(1) === 'dashboardheader' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Dashboard Header</p> </a> </li>
+
+                    <li class="nav-item"><a href="{{ url('gateway/list') }}" class="nav-link {{ Request::segment(1) === 'gateway' ? 'active' : null }}"><i class="nav-icon far fa-circle text-danger"></i><p>Gateway</p> </a> </li>
                 </ul>
             </li>
 

@@ -24,6 +24,18 @@ Auth::routes();
 Route::get('/logout', 'LoginController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth']], function() {
+    /**
+     * 3rd party Getway settings
+     * */
+    Route::controller(WavexpayApiKeyController::class)->prefix('gateway')
+    ->group(function () {
+        Route::get('list', 'index');
+        Route::get('/create', 'createForm');
+        Route::post('/create', 'create');
+        Route::get('/edit/{id}', 'edit');
+        Route::post('/update/{id}', 'update');
+    });
+
 
     Route::get('/admin', function () {
         return redirect('/home');
