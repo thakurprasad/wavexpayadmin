@@ -20,12 +20,12 @@
 	<div class="card">
 		<div class="card-header">
 			<div class="pull-left">
-                <h5>Edit Gateway Key</h5>
+                <h5>Add New Gateway Key &  Secret</h5>
 	        </div>
         </div>
 
 		<div class="card-body">
-      	{!! Form::model($data, ['method' => 'POST', 'url' => 'gateway/update/'.$data->id ]) !!}  	
+      	{!! Form::model($get, ['method' => 'POST', 'url' => 'gateway/create' ]) !!}  	
         @csrf
         <div class="row">
         	<div class="col-md-3">
@@ -78,7 +78,7 @@
            
 
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Save</button>
                 <a class="btn btn-warning" href="{{ url('gateway/list') }}"> Back</a>
             </div>
 		</div>

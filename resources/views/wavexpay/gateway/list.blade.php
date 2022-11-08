@@ -34,9 +34,9 @@
 
 	        </div>
 	        <div class="pull-right">
-			@can('gateway-create')
-	            <a class="btn btn-success" href="{{ route('states.create') }}"> Create New gateway</a>
+			@can('gateway-create')			
 			@endcan
+	            <a class="btn btn-success" href="{{ url('gateway/create') }}"> Create New gateway</a>
 	        </div>
         </div>
 
@@ -44,10 +44,10 @@
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
 					<tr class="text-center">
-						<th>Mode</th>
-						<th>Gateway</th>
-						<th>API Key</th>
-						<th>API Secret</th>
+						<th>Gateway Details</th>
+						<th>Test API</th>
+						<th>Live API</th>
+						<th>Assign To Merchants</th>
 						<th>Created At</th>
 						<th>Updated At</th>
 						<th>Action</th>
@@ -56,10 +56,21 @@
 				<tbody>
 				@foreach ($data as $key => $row)
 				<tr>
-					<td>{{ $row->mode }}</td>
-					<td>{{ $row->gateway }}</td>
-					<td>{{ Str::mask($row->api_key, '*', 5); }} </td>
-					<td>{{ Str::mask($row->api_secret, '*', 5); }} </td>
+					<td>
+						<b>{{ $row->gateway  }}</b><br> 
+						{{ $row->key_description }}
+					</td>
+					
+					<td>
+						<b>Key:</b> {{ Str::mask($row->test_api_key, '*', 5); }} <br>
+						<b>Secret:</b> {{ Str::mask($row->test_api_secret, '*', 5); }} 
+					 </td>
+					
+					<td>
+						<b>Key:</b> {{ Str::mask($row->live_api_key, '*', 5); }}<br>
+						<b>Secret :</b> {{ Str::mask($row->live_api_secret, '*', 5); }} 
+					</td>
+					<td>{{ $row->merchants_count }}</td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($row->created_at)) }}">
 						{{ date('d-m-Y',strtotime($row->created_at)) }}
 					</td>

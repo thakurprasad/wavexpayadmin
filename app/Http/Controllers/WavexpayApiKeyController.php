@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 use App\Models\WavexpayApiKey;
 
 class WavexpayApiKeyController extends Controller
@@ -14,7 +16,7 @@ class WavexpayApiKeyController extends Controller
      */
     public function index()
     {
-        $data =  WavexpayApiKey::all();        
+       $data =  WavexpayApiKey::withCount(['merchants'])->get();        
         return view('wavexpay.gateway.list', ['data' => $data]);
     }
 
@@ -23,9 +25,51 @@ class WavexpayApiKeyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createForm()
     {
-        //
+        return view('wavexpay.gateway.add', ['get'=>[] ]);
+    }
+
+    public function create(Request $request)
+    {
+
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'gateway'        => 'required',  
+                'category_id'    => 'required',  
+                'key_description'=> 'required',  
+                'test_api_key'   => 'required',  
+                'test_api_secret'=> 'required',  
+                'live_api_key'   => 'required',  
+                'live_api_secret'=> 'required',  
+                
+            ]
+        );
+
+        if ($validator->fails())
+        {   
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
+       try{
+        $res = WavexpayApiKey::insert([
+            'category_id' => $request->category_id,
+            'key_description' => $request->key_description,
+            'gateway' => $request->gateway, 
+            'test_api_key' => $request->test_api_key,
+            'test_api_secret' => $request->test_api_secret,
+            'live_api_key' => $request->live_api_key,
+            'live_api_secret' => $request->live_api_secret,
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => \Auth::user()->id
+        ]);
+            
+            return redirect()->back()->with(['success'=> 'Gateway Updated Successfully']);        
+        }catch(Exception $ex){
+            return redirect()->back()->withErrors(['error'=>$ex->getMessage(), $get=>$request]);
+        }
+       
     }
 
     /**
@@ -71,12 +115,36 @@ class WavexpayApiKeyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'category_id'   => 'required',  
+                'gateway'        => 'required',  
+                'key_description'=> 'required',  
+                'test_api_key'   => 'required',  
+                'test_api_secret'=> 'required',  
+                'live_api_key'   => 'required',  
+                'live_api_secret'=> 'required',  
+                
+            ]
+        );
+
+        if ($validator->fails())
+        {   
+            return redirect()->back()->withErrors($validator->errors())->withInput();
+        }
+
        try{
         $res = WavexpayApiKey::where('id', $id)->update([
-            'mode' => $request->mode,
+            'category_id' => $request->category_id,
+            'key_description' => $request->key_description,
             'gateway' => $request->gateway, 
-            'api_key' => $request->api_key,
-            'api_secret' => $request->api_secret,
+            'test_api_key' => $request->test_api_key,
+            'test_api_secret' => $request->test_api_secret,
+            'live_api_key' => $request->live_api_key,
+            'live_api_secret' => $request->live_api_secret,
+            'updated_at' => date('Y-m-d H:i:s'),
+            'updated_by' => \Auth::user()->id
         ]);
             
             return redirect()->back()->with(['success'=> 'Gateway Updated Successfully']);
