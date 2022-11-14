@@ -39,7 +39,11 @@
         </div>
 
 		<div class="card-body">
-    	<form method="post" id="merchant_edit_form" action="{{ route('merchants.update', $data->id) }}" enctype="multipart/form-data">
+
+    {!! Form::model($data, ['enctype'=>'multipart/form-data',
+    'id'=>'merchant_edit_form' ,'method' => 'POST','route' => ['merchants.update', $data->id ]]) !!}
+<!-- 
+    	<form method="post" id="merchant_edit_form" action="{{ route('merchants.update', $data->id) }}" enctype="multipart/form-data"> -->
         @csrf
 		@method('PATCH')
 			<ul class="nav nav-tabs">
@@ -66,7 +70,8 @@
 								<label for="contact_phone">Contact Phone</label>
 								<input type="text" class="form-control" name="contact_phone" id="contact_phone" required value="{{ $data->contact_phone }}"/>
 							</div>
-							<div class="form-group">
+
+							<div class="form-group" style="display:none;">
 								<label for="merchant_logo">Merchant Payment Method</label><br/>
 								<select name="merchant_payment_method" class="form-control">
 									<option value="">Select</option>
@@ -74,7 +79,15 @@
 									<option value="cashfree" <?php if($data->merchant_payment_method=='cashfree') { echo 'selected'; } ?>>Cashfree</option>
 									<option value="paytm" <?php if($data->merchant_payment_method=='paytm') { echo 'selected'; } ?>>Paytm</option>
 								</select>
+
 							</div>
+        	
+		                <div class="form-group">
+							<label for="wavexpay_api_key_id">Assign To Wavexpay api key for this Merchant</label><br>
+							 {!! Form::select('wavexpay_api_key_id', App\Models\WavexpayApiKey::get_api_key_categories_arr() , null, array('class' => 'form-control')) !!}
+						</div>
+            
+							
 						</div>
 						<div class="col-md-6">
 							<div class="form-group">
@@ -240,7 +253,8 @@
 				<button type="button" onclick="form_submit()" class="btn btn-primary">Update</button>
 				<a class="btn btn-warning" href="{{ route('merchants.index') }}"> Back</a>
 			</div>
-    	</form>
+    	<!-- </form> -->
+    	{!! Form::close() !!}
 	</div>
 @endsection
 @section('css')

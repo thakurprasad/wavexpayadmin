@@ -26,5 +26,20 @@ class WavexpayApiKey extends Model
          return $this->hasMany(Merchant::class);
     }  
 
+    public function get_api_key_categories_arr(){
+        $rows = WavexpayApiKey::select(
+            'wavexpay_api_keys.id', 
+            'wavexpay_api_keys.test_api_key', 
+            'wavexpay_api_keys.live_api_key', 
+            'wavexpay_api_keys.key_description',
+            'api_key_categories.category_name'
+        )
+        ->join('api_key_categories', 'api_key_categories.id', '=', 'wavexpay_api_keys.category_id')->get();
+        $DATA[''] = '-- Select --';
+        foreach ($rows as $key => $row) {
+            $DATA[$row->id] = $row->test_api_key . ' -'. $row->category_name . ' - '.$row->key_description;
+        }
+        return $DATA;
+    }
 
 }

@@ -8,6 +8,8 @@ use DB;
 use App\Models\Merchant;
 use App\Models\MerchantKey;
 use App\Models\MerchantUser;
+use App\Models\WavexpayApiKey;
+
 class MerchantController extends Controller
 {
     /**
@@ -95,9 +97,10 @@ class MerchantController extends Controller
      */
     public function edit($id)
     {
-        $data = Merchant::select('merchants.*','merchant_users.*')->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')->where('merchants.id',$id)->get();
-        $data = $data[0];
+        $data = Merchant::select('merchants.*','merchant_users.*')->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')->where('merchants.id',$id)->first();
+        //$data = $data[0];
         //print_r($data);exit;
+       // return WavexpayApiKey::get_api_key_categories_arr();
         return view('merchants.edit',compact('data'));
     }
 
@@ -133,6 +136,7 @@ class MerchantController extends Controller
         $merchant_input['contact_name'] = $input['contact_name'];
         $merchant_input['contact_phone'] = $input['contact_phone'];
         $merchant_input['merchant_payment_method'] = $input['merchant_payment_method'];
+        $merchant_input['wavexpay_api_key_id'] = $input['wavexpay_api_key_id'];
         $merchant_input['status'] = $input['status'];
         Merchant::where('id',$id)->update($merchant_input);
 
