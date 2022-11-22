@@ -41,7 +41,7 @@
         </div>
 
 		<div class="card-body">
-		<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant">
+			<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant">
 				@csrf
 				<div class="row">
 					<x-merchant-key-component />
@@ -150,21 +150,7 @@
   })
 
 
-  function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-  }
+  
 
 
   function search_merchant(){

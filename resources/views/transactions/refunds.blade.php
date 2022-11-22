@@ -151,20 +151,6 @@ function search_refund(){
     });
 }
 
-function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-}
+
 </script>
 @endsection

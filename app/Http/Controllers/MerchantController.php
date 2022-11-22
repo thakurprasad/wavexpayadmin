@@ -235,15 +235,22 @@ class MerchantController extends Controller
     }
 
     public function getmerchantbykey(Request $request){
-        $key_id = $request->key_id;
-        $merchants = Merchant::where('wavexpay_api_key_id',$key_id)->get();
-        $html = '<option value="">Select Merchant</option>';
-        if(count($merchants)>0){
-            foreach($merchants as $merchant){
-                $html.='<option value="'.$merchant->id.'">'.$merchant->merchant_name.'</option>';
-            }
+        try{
+            $key_id = $request->key_id;
+            $merchants = Merchant::select('id','merchant_name')->where('wavexpay_api_key_id',$key_id)->get();
+            /*$html='<option value="">Select Merchant</option>
+            <option value="all">All</option>';
+            if(count($merchants)>0){
+                foreach($merchants as $merchant){
+                    $html.='<option value="'.$merchant->id.'">'.$merchant->merchant_name.'</option>';
+                }
+            }*/
+            return $this->sendResponse($merchants,'Merchant Recieved Successfully');
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
         }
-        return response()->json(['html'=>$html]);
+        
     }
 
     public function searchMerchant(Request $request){

@@ -15,3 +15,27 @@
         <option value="">Select Merchant</option>
     </select>
 </div>
+
+<script type="text/javascript">
+    function get_merchants(){
+	var key_id = $("#key_id").val();
+	$("#merchant_id").html('<option value="all">Select All</option>');
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "{{url('/merchants/getmerchantsbykey')}}",
+		data: {'key_id': key_id},
+		headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+		success: function(resp){
+			if(resp.success==true){
+				$(resp.data).each(function(index,value) {
+					$("#merchant_id").append('<option value="'+value.id+'">'+value.merchant_name+'</option>');
+				});
+
+			}
+		}
+	});
+  }
+</script>
