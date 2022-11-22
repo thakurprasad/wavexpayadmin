@@ -19,10 +19,10 @@ class MerchantController extends Controller
     */
     function __construct()
     {
-         $this->middleware('permission:merchant-list');
+         /*$this->middleware('permission:merchant-list');
          $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
          $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);*/
     }
 
     /**
@@ -32,8 +32,9 @@ class MerchantController extends Controller
      */
     public function index(Request $request)
     {
+        $all_api_keys = WavexpayApiKey::all();
         $data = Merchant::orderBy('merchant_name','ASC')->get();
-        return view('merchants.index',compact('data'));
+        return view('merchants.index',compact('data','all_api_keys'));
     }
 
     /**
@@ -231,5 +232,55 @@ class MerchantController extends Controller
         $data->reward_value = $request->reward;
         $data->save();
         return response()->json(['success'=>'Reward Value Updated successfully.']);
+    }
+
+    public function getmerchantbykey(Request $request){
+        $key_id = $request->key_id;
+        $merchants = Merchant::where('wavexpay_api_key_id',$key_id)->get();
+        $html = '<option value="">Select Merchant</option>';
+        if(count($merchants)>0){
+            foreach($merchants as $merchant){
+                $html.='<option value="'.$merchant->id.'">'.$merchant->merchant_name.'</option>';
+            }
+        }
+        return response()->json(['html'=>$html]);
+    }
+
+    public function searchMerchant(Request $request){
+        $merchant_id = $request->merchant_id;
+        $status = $request->status;
+        $contact_person = $request->contact_person;
+        $phone = $request->phone;
+
+
+        $html = '';
+        $query = Merchant::where('id',$merchant_id);
+        if($status!=''){
+            $query->where('status',$status);
+        }if($contact_person!=''){
+            $query->where('contact_name',$contact_person);
+        }if($phone!=''){
+            $query->where('contact_phone',$phone);
+        }
+        $result = $query->get();
+        
+
+        if(!empty($result)){
+            foreach($result as $value){
+                $html.='<tr>
+                <td>'.$value->merchant_name.'</td>
+                <td>'.$value->contact_name.'</td>
+                <td>'.$value->contact_phone.'</td>
+                <td class="text-center"> <input data-id="'.$value->id.'" class="toggle-class  btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive"'; if($value->status=="Active") { $html.='checked'; } else { $html.=''; } $html.='data-size="xs"> </td>
+                <td class="text-center">'.ucwords($value->merchant_payment_method).'</td>
+                <td class="text-center" data-sort="'.date('d-m-Y',strtotime($value->updated_at)).'">'.date('d-m-Y',strtotime($value->updated_at)).'</td>
+                <td class="text-center"> <input data-partner="'.$value->id.'" class="toggle-class partner-toggle btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="yes" data-off="no"'; if($value->is_partner=="yes") { $html.='checked'; } else { $html.=''; } $html.='data-size="xs"> </td>
+                <td class="text-center">
+                    <a class="btn btn-primary btn-sm" href="'.route('merchants.edit',$value->id).'"  title="Edit"><i class="fas fa-edit"></i></a>
+                </td>
+            </tr>';
+            }
+        }
+        return response()->json(array('html'=>$html));
     }
 }

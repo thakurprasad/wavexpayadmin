@@ -47,21 +47,7 @@
 				@csrf
 				<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
 				<div class="row">
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            @php 
-                            $get_all_merchants = Helpers::get_all_merchants();
-                            @endphp
-                            @if(!empty($get_all_merchants))
-                            <select class="form-control" id="header_merchant_id" onchange="get_table_data()">
-                            <option value="">Select Merchant</option>
-                            @foreach($get_all_merchants as $merchants)
-                            <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
-                            @endforeach
-                            </select>
-                            @endif
-                        </div>
-                    </div>
+					<x-merchant-key-component />
 					<div class="col-md-3">
 						<input placeholder="Payment ID" name="payment_id" id="payment_id" type="text" class="form-control">
 					</div>
@@ -78,10 +64,6 @@
 						</select>
 					</div>
 					<div class="col-md-3">
-						<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
-					</div>
-				
-					<div class="col-md-3">
 						Start Date  <input id="start_date" name="start_date" type="date">
 					</div>
 					<div class="col-md-3">
@@ -96,7 +78,6 @@
 			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
-						<th>Id</th>
 						<th>Payment Id</th>
 						<th>Amount</th>
 						<th>Email</th>
@@ -108,7 +89,6 @@
 				<tbody id="table_container">
 				@foreach ($data as  $value)
 				<tr>
-					<td>{{ $value->id }}</td>
 					<td>{{ $value->payment_id }}</td>
 					<td>₹{{ $value->amount }} </td>
                     <td>{{ $value->email }} </td>
@@ -184,6 +164,23 @@ function search_payment(){
             $('#datatable1').DataTable();
         }
     });
+}
+
+
+function get_merchants(){
+	var key_id = $("#key_id").val();
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "{{url('/merchants/getmerchantsbykey')}}",
+		data: {'key_id': key_id},
+		headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+		success: function(data){
+			$("#merchant_id").html(data.html);
+		}
+	});
 }
 </script>
 
