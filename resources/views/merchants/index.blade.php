@@ -41,11 +41,37 @@
         </div>
 
 		<div class="card-body">
+		<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant">
+				@csrf
+				<div class="row">
+					<x-merchant-key-component />
+					<div class="col-md-3">
+						<input placeholder="Contact Person" id="contact_person" name="contact_person" type="text" class="form-control">
+					</div>
+					<div class="col-md-3">
+						<select class="form-control" name="status">
+							<option value="">Select Status</option>
+							<option value="authorized">Authorized</option>
+							<option value="captured">Captured</option>
+							<option value="refunded">Refunded</option>
+							<option value="failed">Failed</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<input placeholder="Phone" id="phone" name="phone" type="text" class="form-control">
+					</div>
+				
+					<div class="col-md-3"> 
+						<button class="btn btn-sm btn-info" onclick="search_merchant()" type="button" name="action">Submit</button>
+					</div>
+				</div>
+			</form>
+			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
 					<tr class="text-center">
 						<th>Merchant Name</th>
-						<th>Contact Persone</th>
+						<th>Contact Person</th>
 						<th>Phone</th>
 						<th>Status</th>
 						<th>Payment Method</th>
@@ -54,7 +80,7 @@
 						<th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="table_container">
 				@foreach ($data as $key => $value)
 				<tr>
 					<td>{{ $value->merchant_name }}</td>
@@ -121,8 +147,41 @@
         });
 		
     });
-
-
   })
+
+
+  function get_merchants(){
+	var key_id = $("#key_id").val();
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "{{url('/merchants/getmerchantsbykey')}}",
+		data: {'key_id': key_id},
+		headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+		success: function(data){
+			$("#merchant_id").html(data.html);
+		}
+	});
+  }
+
+
+  function search_merchant(){
+	$.ajax({
+        url: '{{url("searchmerchant")}}',
+        data: $("#search_form").serialize(),
+        type: "POST",
+        headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+        success: function(data){
+            $("#table_container").html(data.html);
+            $('#datatable').DataTable();
+			$('.toggle-class').bootstrapToggle();
+			$('.partner-toggle').bootstrapToggle();
+        }
+    });
+  }
 </script>
 @endsection

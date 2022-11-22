@@ -35,6 +35,7 @@
                     @csrf
                     <input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
                     <div class="row">
+                        <x-merchant-key-component />
                         <div class="col-md-3">
                             <input placeholder="Order Id" name="dispute_id" id="dispute_id" type="text" class="form-control">
                         </div>
@@ -165,6 +166,23 @@ function search_dispute(){
             $('#datatable1').DataTable();
         }
     });
+}
+
+
+function get_merchants(){
+	var key_id = $("#key_id").val();
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "{{url('/merchants/getmerchantsbykey')}}",
+		data: {'key_id': key_id},
+		headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+		success: function(data){
+			$("#merchant_id").html(data.html);
+		}
+	});
 }
 </script>
 @endsection

@@ -77,19 +77,15 @@ Route::group(['middleware' => ['auth']], function() {
 
     //Merchants
     Route::get('merchants/changestatus', 'MerchantController@changeStatus');
-
     Route::get('merchants/changespartnertatus', 'MerchantController@changePartnerStatus');
-
     Route::get('merchant-rewards', 'MerchantController@merchantRewards');
-
     Route::get('merchants/changerewardvalue', 'MerchantController@changeRewardValue');
-
-
     Route::resource('merchants','MerchantController');
-
     Route::resource('merchant-keys','MerchantKeyController');
-
     Route::resource('dashboardheader','DashboardHeaderController');
+    Route::post('merchants/getmerchantsbykey','MerchantController@getmerchantbykey');
+    Route::post('searchmerchant','MerchantController@searchMerchant')->name('searchmerchant');
+
 
     //Transactions
     Route::get('payments','TransactionController@payments')->name('payments.index');

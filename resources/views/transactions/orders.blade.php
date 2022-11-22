@@ -44,21 +44,7 @@
 					@csrf
 					<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
 					<div class="row">
-						<div class="col-lg-3">
-							<div class="form-group">
-								@php 
-								$get_all_merchants = Helpers::get_all_merchants();
-								@endphp
-								@if(!empty($get_all_merchants))
-								<select class="form-control" name="header_merchant_id" id="header_merchant_id" onchange="get_table_data()">
-								<option value="">Select Merchant</option>
-								@foreach($get_all_merchants as $merchants)
-								<option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
-								@endforeach
-								</select>
-								@endif
-							</div>
-						</div>
+						<x-merchant-key-component />
 						<div class="col-md-3">
 							<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
 						</div>
@@ -172,6 +158,22 @@ function search_order(){
             $('#datatable1').DataTable();
         }
     });
+}
+
+function get_merchants(){
+	var key_id = $("#key_id").val();
+	$.ajax({
+		type: "POST",
+		dataType: "json",
+		url: "{{url('/merchants/getmerchantsbykey')}}",
+		data: {'key_id': key_id},
+		headers: {
+            'X-CSRF-Token': '{{ csrf_token() }}',
+        },
+		success: function(data){
+			$("#merchant_id").html(data.html);
+		}
+	});
 }
 </script>
 

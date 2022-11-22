@@ -8,6 +8,7 @@ use DB;
 use App\Models\Merchant;
 use App\Models\MerchantKey;
 use App\Models\MerchantUser;
+use App\Models\Payment;
 use Razorpay\Api\Api;
 use DateTime;
 class TransactionController extends Controller
@@ -19,10 +20,7 @@ class TransactionController extends Controller
     */
     function __construct()
     {
-         $this->middleware('permission:merchant-list');
-         $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
-         $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);
+        
     }
 
     /**
@@ -99,13 +97,6 @@ class TransactionController extends Controller
     function getpaymentdata(Request $request){
         $merchant_id = $request->merchant_id;
         $html = '';
-        /*$get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
-        $api_key = $get_merchant_key_details->api_key;
-        $api_secret = $get_merchant_key_details->api_secret;
-        $api = $api = new Api($api_key, $api_secret);
-        $html = '';
-        $options = array('count'=>10,'skip'=>0);
-        $data = $api->payment->all($options);*/
         $data = DB::table('payments')->where('merchant_id',$merchant_id)->get();
         if(!empty($data)){
             foreach($data as $value){
@@ -125,59 +116,40 @@ class TransactionController extends Controller
 
 
     public function searchpayment(Request $request){
-        //search parameter
-        $merchant_id = $request->header_merchant_id;
+        $merchant_id = $request->merchant_id;
         $payment_id = $request->payment_id;
         $email = $request->email;
         $status = $request->status;
         $notes = $request->notes;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        $start_date = DateTime::createFromFormat('d/m/Y', $start_date);
-        if ($start_date === false) {
-            $s_date='';
-        } else {
-            $s_date = $start_date->getTimestamp();
-        }
+        $daterangepicker = $request->daterangepicker;
 
-        $end_date = DateTime::createFromFormat('d/m/Y', $end_date);
-        if ($end_date === false) {
-            $e_date='';
-        } else {
-            $e_date = $end_date->getTimestamp();
-        }
-
-        /*$hidden_merchant_id = $request->hidden_merchant_id;
-        $get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
-        $api_key = $get_merchant_key_details->api_key;
-        $api_secret = $get_merchant_key_details->api_secret;
-        $api = $api = new Api($api_key, $api_secret);
-        
-        $data = $api->payment->all();*/
-        if(isset($merchant_id) && $merchant_id!='')
-        {
-            $data = DB::table('payments')->where('merchant_id',$merchant_id)->get();
-        }
-        else 
-        {
-            $data = DB::table('payments')->get();
-        }
-        
         $html = '';
-
-        if(!empty($data)){
-            foreach($data as $value){
-                if($merchant_id==$value->merchant_id || $payment_id==$value->payment_id || $email==$value->email ||  $status==$value->status){
-                    $html.='<tr>
-                        <td>'.$value->id.'</td>
-                        <td>'.$value->payment_id.'</td>
-                        <td>₹'.$value->amount.'</td>
-                        <td>'.$value->email.'</td>
-                        <td>'.$value->contact.'</td>
-                        <td class="text-center" data-sort="'.date('d-m-Y',strtotime($value->created_at)).'">'.date('d-m-Y',strtotime($value->created_at)).'</td>
-                        <td>'.$value->status.'</td>
-                    </tr>';
-                }
+        $query = DB::table('payments');
+        if($payment_id!=''){
+            $query->where('payment_id',$payment_id);
+        }if($email!=''){
+            $query->where('email',$email);
+        }if($status!=''){
+            $query->where('status',$status);
+        }if($daterangepicker!='' && $start_date!='' && $end_date!=''){
+            $query->whereBetween('created_at', [$start_date." 00:00:00", $end_date." 23:59:59"]);
+        }
+        $result = $query->get();
+        
+        if(!empty($result)){
+            foreach($result as $payment){
+                $html.='<tr>
+                    <th scope="row">'.$payment->payment_id.'</th>
+                    <td>'.$payment->amount.'</td>
+                    <td>'.$payment->email.'</td>
+                    <td>'.$payment->contact.'</td>
+                    <td>'.date('Y-m-d',strtotime($payment->created_at)).'</td>
+                    <td>
+                        <a class="waves-effect waves-light btn-small">'.$payment->status.'</a>
+                    </td>
+                </tr>';
             }
         }
         return response()->json(array('html'=>$html));
@@ -187,13 +159,6 @@ class TransactionController extends Controller
     public function getorderdata(Request $request){
         $merchant_id = $request->merchant_id;
         $html = '';
-        /*$get_merchant_key_details = MerchantKey::where('id',$merchant_id)->first();
-        $api_key = $get_merchant_key_details->api_key;
-        $api_secret = $get_merchant_key_details->api_secret;
-        $api = $api = new Api($api_key, $api_secret);
-        $html = '';
-        $options = array('count'=>10,'skip'=>0);
-        $all_orders = $api->order->all($options);*/
         $all_orders = DB::table('orders')->where('merchant_id',$merchant_id)->get();
         if(!empty($all_orders)){
             foreach($all_orders as $order){
@@ -219,11 +184,6 @@ class TransactionController extends Controller
         $notes = $request->notes;
         $html = '';       
         $merchant_id = $request->header_merchant_id;
-        /*$get_merchant_key_details = MerchantKey::where('id',$hidden_merchant_id)->first();
-        $api_key = $get_merchant_key_details->api_key;
-        $api_secret = $get_merchant_key_details->api_secret;
-        $api = $api = new Api($api_key, $api_secret);
-        $all_orders = $api->order->all();*/
 
         if(isset($merchant_id) && $merchant_id!='')
         {
