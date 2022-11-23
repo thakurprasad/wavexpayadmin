@@ -9,6 +9,7 @@ use App\Models\Merchant;
 use App\Models\MerchantKey;
 use App\Models\MerchantUser;
 use App\Models\Payment;
+use App\Models\Order;
 use Razorpay\Api\Api;
 use DateTime;
 use Helpers;
@@ -92,9 +93,31 @@ class TransactionController extends Controller
 
     public function orders(Request $request)
     {
-        $data = DB::table('orders')->get();
-        $pageConfigs = ['pageHeader' => true];
-        return view('transactions.orders',compact('data'));
+        try{
+            $query = Order::query();
+            if(isset($request->merchant_id) && $request->merchant_id!=''){
+                $query->where('merchant_id',$request->merchant_id);
+            }if(isset($request->order_id) && $request->order_id!=''){
+                $query->where('order_id',$request->order_id);
+            }if(isset($request->reciept) && $request->reciept!=''){
+                $query->where('receipt',$request->reciept);
+            }if(isset($request->status) && $request->status!=''){
+                $query->where('status',$request->status);
+            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
+                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
+            }if(isset($request->amount_range) && $request->amount_range!=''){
+                $amount = explode('-',$request->amount_range);
+                $min = $amount[0];
+                $max = $amount[1];
+                $query->where('amount', '>=', $min)->where('amount', '<=', $max);
+            }
+            $result = $query->get();
+            $data = $result;
+            return view('transactions.orders',compact('data'));
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
+        }        
     }
 
     public function disputes(Request $request)

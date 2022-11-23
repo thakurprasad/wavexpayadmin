@@ -39,7 +39,7 @@
         </div>
 
 		<div class="card-body">
-			<x-filter-component form_id="search_form" action="searchorder" method="POST" status="orders"> 
+			<x-filter-component form_id="search_form" action="orders" method="POST" status="orders"> 
 				@section('advance_filters')
 				<div class="col-sm-3">
 					<div class="form-group">
@@ -51,6 +51,14 @@
 					<div class="form-group">
 						<label for="first_name">Reciept</label>
 						<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Amount Range</label>
+						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
+						<p style="color:red;" id="onkeyup_msg"></p>
 					</div>
 				</div>
 				@endsection
@@ -145,7 +153,22 @@ function search_data(){
     });
 }
 
-
+function check_range(){
+	var amount_range = $("#amount_range").val();
+	if(amount_range.indexOf('-') == -1){
+		$("#onkeyup_msg").html('enter - between two range');
+		return false;
+	}else{
+		amount = amount_range.split("-");
+		var min_amount = amount[0];
+		var max_amount = amount[1];
+		if(Number(min_amount)>Number(max_amount)){
+			$("#onkeyup_msg").html('Min Amount Cannot Be Greater Than Max Amount');
+		}else{
+			$("#onkeyup_msg").html('');
+		}
+	}
+}
 </script>
 
 <script>

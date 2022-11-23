@@ -101,8 +101,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('searchrefund','TransactionController@searchrefund')->name('searchrefund');
     Route::get('batch-refunds','TransactionController@batchrefunds')->name('batch-refunds.index');
     Route::get('orders','TransactionController@orders')->name('orders.index');
+    Route::post('orders','TransactionController@orders')->name('searchorder');
     Route::post('getorderdata','TransactionController@getorderdata')->name('getorderdata');
-    Route::post('searchorder','TransactionController@searchorder')->name('searchorder');
+    //Route::post('searchorder','TransactionController@searchorder')->name('searchorder');
     Route::get('disputes','TransactionController@disputes')->name('disputes.index');
     Route::post('getdisputedata','TransactionController@getdisputedata')->name('getdisputedata');
     Route::post('searchdispute','TransactionController@searchdispute')->name('searchdispute');
