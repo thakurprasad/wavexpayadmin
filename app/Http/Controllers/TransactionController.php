@@ -33,7 +33,7 @@ class TransactionController extends Controller
        /* $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');*/
         //$data = $api->payment->all();
 
-       return $data = Payment::all();
+        $data = Payment::with(['payment_details'])->get();
 
         //$data['items'] = []; 
         $pageConfigs = ['pageHeader' => true];

@@ -80,6 +80,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('pages','PageController');
 
     //Merchants
+    Route::get('merchants/profile/{merchant_id}', 'MerchantController@profile');
+
     Route::get('merchants/changestatus', 'MerchantController@changeStatus');
     Route::get('merchants/changespartnertatus', 'MerchantController@changePartnerStatus');
     Route::get('merchant-rewards', 'MerchantController@merchantRewards');

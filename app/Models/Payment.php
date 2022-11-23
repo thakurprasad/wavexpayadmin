@@ -9,7 +9,10 @@ class Payment extends Model
 {
     use HasFactory;
 
-   
+    public function payment_details()
+    {
+        return $this->hasOne(PaymentLink::class, 'payment_id', 'payment_id');
+    }
 
 
 }
