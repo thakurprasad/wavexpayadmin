@@ -43,37 +43,28 @@
 
 
 		<div class="card-body">
-			<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchpayments">
-				@csrf
-				<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-				<div class="row">
-					<x-merchant-key-component />
-					<div class="col-md-3">
-						<input placeholder="Payment ID" name="payment_id" id="payment_id" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<input placeholder="Email" id="email" name="email" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<select class="form-control" name="status">
-							<option value="">Select Status</option>
-							<option value="authorized">Authorized</option>
-							<option value="captured">Captured</option>
-							<option value="refunded">Refunded</option>
-							<option value="failed">Failed</option>
-						</select>
-					</div>
-					<div class="col-md-3">
-						Start Date  <input id="start_date" name="start_date" type="date">
-					</div>
-					<div class="col-md-3">
-						End Date  <input id="end_date" name="end_date" type="date">
-					</div>
-					<div class="col-md-3"> 
-						<button class="btn btn-sm btn-info" onclick="search_payment()" type="button" name="action">Submit</button>
-					</div>
-				</div>
-			</form>
+			<x-filter-component form_id="search_form" action="searchpayments" method="POST" status="payments"> 
+                @section('advance_filters')
+                <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="payment_id">Payment Id</label>
+                            <input type="text" name="payment_id" class="form-control" id="payment_id" placeholder="Payment Id">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                    </div>
+					<div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="email">Contact</label>
+                            <input type="text" name="contact" type="text" class="form-control" id="contact" placeholder="Contact">
+                        </div>
+                    </div>
+                @endsection
+            </x-filter-component>
 			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
@@ -142,54 +133,28 @@ function get_payment_data(){
 }
 
 
-function search_payment(){
-	var merchant_id = $("#header_merchant_id").val();
-    /*if(merchant_id==''){
-        alert('Please Select Merchant Id');
-        return false;
-    }*/
+function search_data(){
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
+	var start_date = $('#daterangepicker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end_date = $('#daterangepicker').data('daterangepicker').endDate.format('YYYY-MM-DD');
     $.ajax({
         url: '{{url("searchpayment")}}',
-        data: $("#search_form").serialize(),
+        data: $("#search_form").serialize()+'&start_date='+start_date+'&end_date='+end_date,
         type: "POST",
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+			if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
+            //$('#datatable1').DataTable();
         }
     });
 }
 
-
-function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-}
-</script>
-
-
-<script>
-    $(function(){
-      $('#header_merchant_id').on('change', function () {
-		get_payment_data();
-      });
-    });
 </script>
 @endsection

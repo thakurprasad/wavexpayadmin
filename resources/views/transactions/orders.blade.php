@@ -39,35 +39,22 @@
         </div>
 
 		<div class="card-body">
-			<div class="row">
-				<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchorder">
-					@csrf
-					<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-					<div class="row">
-						<x-merchant-key-component />
-						<div class="col-md-3">
-							<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">
-							<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">
-							<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">
-							<select class="form-control" name="status">
-								<option value="" disabled selected>Choose your option</option>
-								<option value="created">Created</option>
-								<option value="accepted">Accepted</option>
-								<option value="paid">Paid</option>
-							</select>
-						</div>
-						<div class="col-md-3">                          
-							<button class="btn btn-sm btn-info" type="button" onclick="search_order()" name="action">Submit</button>
-						</div>
+			<x-filter-component form_id="search_form" action="searchorder" method="POST" status="orders"> 
+				@section('advance_filters')
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="first_name">Order Id</label>
+						<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
 					</div>
-				</form>
-			</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="first_name">Reciept</label>
+						<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
+					</div>
+				</div>
+				@endsection
+			</x-filter-component>
 			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable2">
 				<thead>
@@ -136,45 +123,29 @@ function get_orders_data(){
 }
 
 
-function search_order(){
-	var merchant_id = $("#header_merchant_id").val();
-    /*if(merchant_id==''){
-        alert('Please Select Merchant Id');
-        return false;
-    }*/
-    $("#table_container").LoadingOverlay("show", {
+function search_data(){
+	$("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
+	var start_date = $('#daterangepicker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end_date = $('#daterangepicker').data('daterangepicker').endDate.format('YYYY-MM-DD');
     $.ajax({
         url: '{{url("searchorder")}}',
-        data: $("#search_form").serialize(),
+        data: $("#search_form").serialize()+'&start_date='+start_date+'&end_date='+end_date,
         type: "POST",
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+            if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
         }
     });
 }
 
-function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-}
+
 </script>
 
 <script>

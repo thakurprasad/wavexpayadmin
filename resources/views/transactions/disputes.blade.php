@@ -30,52 +30,22 @@
 	@endif
 	<div class="card">
 		<div class="card-body">
-            <div class="row">
-                <form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchorder">
-                    @csrf
-                    <input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-                    <div class="row">
-                        <x-merchant-key-component />
-                        <div class="col-md-3">
-                            <input placeholder="Order Id" name="dispute_id" id="dispute_id" type="text" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <input placeholder="Reciept" name="payment_id" id="payment_id" type="text" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <input id="start_date" name="start_date" type="date" class="form-control">
-                        </div>
-                        <div class="col-md-3">
-                            <input id="end_date" name="end_date" type="text" class="form-control">
-                        </div>
-                        <div class="col-md-3" style="margin-top:18px;">
-                            <select class="form-control" name="status">
-                                <option value="">Select Status</option>
-                                <option value="open">Open</option>
-                                <option value="under_review">Under Review</option>
-                                <option value="lost">Lost</option>
-                                <option value="won">Won</option>
-                                <option value="closed">Closed</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3" style="margin-top:18px;">
-                            <select class="form-control" name="phase">
-                                <option value="">Select Phase</option>
-                                <option value="retrieval">Retrieval</option>
-                                <option value="chargeback">Chargeback</option>
-                                <option value="pre_arbitration">Pre Arbitration</option>
-                                <option value="arbitration">Arbitration</option>
-                                <option value="fraud">Fraud</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3" style="margin-top:18px;">                          
-                            <button class="btn btn-sm btn-info" type="button" onclick="search_dispute()" name="action">Submit</button>
-                        </div>
+            <x-filter-component form_id="search_form" action="searchdispute" method="POST" status="disputes"> 
+                @section('advance_filters')
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Dispute Id</label>
+                        <input placeholder="Dispute Id" name="dispute_id" id="dispute_id" type="text" class="form-control">
+                    </div>  
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Payment Id</label>
+                        <input placeholder="Payment Id" name="payment_id" id="payment_id" type="text" class="form-control">
                     </div>
-                </form>
-            </div>
-			<br clear="all">
-			<br clear="all">
+                </div>
+                @endsection
+            </x-filter-component>
 			<table class="table table-bordered table-sm" id="datatable1">
                 <thead>
                     <tr>
@@ -128,61 +98,29 @@ function get_table_data(){
 }
 
 
-function get_dispute_data(){
-	$("#table_container").LoadingOverlay("show", {
-        background  : "rgba(165, 190, 100, 0.5)"
-    });
-	var merchant_id = $("#hidden_merchant_id").val();
-	$.ajax({
-        url: '{{url("getdisputedata")}}',
-        data: {'merchant_id': merchant_id},
-        type: "POST",
-        headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-        success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
-        }
-    });
-}
-
-
-function search_dispute(){
+function search_data(){
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
+    var start_date = $('#daterangepicker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end_date = $('#daterangepicker').data('daterangepicker').endDate.format('YYYY-MM-DD');
     $.ajax({
         url: '{{url("searchdispute")}}',
-        data: $("#search_form").serialize(),
+        data: $("#search_form").serialize()+'&start_date='+start_date+'&end_date='+end_date,
         type: "POST",
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+            if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
         }
     });
 }
 
 
-function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-}
+
 </script>
 @endsection

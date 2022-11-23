@@ -30,38 +30,16 @@
 	@endif
 	<div class="card">
 		<div class="card-body">
-			<div class="row">
-				<form class="col s12" id="search_form" method="POST" action="{{ url('/') }}/transactions/searchrefunds">
-					@csrf
-					<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-					<div class="row">
-					<x-merchant-key-component />
-					<div class="col-md-3">
-							<input placeholder="Refund ID" name="refund_id" id="refund_id" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">
-							<input placeholder="Payment ID" name="payment_id" id="payment_id" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">
-							<select class="form-control" name="status">
-							<option value="">Choose your option</option>
-							<option value="processed">Processed</option>
-							<option value="processing">Processing</option>
-							<option value="failed">Failed</option>
-							</select>
-						</div>
-						<div class="col-md-3">
-							<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
-						</div>
-						<div class="col-md-3">                          
-							<button class="btn btn-sm btn-info" onclick="search_refund()" type="button" name="action">Submit</button>
-						</div>
-
-					</div>
-				</form>
-			</div>
-			<br clear="all">
-			<br clear="all">
+			<x-filter-component form_id="search_form" action="searchrefund" method="POST" status="refunds"> 
+                @section('advance_filters')
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Refund Id</label>
+                        <input placeholder="Refund Id" name="refund_id" id="refund_id" type="text" class="form-control">
+                    </div>
+                </div>
+                @endsection
+            </x-filter-component>
 			<table class="table table-bordered table-sm" id="datatable1">
 				<thead>
 					<tr class="text-center">
@@ -100,71 +78,29 @@ $(document).ready( function () {
 } );
 
 
-function get_table_data(){
-	var header_merchant_id = $("#header_merchant_id").val();
-	$("#hidden_merchant_id").val(header_merchant_id);
-	//setTimeout(get_refunds_data, 1000);
-}
 
-function get_refunds_data(){
-	$("#table_container").LoadingOverlay("show", {
-        background  : "rgba(165, 190, 100, 0.5)"
-    });
-	var merchant_id = $("#hidden_merchant_id").val();
-	$.ajax({
-        url: '{{url("getrefunddata")}}',
-        data: {'merchant_id': merchant_id},
-        type: "POST",
-        headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-        success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
-        }
-    });
-}
-
-
-function search_refund(){
-	var merchant_id = $("#header_merchant_id").val();
-    if(merchant_id==''){
-        alert('Please Select Merchant Id');
-        return false;
-    }
+function search_data(){
+	var start_date = $('#daterangepicker').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end_date = $('#daterangepicker').data('daterangepicker').endDate.format('YYYY-MM-DD');
     $("#table_container").LoadingOverlay("show", {
         background  : "rgba(165, 190, 100, 0.5)"
     });
     $.ajax({
         url: '{{url("searchrefund")}}',
-        data: $("#search_form").serialize(),
+        data: $("#search_form").serialize()+'&start_date='+start_date+'&end_date='+end_date,
         type: "POST",
         headers: {
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+            if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
         }
     });
 }
 
-function get_merchants(){
-	var key_id = $("#key_id").val();
-	$.ajax({
-		type: "POST",
-		dataType: "json",
-		url: "{{url('/merchants/getmerchantsbykey')}}",
-		data: {'key_id': key_id},
-		headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-		success: function(data){
-			$("#merchant_id").html(data.html);
-		}
-	});
-}
+
 </script>
 @endsection
