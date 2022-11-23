@@ -95,8 +95,9 @@ Route::group(['middleware' => ['auth']], function() {
 
     //Transactions
     Route::get('payments','TransactionController@payments')->name('payments.index');
+    Route::post('payments','TransactionController@payments')->name('searchpayment');
     Route::post('getpaymentdata','TransactionController@getpaymentdata')->name('getpaymentdata');
-    Route::post('searchpayment','TransactionController@searchpayment')->name('searchpayment');
+    //Route::post('searchpayment','TransactionController@searchpayment')->name('searchpayment');
     Route::get('refunds','TransactionController@refunds')->name('refunds.index');
     Route::post('getrefunddata','TransactionController@getrefunddata')->name('getrefunddata');
     Route::post('searchrefund','TransactionController@searchrefund')->name('searchrefund');

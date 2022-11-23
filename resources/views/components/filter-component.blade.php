@@ -8,6 +8,8 @@
                     </div>
                 </div>
                 <x-merchant-key-component />
+
+                <x-dropdown-component status="{{$status}}" />
             </div>
           
             <div class="col-md-12"> 
@@ -24,7 +26,7 @@
                 <div class="col-md-8"> </div>
                 <div class="col-md-2 col-sm-2">
                     <div class="form-group pad-30">
-                        <button type="button" class="btn btn-primary btn-block"  onclick="search_data()" id="filter_data_btn">Serach</button>
+                        <button type="submit" class="btn btn-primary btn-block" id="filter_data_btn">Serach</button>
                     </div>
                 </div>
                 <div class="col-md-2 col-sm-2">
@@ -48,6 +50,11 @@
             $(".show-advance-filters").show(100);
             $(".hide-advance-filters").hide(100);
         }
+    }
+
+    function reset_page()
+    {
+        window.location = '{{url($action)}}';
     }
 </script>
 

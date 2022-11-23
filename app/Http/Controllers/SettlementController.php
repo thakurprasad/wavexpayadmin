@@ -19,10 +19,7 @@ class SettlementController extends Controller
     */
     function __construct()
     {
-         $this->middleware('permission:merchant-list');
-         $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
-         $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);
+
     }
 
     /**
