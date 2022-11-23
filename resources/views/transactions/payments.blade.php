@@ -147,8 +147,10 @@ function search_data(){
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
+			if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
             //$('#datatable1').DataTable();
         }
     });

@@ -55,33 +55,6 @@
 				</div>
 				@endsection
 			</x-filter-component>
-			<!--<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/transactions/searchorder">
-				@csrf
-				<input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-				<div class="row">
-					<x-merchant-key-component />
-					<div class="col-md-3">
-						<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<input placeholder="Notes" id="notes" name="notes" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-						<select class="form-control" name="status">
-							<option value="" disabled selected>Choose your option</option>
-							<option value="created">Created</option>
-							<option value="accepted">Accepted</option>
-							<option value="paid">Paid</option>
-						</select>
-					</div>
-					<div class="col-md-3">                          
-						<button class="btn btn-sm btn-info" type="button" onclick="search_order()" name="action">Submit</button>
-					</div>
-				</div>
-			</form>-->
 			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable2">
 				<thead>
@@ -164,9 +137,10 @@ function search_data(){
             'X-CSRF-Token': '{{ csrf_token() }}',
         },
         success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
+            if(data.success==true){
+				$("#table_container").LoadingOverlay("hide", true);
+            	$("#table_container").html(data.html);
+			}
         }
     });
 }
