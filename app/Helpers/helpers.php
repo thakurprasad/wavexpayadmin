@@ -99,6 +99,25 @@ class Helpers
     }
 
 
+    public static function badge($string){
+        $class = 'dark';
+        if(in_array($string, ['authorized', 'wait', 'coming soon', 'created','partially_paid','issued'])){
+             $class = 'warning';
+        }
+        if(in_array($string, ['draft'])){
+            $class = 'info';
+        }
+        if(in_array($string, ['test', 'failed', 'error', 'pending','expired','cancelled','deleted'])){
+             $class = 'danger';
+        }
+        if(in_array($string, ['live', 'captured', 'success', 'completed', 'paid','processed'])){
+            $class = 'success';
+        }
+
+          return "<span class='badge badge-".$class."'>$string</span>";
+    }
+
+
 }
 
 

@@ -8,7 +8,7 @@
 	<div class="col-sm-6">
 	<ol class="breadcrumb float-sm-right">
 		<li class="breadcrumb-item"><a href="{{ route('home')}}">Home</a></li>
-		<li class="breadcrumb-item active">Merchant Transactions</li>
+		<li class="breadcrumb-item active">Merchant Payments</li>
 	</ol>
 	</div>
 </div>
@@ -30,72 +30,75 @@
 	@endif
 
 
-	<div class="card">
-		<div class="card-header">
-			<div class="pull-left">
-
-	        </div>
-	        <div class="pull-right">
-
-	        </div>
-        </div>
-
-
-
-		<div class="card-body">
-			<x-filter-component form_id="search_form" action="searchpayments" method="POST" status="payments"> 
-                @section('advance_filters')
-                <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="payment_id">Payment Id</label>
-                            <input type="text" name="payment_id" class="form-control" id="payment_id" placeholder="Payment Id">
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" name="email" type="email" class="form-control" id="email" placeholder="Email">
-                        </div>
-                    </div>
-					<div class="col-sm-3">
-                        <div class="form-group">
-                            <label for="email">Contact</label>
-                            <input type="text" name="contact" type="text" class="form-control" id="contact" placeholder="Contact">
-                        </div>
-                    </div>
-                @endsection
-            </x-filter-component>
-			<br clear="all"><br clear="all">
-			<table class="table table-bordered table-sm" id="datatable1">
-				<thead>
-					<tr class="text-center">
-						<th>Payment Id</th>
-						<th>Amount</th>
-						<th>Email</th>
-						<th>Contact</th>
-                        <th>Created At</th>
-                        <th>Status</th>
-					</tr>
-				</thead>
-				<tbody id="table_container">
-				@foreach ($data as  $value)
-				<tr>
-					<td>{{ $value->payment_id }}</td>
-					<td>₹{{ $value->amount }} </td>
-                    <td>{{ $value->email }} </td>
-                    <td>{{ $value->contact }} </td>
-					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
-
-                    <td>{{ $value->status }} </td>
+	<div class="container">
+		<x-filter-component form_id="search_form" action="payments" method="POST" status="payments"> 
+			@section('advance_filters')
+			<div class="col-sm-3">
+					<div class="form-group">
+						<label for="payment_id">Payment Id</label>
+						<input type="text" name="payment_id" class="form-control" id="payment_id" placeholder="Payment Id">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Email</label>
+						<input type="text" name="email" type="email" class="form-control" id="email" placeholder="Email">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Contact</label>
+						<input type="text" name="contact" type="text" class="form-control" id="contact" placeholder="Contact">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Payment Method</label>
+						<input type="text" name="payment_method" type="text" class="form-control" id="payment_method" placeholder="Payment Method">
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Amount Range</label>
+						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
+						<p style="color:red;" id="onkeyup_msg"></p>
+					</div>
+				</div>
+			@endsection
+		</x-filter-component>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr class="text-center">
+					<th>Payment Id</th>
+					<th>Amount</th>
+					<th>Email</th>
+					<th>Contact</th>
+					<th>Payment Method</th>
+					<th>Created At</th>
+					<th>Status</th>
 				</tr>
-				@endforeach
-				</tbody>
-			</table>
-		</div>
+			</thead>
+			<tbody id="table_container">
+			@foreach ($data as  $value)
+			<tr>
+				<td>{{ $value->payment_id }}</td>
+				<td>₹{{ $value->amount }} </td>
+				<td>{{ $value->email }} </td>
+				<td>{{ $value->contact }} </td>
+				<td>{{ $value->payment_method }} </td>
+				<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
+				<td>{!! Helpers::badge($value->status) !!} </td>
+			</tr>
+			@endforeach
+			</tbody>
+		</table>
+		<div class="pagination">{!! $data->links() !!}</div>
 	</div>
 
 @endsection
 @section('css')
+
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
@@ -105,33 +108,6 @@ $(document).ready( function () {
         "searching": false
     });
 } );
-
-function get_table_data(){
-	var header_merchant_id = $("#header_merchant_id").val();
-	$("#hidden_merchant_id").val(header_merchant_id);
-	//setTimeout(get_payment_data, 1000);
-}
-
-function get_payment_data(){
-	$("#table_container").LoadingOverlay("show", {
-        background  : "rgba(165, 190, 100, 0.5)"
-    });
-	var merchant_id = $("#hidden_merchant_id").val();
-	$.ajax({
-        url: '{{url("getpaymentdata")}}',
-        data: {'merchant_id': merchant_id},
-        type: "POST",
-        headers: {
-            'X-CSRF-Token': '{{ csrf_token() }}',
-        },
-        success: function(data){
-            $("#table_container").LoadingOverlay("hide", true);
-            $("#table_container").html(data.html);
-            $('#datatable1').DataTable();
-        }
-    });
-}
-
 
 function search_data(){
     $("#table_container").LoadingOverlay("show", {
@@ -154,6 +130,24 @@ function search_data(){
             //$('#datatable1').DataTable();
         }
     });
+}
+
+
+function check_range(){
+	var amount_range = $("#amount_range").val();
+	if(amount_range.indexOf('-') == -1){
+		$("#onkeyup_msg").html('enter - between two range');
+		return false;
+	}else{
+		amount = amount_range.split("-");
+		var min_amount = amount[0];
+		var max_amount = amount[1];
+		if(Number(min_amount)>Number(max_amount)){
+			$("#onkeyup_msg").html('Min Amount Cannot Be Greater Than Max Amount');
+		}else{
+			$("#onkeyup_msg").html('');
+		}
+	}
 }
 
 </script>

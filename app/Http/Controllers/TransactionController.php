@@ -11,6 +11,10 @@ use App\Models\MerchantUser;
 use App\Models\Payment;
 use Razorpay\Api\Api;
 use DateTime;
+use Helpers;
+
+
+
 class TransactionController extends Controller
 {
     /**
@@ -30,15 +34,40 @@ class TransactionController extends Controller
      */
     public function payments(Request $request)
     {
-       /* $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');*/
-        //$data = $api->payment->all();
+        try{
+            $query = Payment::query();
+            if(isset($request->payment_id) && $request->payment_id!=''){
+                $query->where('payment_id',$request->payment_id);
+            }if(isset($request->merchant_id) && $request->merchant_id!=''){
+                $query->where('merchant_id',$request->merchant_id);
+            }if(isset($request->email) && $request->email!=''){
+                $query->where('email',$request->email);
+            }if(isset($request->status) && $request->status!=''){
+                $query->where('status',$request->status);
+            }if(isset($request->contact) && $request->contact!=''){
+                $query->where('contact',$request->contact);
+            }if(isset($request->payment_method) && $request->payment_method!=''){
+                $query->where('payment_method',$request->payment_method);
+            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
+                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
+            }if(isset($request->amount_range) && $request->amount_range!=''){
+                $amount = explode('-',$request->amount_range);
+                $min = $amount[0];
+                $max = $amount[1];
+                $query->where('amount', '>=', $min)->where('amount', '<=', $max);
+            }
 
-       return $data = Payment::all();
 
-        //$data['items'] = []; 
-        $pageConfigs = ['pageHeader' => true];
+            $result = $query->paginate(10);
+            $data = $result;
 
-        return view('transactions.payments',compact('data'));
+            $pageConfigs = ['pageHeader' => true];
+            return view('transactions.payments',compact('data'));
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
+        }
+        
     }
 
     public function refunds(Request $request)
@@ -63,9 +92,6 @@ class TransactionController extends Controller
 
     public function orders(Request $request)
     {
-        /*$api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
-        $data = $api->order->all();
-        $data['items'] = [];*/
         $data = DB::table('orders')->get();
         $pageConfigs = ['pageHeader' => true];
         return view('transactions.orders',compact('data'));
@@ -122,22 +148,11 @@ class TransactionController extends Controller
                 $query->whereBetween('created_at', [$start_date." 00:00:00", $end_date." 23:59:59"]);
             }
             $result = $query->get();
-            
-            if(!empty($result)){
-                foreach($result as $payment){
-                    $html.='<tr>
-                        <th scope="row">'.$payment->payment_id.'</th>
-                        <td>'.$payment->amount.'</td>
-                        <td>'.$payment->email.'</td>
-                        <td>'.$payment->contact.'</td>
-                        <td>'.date('Y-m-d',strtotime($payment->created_at)).'</td>
-                        <td>
-                            <a class="waves-effect waves-light btn-small">'.$payment->status.'</a>
-                        </td>
-                    </tr>';
-                }
-            }
-            return response()->json(array('success'=>true,'html'=>$html));
+            $data = $result;
+
+            print_r($data);
+            return view('transactions.payments',compact('data'));
+            //return response()->json(array('success'=>true,'html'=>$html));
             //return $this->sendResponse($html,'Payment data');
         }catch(\Exception $e){
             $msg = $e->getMessage();

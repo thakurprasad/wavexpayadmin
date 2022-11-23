@@ -29,32 +29,17 @@
 	</div>
 	@endif
 	<div class="card">
-		<div class="card-header">
-			<div class="pull-left">
-                <div class="row">
-                    <div class="col-lg-12">
+		<div class="card-body">
+            <x-filter-component form_id="search_form"  action="searchsettlements" method="POST" status="settlements"> 
+                @section('advance_filters')
+                    <div class="col-sm-3">
                         <div class="form-group">
-                            @php 
-                            $get_all_merchants = Helpers::get_all_merchants();
-                            @endphp
-                            @if(!empty($get_all_merchants))
-                            <select class="form-control" id="header_merchant_id" onchange="get_table_data()">
-                            <option value="">Select Merchant</option>
-                            @foreach($get_all_merchants as $merchants)
-                            <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
-                            @endforeach
-                            </select>
-                            @endif
+                            <label for="payment_id">Settlement Id</label>
+                            <input type="text" name="settlement_id" class="form-control" id="settlement_id" placeholder="Settleement Id">
                         </div>
                     </div>
-                </div>
-	        </div>
-	        <div class="pull-right">
-
-	        </div>
-        </div>
-
-		<div class="card-body">
+                @endsection
+            </x-filter-component>
 			<table class="table table-bordered table-sm" id="datatable">
                 <thead>
                     <tr>
