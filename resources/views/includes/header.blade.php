@@ -20,3 +20,43 @@
 
 
   </nav>
+  <?php 
+    if(! session()->get('mode') ){
+       session()->put('mode', 'test'); 
+    }
+     $mode = session()->get('mode');   
+  ?>  
+  <div class="<?= $mode ?>-mode-dashboard">You're In 
+  <select id="change_mode" class="btn btn-sm btn-<?= ($mode == 'test' ? 'danger' : 'success') ?>">    
+    <option value="test" <?= ($mode == 'test' ? 'selected' : '') ?>>Test</option>
+    <option value="live" <?= ($mode == 'live' ? 'selected' : '') ?>>Live</option>
+  </select>
+    Mode
+   </div>
+<style type="text/css">
+  .live-mode-dashboard {
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    color: white;
+    font-weight: bold;
+    background: green;
+    padding: 0px 21px;
+    border-radius: 0px 0px 5px 5px;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+  .test-mode-dashboard {
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    color: white;
+    font-weight: bold;
+    background: red;
+    padding: 0px 21px;
+    border-radius: 0px 0px 5px 5px;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+</style>
+ 
