@@ -30,10 +30,10 @@ class TransactionController extends Controller
      */
     public function payments(Request $request)
     {
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
+       /* $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');*/
         //$data = $api->payment->all();
 
-        $data = DB::table('payments')->get();
+       return $data = Payment::all();
 
         //$data['items'] = []; 
         $pageConfigs = ['pageHeader' => true];
