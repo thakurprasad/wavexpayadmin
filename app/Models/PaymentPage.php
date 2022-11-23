@@ -21,4 +21,5 @@ class PaymentPage extends Model
     protected $fillable = [
         'merchant_id', 'template_id', 'page_title', 'page_content', 'status', 'fb_link', 'twitter_link', 'whatsapp', 'support_email', 'support_phone', 'term_conditions', 'payment_form_json', 'custom_url', 'theme', 'is_page_expiry', 'expiry_date', 'successful_custom_message', 'successful_redirect_url', 'facebook_pixel', 'google_analytics', 'created_at', 'updated_at'
     ];
+    
 }

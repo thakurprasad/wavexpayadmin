@@ -21,16 +21,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{ asset("/plugins/fontawesome-free/css/all.min.css") }}">
+  <link rel="stylesheet" href="{{ asset('/plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset("/css/adminlte.css") }}">
-  <link rel="stylesheet" href="{{ asset("/plugins/datatable/dataTables.bootstrap4.css") }}">
-  <link rel="stylesheet" href="{{ asset("/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css") }}"/>
+  <link rel="stylesheet" href="{{ asset('/css/adminlte.css') }}">
+  <link rel="stylesheet" href="{{ asset('/plugins/datatable/dataTables.bootstrap4.css') }}">
+  <link rel="stylesheet" href="{{ asset('/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"/>
 
 
   <!-- Select2 -->
-  <link rel="stylesheet" href="{{ asset("/plugins/select2/css/select2.min.css") }}">
-  <link rel="stylesheet" href="{{ asset("/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css") }}">
+  <link rel="stylesheet" href="{{ asset('/plugins/select2/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -89,21 +89,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
-<script src="{{ asset("/plugins/jquery/jquery.min.js") }}"></script>
+<script src="{{ asset('/plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap 4 -->
-<script src="{{ asset("/plugins/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+<script src="{{ asset('/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- Select2 -->
-<script src="{{ asset("/plugins/select2/js/select2.full.min.js") }}"></script>
+<script src="{{ asset('/plugins/select2/js/select2.full.min.js') }}"></script>
 <!-- AdminLTE App -->
-<script src="{{ asset("/js/adminlte.min.js") }}"></script>
+<script src="{{ asset('/js/adminlte.min.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset("/plugins/datatable/jquery.dataTables.js") }}"></script>
-<script type="text/javascript" src="{{ asset("/plugins/datatable/dataTables.bootstrap4.js") }}"></script>
+<script type="text/javascript" src="{{ asset('/plugins/datatable/jquery.dataTables.js') }}"></script>
+<script type="text/javascript" src="{{ asset('/plugins/datatable/dataTables.bootstrap4.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset("/plugins/moment/moment.min.js") }}"></script>
+<script type="text/javascript" src="{{ asset('/plugins/moment/moment.min.js') }}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script type="text/javascript">
+  $('#change_mode').on('change', function() {
+    location.href = "<?= url('/mode') ?>/"+$(this).val();
+  });
+</script>
 
 @yield('js')
+
 
 <script>
 

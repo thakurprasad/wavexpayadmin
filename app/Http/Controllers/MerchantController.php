@@ -98,7 +98,43 @@ class MerchantController extends Controller
      */
     public function edit($id)
     {
-        $data = Merchant::select('merchants.*','merchant_users.*')->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')->where('merchants.id',$id)->first();
+        $data = Merchant::select(
+    'merchants.*',
+    'merchant_id',
+    'name',
+    'display_name',
+    'email',
+    'email_verified_at',
+    'password',
+    'remember_token',
+    'beneficiary_name',
+    'ifsc_code',
+    'account_number',
+    'business_type',
+    'business_category',
+    'business_description',
+    'accept_payment_by',
+    'accept_web_permission',
+    'payment_web_url',
+    'accept_app_permission',
+    'pan_holder_name',
+    'billing_label',
+    'billing_address',
+    'billing_pincode',
+    'billing_city',
+    'billing_state',
+    'aadhar_no',
+    'link_status',
+    'gst_no',
+    'razorpay_gst_no',
+    'address_proof',
+    'aadhar_front_image',
+    'aadhar_back_image',
+    'aadhar_front_image_status',
+    'aadhar_back_image_status',
+    'aadhar_front_image_reject_reason',
+    'aadhar_back_image_reject_reason',
+        )->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')->where('merchants.id',$id)->first();
         //$data = $data[0];
         //print_r($data);exit;
        // return WavexpayApiKey::get_api_key_categories_arr();
@@ -114,6 +150,7 @@ class MerchantController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //return $id;
         $this->validate($request, [
             'merchant_name' => 'required|max:200',
             'access_salt' => 'required',
@@ -139,6 +176,7 @@ class MerchantController extends Controller
         $merchant_input['merchant_payment_method'] = $input['merchant_payment_method'];
         $merchant_input['wavexpay_api_key_id'] = $input['wavexpay_api_key_id'];
         $merchant_input['status'] = $input['status'];
+        #return $merchant_input;
         Merchant::where('id',$id)->update($merchant_input);
 
 

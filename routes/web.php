@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountriesController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\SetGatwayController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,9 @@ Auth::routes();
 Route::get('/logout', 'LoginController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth']], function() {
+
+    Route::get('mode/{mode}', [SetGatwayController::class, 'setGatwayMode']);
+
     /**
      * 3rd party Getway settings
      * */
