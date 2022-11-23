@@ -38,7 +38,7 @@ class TransactionController extends Controller
             $query = Payment::query();
             if(isset($request->payment_id) && $request->payment_id!=''){
                 $query->where('payment_id',$request->payment_id);
-            }if(isset($request->merchant_id) && $request->merchant_id!=''){
+            }if(isset($request->merchant_id) && $request->merchant_id!='' && $request->merchant_id!='all'){
                 $query->where('merchant_id',$request->merchant_id);
             }if(isset($request->email) && $request->email!=''){
                 $query->where('email',$request->email);
