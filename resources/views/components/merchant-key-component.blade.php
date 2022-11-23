@@ -4,7 +4,7 @@
         <select class="form-control" id="key_id" onchange="get_merchants()">
         <option value="">Select Api Key </option>
         @foreach($all_api_keys as $key)
-        <option value="{{$key->id}}">{{$key->test_api_key}} - {{$key->test_api_description}}</option>
+        <option value="{{$key->id}}">{{$key->key_description}}</option>
         @endforeach
         </select>
         @endif
