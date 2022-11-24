@@ -32,7 +32,8 @@
 	<div class="card">
 
 		<div class="card-body">
-			{!! $data !!}
+
+    <?php //print_r($data); exit; ?>
 			<section class="content">
       <div class="container-fluid">
         <div class="row">
@@ -116,16 +117,11 @@
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Basic Details</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Tab2</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Tab3</a></li>
-                  
-                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Tab3</a></li>
-
-                  <li class="nav-item"><a class="nav-link" href="#tab4" data-toggle="tab">Tab4</a></li>
-
-                  <li class="nav-item"><a class="nav-link" href="#tab5" data-toggle="tab">Tab5</a></li>
-
-                  <li class="nav-item"><a class="nav-link" href="#tab6" data-toggle="tab">Tab6</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Address</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Payment Link</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab4" data-toggle="tab">Invoice</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab5" data-toggle="tab">Payments</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab6" data-toggle="tab">Items</a></li>
 
                 </ul>
               </div><!-- /.card-header -->
@@ -133,7 +129,58 @@
                 <div class="tab-content">
                   
                   <div class="active tab-pane" id="tab1">
-                    <h1>TAB1</h1>
+                    <div class="row">
+
+
+                      <div class="col-md-4">
+                        <label><strong>Name : </strong></label> {{$data->merchant_name}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Contact Name : </strong></label> {{$data->contact_name}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Email : </strong></label>  {{$data->MerchantUsers->email}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Contact Phone : </strong></label> {{$data->contact_phone}}
+                      </div>
+
+
+                      <div class="col-md-4"></div>
+                      <div class="col-md-4"></div>
+                      <br><br>
+
+
+                      <div class="col-md-4">
+                        <label><strong>Beneficiary Name : </strong></label> {{$data->MerchantUsers->beneficiary_name}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>IFSC Code : </strong></label> {{$data->MerchantUsers->ifsc_code}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Account Number : </strong></label>  {{$data->MerchantUsers->account_number}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Pan Holder Name : </strong></label>  {{$data->MerchantUsers->pan_holder_name}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Aadhar No : </strong></label>  {{$data->MerchantUsers->aadhar_no}}
+                      </div>
+                      
+                      <div class="col-md-4"></div>
+                      <br><br>
+                      
+                      <div class="col-md-4">
+                        <label><strong>Business Category : </strong></label> {{$data->MerchantUsers->business_category}}
+                      </div>
+                      <div class="col-md-4">
+                        <label><strong>Business Description : </strong></label> {{$data->MerchantUsers->business_description}}
+                      </div>
+
+                      <div class="col-md-4"></div>
+                      <br><br>
+
+                    </div>
                   </div>
 
                   <div class="tab-pane" id="tab2">
@@ -141,23 +188,132 @@
                   </div>
 
                    <div class="tab-pane" id="tab3">
-                  	<h1>Tab3</h1>
+                    <table class="table table-striped table-bordered table-responsive">
+                      <thead>
+                        <tr>
+                          <th>Payment Link Id</th>
+                          <th>Amount</th>
+                          <th>Description</th>
+                          <th>Reference Id</th>
+                          <th>Short Url</th>
+                          <th>Status</th>
+                          <th>Created At</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @if(isset($data->PaymentLinks) && count($data->PaymentLinks)>0)
+                      @foreach($data->PaymentLinks as $plink)
+                        <tr>
+                          <td>{{$plink->payment_link_id}}</td>
+                          <td>{{$plink->amount}}</td>
+                          <td>{{$plink->description}}</td>
+                          <td>{{$plink->reference_id}}</td>
+                          <td>{{$plink->short_url}}</td>
+                          <td>{!! Helpers::badge($plink->status) !!}</td>
+                          <td>{{date('j F,Y',strtotime($plink->created_at))}}</td>
+                        </tr>
+                      @endforeach
+                      @else 
+                      <tr><td colspan="6">No Item Found</td></tr>
+                      @endif
+                      </tbody>
+                    </table>
                   </div>
 
                   <div class="tab-pane" id="tab4">
-                  	<h1>Tab4</h1>
+                  	@if(!empty($data->Invoices))
+                    @foreach($data->Invoices as $invoices)
+                    <table class="table table-striped table-bordered">
+                      <thead><strong>Invoice No:</strong>{{$invoices->invoice_id}}     <strong>Date:</strong> {{date('j F,Y',strtotime($invoices->created_at))}}</thead>
+                      <tbody>
+                        <table class="table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Item</th>
+                              <th>Rate</th>
+                              <th>Quantity</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          @if(isset($invoices->invoice_items) && count($invoices->invoice_items)>0)
+                          @foreach($invoices->invoice_items as $items)
+                            <tr>
+                              <td>{{$items->name}}</td>
+                              <td>{{$items->amount}}</td>
+                              <td>{{$items->quantity}}</td>
+                              <td>{{$items->amount*$items->quantity}}</td>
+                            </tr>
+                          @endforeach
+                          @else 
+                          <tr><td colspan="4">No Item Found</td></tr>
+                          @endif
+                          </tbody>
+                        </table>
+                      </tbody>
+                    </table>
+                    @endforeach 
+                    @endif
                   </div>
 
                   <div class="tab-pane" id="tab5">
-                  	<h1>Tab5</h1>
+                    <table class="table table-striped table-bordered table-responsive">
+                      <thead>
+                        <tr>
+                          <th>Payment Id</th>
+                          <th>Amount</th>
+                          <th>Email</th>
+                          <th>Cantact</th>
+                          <th>Status</th>
+                          <th>Payment Method</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @if(isset($data->Payments) && count($data->Payments)>0)
+                      @foreach($data->Payments as $pmt)
+                        <tr>
+                          <td>{{$pmt->payment_id}}</td>
+                          <td>{{$pmt->amount}}</td>
+                          <td>{{$pmt->email}}</td>
+                          <td>{{$pmt->contact}}</td>
+                          <td>{!! Helpers::badge($pmt->status) !!}</td>
+                          <td>{{$pmt->payment_method}}</td>
+                        </tr>
+                      @endforeach
+                      @else 
+                      <tr><td colspan="6">No Item Found</td></tr>
+                      @endif
+                      </tbody>
+                    </table>
                   </div>
 
                   <div class="tab-pane" id="tab6">
-                  	<h1>Tab6</h1>
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Item Id</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @if(isset($data->Items) && count($data->Items)>0)
+                      @foreach($data->Items as $it)
+                        <tr>
+                          <td>{{$it->item_id}}</td>
+                          <td>{{$it->name}}</td>
+                          <td>{{$it->description}}</td>
+                          <td>{{$it->amount}}</td>
+                        </tr>
+                      @endforeach
+                      @else 
+                      <tr><td colspan="6">No Item Found</td></tr>
+                      @endif
+                      </tbody>
+                    </table>
                   </div>
 
-
-                
 
                 </div>
                 <!-- /.tab-content -->
