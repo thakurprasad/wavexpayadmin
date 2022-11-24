@@ -51,12 +51,6 @@
                     </div>  
                 </div>
                 <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="first_name">Respond By</label>
-                        <input placeholder="Respond By" name="respond_by" id="respond_by" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Amount Range</label>
 						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
@@ -82,14 +76,14 @@
                     @if(!empty($data))
                     @foreach($data as $dispute)
                     <tr>
-                        <th scope="row">{{$dispute['id']}}</th>
-                        <th scope="row">{{$dispute['payment_id']}}</th>
-                        <td>{{number_format($dispute['amount'],2)}}</td>
-                        <td>{{$dispute['reason_code']}}</td>
-                        <td>{{date("jS F, Y", $dispute['respond_by'])}}</td>
-                        <td>{{date("jS F, Y", $dispute['created_at'])}}</td>
+                        <th scope="row">{{$dispute->id}}</th>
+                        <th scope="row">{{$dispute->payment_id}}</th>
+                        <td>{{number_format($dispute->amount,2)}}</td>
+                        <td>{{$dispute->reason_code}}</td>
+                        <td>{{date("jS F, Y", $dispute->respond_by)}}</td>
+                        <td>{{date("jS F, Y", $dispute->created_at)}}</td>
                         <td>
-                            <a class="waves-effect waves-light btn-small">{{$dispute['status']}}</a>
+                            <a class="waves-effect waves-light btn-small">{!! Helpers::badge($dispute->status) !!}</a>
                         </td>
                     </tr>
                     @endforeach
