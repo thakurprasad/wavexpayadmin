@@ -10,6 +10,7 @@ use App\Models\MerchantKey;
 use App\Models\MerchantUser;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Models\Refund;
 use Razorpay\Api\Api;
 use DateTime;
 use Helpers;
@@ -73,29 +74,41 @@ class TransactionController extends Controller
 
     public function refunds(Request $request)
     {
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
-        $data = $api->refund->all();
-
-        //Pageheader set true for breadcrumbs
-        $pageConfigs = ['pageHeader' => true];
-        return view('transactions.refunds',compact('data'));
+        try{
+            $query = Refund::query();
+            if(isset($request->merchant_id) && $request->merchant_id!='' && $request->merchant_id!='all'){
+                $query->where('merchant_id',$request->merchant_id);
+            }if(isset($request->refund_id) && $request->refund_id!=''){
+                $query->where('refund_id',$request->refund_id);
+            }if(isset($request->payment_id) && $request->payment_id!=''){
+                $query->where('payment_id',$request->payment_id);
+            }if(isset($request->receipt) && $request->receipt!=''){
+                $query->where('receipt',$request->receipt);
+            }if(isset($request->status) && $request->status!=''){
+                $query->where('status',$request->status);
+            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
+                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
+            }if(isset($request->amount_range) && $request->amount_range!=''){
+                $amount = explode('-',$request->amount_range);
+                $min = $amount[0];
+                $max = $amount[1];
+                $query->where('amount', '>=', $min)->where('amount', '<=', $max);
+            }
+            $result = $query->get();
+            $data = $result;
+            return view('transactions.refunds',compact('data'));
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
+        }
     }
 
-    public function batchrefunds(Request $request)
-    {
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
-        $data = $api->refund->all();
-
-        //Pageheader set true for breadcrumbs
-        $pageConfigs = ['pageHeader' => true];
-        return view('transactions.refunds',compact('data'));
-    }
 
     public function orders(Request $request)
     {
         try{
             $query = Order::query();
-            if(isset($request->merchant_id) && $request->merchant_id!=''){
+            if(isset($request->merchant_id) && $request->merchant_id!='' && $request->merchant_id!='all'){
                 $query->where('merchant_id',$request->merchant_id);
             }if(isset($request->order_id) && $request->order_id!=''){
                 $query->where('order_id',$request->order_id);

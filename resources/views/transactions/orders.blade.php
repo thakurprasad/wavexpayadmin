@@ -83,7 +83,7 @@
                     <td>{{ $value->attempts }}</td>
                     <td>{{ $value->receipt }}</td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
-                    <td><a class="btn btn-sm btn-default">{{ $value->status }}</a></td>
+                    <td><a class="btn btn-sm btn-default">{!! Helpers::badge($value->status) !!}</a></td>
 				</tr>
 				@endforeach
 				</tbody>
