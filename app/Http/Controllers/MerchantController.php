@@ -9,6 +9,7 @@ use App\Models\Merchant;
 use App\Models\MerchantKey;
 use App\Models\MerchantUser;
 use App\Models\WavexpayApiKey;
+use App\Models\MerchantAddress;
 
 class MerchantController extends Controller
 {
@@ -23,6 +24,33 @@ class MerchantController extends Controller
          $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
          $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);*/
+    }
+
+
+    public function profile($merchant_id){
+        try{
+            
+            $profile = Merchant::select('*')
+            ->with([
+                'MerchantApiKeys', 
+                'MerchantUsers', 
+                'MerchantAddresses',                 
+                'PaymentLinks',
+                'Invoices',
+                'Payments', 
+                'Items'
+            ])
+            ->where('id', $merchant_id)->first();
+            if($profile){
+                return view('merchants.profile', ['data'=>$profile]);
+            }else{
+                 return redirect()->back()->withErrors(['error'=> 'Invalid merchant_id']);     
+            }
+            
+
+        }catch(Exception $ex){
+            return redirect()->back()->withErrors(['error'=>$ex->getMessage()]);
+        }
     }
 
     /**

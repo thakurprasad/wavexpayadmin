@@ -80,6 +80,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('pages','PageController');
 
     //Merchants
+    Route::get('merchants/profile/{merchant_id}', 'MerchantController@profile');
+
+    //Merchants
     Route::get('merchants/changestatus', 'MerchantController@changeStatus');
     Route::get('merchants/changespartnertatus', 'MerchantController@changePartnerStatus');
     Route::get('merchant-rewards', 'MerchantController@merchantRewards');
@@ -105,7 +108,8 @@ Route::group(['middleware' => ['auth']], function() {
    
     
     Route::get('disputes','TransactionController@disputes')->name('disputes.index');
-    Route::post('searchdispute','TransactionController@searchdispute')->name('searchdispute');
+    Route::post('disputes','TransactionController@disputes')->name('searchdispute');
+    //Route::post('searchdispute','TransactionController@searchdispute')->name('searchdispute');
 
 
     //Invoice

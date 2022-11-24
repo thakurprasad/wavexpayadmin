@@ -135,29 +135,39 @@ class TransactionController extends Controller
 
     public function disputes(Request $request)
     {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/disputes');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-
-        curl_setopt($ch, CURLOPT_USERPWD, 'rzp_test_YRAqXZOYgy9uyf' . ':' . 'uSaaMQw3jHK0MPtOnXCSSg51');
-
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+        try{
+            $query = Refund::query();
+            if(isset($request->merchant_id) && $request->merchant_id!='' && $request->merchant_id!='all'){
+                $query->where('merchant_id',$request->merchant_id);
+            }if(isset($request->dispute_id) && $request->dispute_id!=''){
+                $query->where('dispute_id',$request->dispute_id);
+            }if(isset($request->payment_id) && $request->payment_id!=''){
+                $query->where('payment_id',$request->payment_id);
+            }if(isset($request->reason_code) && $request->reason_code!=''){
+                $query->where('reason_code',$request->reason_code);
+            }if(isset($request->respond_by) && $request->respond_by!=''){
+                $query->where('respond_by',$request->respond_by);
+            }if(isset($request->status) && $request->status!=''){
+                $query->where('status',$request->status);
+            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
+                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
+            }if(isset($request->amount_range) && $request->amount_range!=''){
+                $amount = explode('-',$request->amount_range);
+                $min = $amount[0];
+                $max = $amount[1];
+                $query->where('amount', '>=', $min)->where('amount', '<=', $max);
+            }
+            $result = $query->get();
+            $data = $result->toArray();
+            return view('transactions.disputes',compact('data'));
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
         }
-        $all_disputes = json_decode($result, TRUE);
-        curl_close($ch);
-        return view('transactions.disputes',compact('all_disputes'));
     }
 
 
-    public function searchpayment(Request $request){
+    /*public function searchpayment(Request $request){
         try{
             $merchant_id = $request->merchant_id;
             $payment_id = $request->payment_id;
@@ -278,7 +288,7 @@ class TransactionController extends Controller
             $msg = $e->getMessage();
             return $this->sendError($msg);
         }
-    }
+    }*/
 
 
     public function searchdispute(Request $request){

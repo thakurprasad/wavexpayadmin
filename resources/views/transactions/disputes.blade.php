@@ -30,7 +30,7 @@
 	@endif
 	<div class="card">
 		<div class="card-body">
-            <x-filter-component form_id="search_form" action="searchdispute" method="POST" status="disputes"> 
+            <x-filter-component form_id="search_form" action="disputes" method="POST" status="disputes"> 
                 @section('advance_filters')
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -44,6 +44,26 @@
                         <input placeholder="Payment Id" name="payment_id" id="payment_id" type="text" class="form-control">
                     </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Reason Code</label>
+                        <input placeholder="Reason Code" name="reason_code" id="reason_code" type="text" class="form-control">
+                    </div>  
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Respond By</label>
+                        <input placeholder="Respond By" name="respond_by" id="respond_by" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Amount Range</label>
+						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
+						<p style="color:red;" id="onkeyup_msg"></p>
+					</div>
+				</div>
                 @endsection
             </x-filter-component>
 			<table class="table table-bordered table-sm" id="datatable1">
@@ -59,8 +79,8 @@
                     </tr>
                 </thead>
                 <tbody id="table_container">
-                    @if(!empty($all_disputes['items']))
-                    @foreach($all_disputes['items'] as $dispute)
+                    @if(!empty($data))
+                    @foreach($data as $dispute)
                     <tr>
                         <th scope="row">{{$dispute['id']}}</th>
                         <th scope="row">{{$dispute['payment_id']}}</th>
@@ -121,6 +141,21 @@ function search_data(){
 }
 
 
-
+function check_range(){
+	var amount_range = $("#amount_range").val();
+	if(amount_range.indexOf('-') == -1){
+		$("#onkeyup_msg").html('enter - between two range');
+		return false;
+	}else{
+		amount = amount_range.split("-");
+		var min_amount = amount[0];
+		var max_amount = amount[1];
+		if(Number(min_amount)>Number(max_amount)){
+			$("#onkeyup_msg").html('Min Amount Cannot Be Greater Than Max Amount');
+		}else{
+			$("#onkeyup_msg").html('');
+		}
+	}
+}
 </script>
 @endsection
