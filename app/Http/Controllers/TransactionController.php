@@ -44,7 +44,7 @@ class TransactionController extends Controller
                 $query->where('merchant_id',$request->merchant_id);
             }if(isset($request->email) && $request->email!=''){
                 $query->where('email',$request->email);
-            }if(isset($request->status) && $request->status!=''){
+            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
                 $query->where('status',$request->status);
             }if(isset($request->contact) && $request->contact!=''){
                 $query->where('contact',$request->contact);
@@ -86,7 +86,7 @@ class TransactionController extends Controller
                 $query->where('payment_id',$request->payment_id);
             }if(isset($request->receipt) && $request->receipt!=''){
                 $query->where('receipt',$request->receipt);
-            }if(isset($request->status) && $request->status!=''){
+            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
                 $query->where('status',$request->status);
             }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
                 $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
@@ -116,7 +116,7 @@ class TransactionController extends Controller
                 $query->where('order_id',$request->order_id);
             }if(isset($request->reciept) && $request->reciept!=''){
                 $query->where('receipt',$request->reciept);
-            }if(isset($request->status) && $request->status!=''){
+            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
                 $query->where('status',$request->status);
             }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
                 $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
@@ -149,7 +149,7 @@ class TransactionController extends Controller
                 $query->where('reason_code',$request->reason_code);
             }if(isset($request->respond_by) && $request->respond_by!=''){
                 $query->where('respond_by',$request->respond_by);
-            }if(isset($request->status) && $request->status!=''){
+            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
                 $query->where('status',$request->status);
             }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
                 $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);

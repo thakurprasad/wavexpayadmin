@@ -13,6 +13,7 @@
 <div class="col-md-2">
     <select class="form-control" id="merchant_id" name="merchant_id">
         <option value="">Select Merchant</option>
+        <option value="all">All</option>
     </select>
 </div>
 
