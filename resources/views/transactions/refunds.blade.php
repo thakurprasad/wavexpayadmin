@@ -30,7 +30,7 @@
 	@endif
 	<div class="card">
 		<div class="card-body">
-			<x-filter-component form_id="search_form" action="searchrefund" method="POST" status="refunds"> 
+			<x-filter-component form_id="search_form" action="refunds" method="POST" status="refunds"> 
                 @section('advance_filters')
                 <div class="col-sm-3">
                     <div class="form-group">
@@ -38,6 +38,26 @@
                         <input placeholder="Refund Id" name="refund_id" id="refund_id" type="text" class="form-control">
                     </div>
                 </div>
+				<div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Payment Id</label>
+                        <input placeholder="Payment Id" name="payment_id" id="payment_id" type="text" class="form-control">
+                    </div>
+                </div>
+				<div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="first_name">Receipt</label>
+                        <input placeholder="Receipt" name="receipt" id="receipt" type="text" class="form-control">
+                    </div>
+                </div>
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label for="email">Amount Range</label>
+						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
+						<p style="color:red;" id="onkeyup_msg"></p>
+					</div>
+				</div>
                 @endsection
             </x-filter-component>
 			<table class="table table-bordered table-sm" id="datatable1">
@@ -45,19 +65,21 @@
 					<tr class="text-center">
 						<th>Refund Id</th>
 						<th>Payment Id</th>
+						<th>Receipt</th>
 						<th>Amount</th>
                         <th>Created At</th>
                         <th>Status</th>
 					</tr>
 				</thead>
 				<tbody id="table_container">
-				@foreach ($data['items'] as $key => $value)
+				@foreach ($data as $key => $value)
 				<tr>
-					<td>{{ $value->id }}</td>
+					<td>{{ $value->refund_id }}</td>
 					<td>{{ $value->payment_id }} </td>
+					<td>{{ $value->receipt }} </td>
 					<td>{{ $value->amount }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d-m-Y',strtotime($value->created_at)) }}</td>
-                    <td><a class="btn btn-sm btn-default">{{ $value->status }}</a></td>
+                    <td><a class="btn btn-sm btn-default">{!! Helpers::badge($value->status) !!}</a></td>
 				</tr>
 				@endforeach
 				</tbody>
@@ -101,6 +123,21 @@ function search_data(){
     });
 }
 
-
+function check_range(){
+	var amount_range = $("#amount_range").val();
+	if(amount_range.indexOf('-') == -1){
+		$("#onkeyup_msg").html('enter - between two range');
+		return false;
+	}else{
+		amount = amount_range.split("-");
+		var min_amount = amount[0];
+		var max_amount = amount[1];
+		if(Number(min_amount)>Number(max_amount)){
+			$("#onkeyup_msg").html('Min Amount Cannot Be Greater Than Max Amount');
+		}else{
+			$("#onkeyup_msg").html('');
+		}
+	}
+}
 </script>
 @endsection
