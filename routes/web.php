@@ -82,7 +82,6 @@ Route::group(['middleware' => ['auth']], function() {
     //Merchants
     Route::get('merchants/profile/{merchant_id}', 'MerchantController@profile');
 
-    //Merchants
     Route::get('merchants/changestatus', 'MerchantController@changeStatus');
     Route::get('merchants/changespartnertatus', 'MerchantController@changePartnerStatus');
     Route::get('merchant-rewards', 'MerchantController@merchantRewards');

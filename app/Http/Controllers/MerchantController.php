@@ -26,7 +26,6 @@ class MerchantController extends Controller
          $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);*/
     }
 
-
     public function profile($merchant_id){
         try{
             
@@ -53,11 +52,6 @@ class MerchantController extends Controller
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         $all_api_keys = WavexpayApiKey::all();

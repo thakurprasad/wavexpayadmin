@@ -60,6 +60,8 @@ class TransactionController extends Controller
             }
 
 
+            /*$data = Payment::with(['payment_details'])->get();*/
+
             $result = $query->paginate(10);
             $data = $result;
 
