@@ -32,4 +32,12 @@ class Invoice extends Model
         return $this->hasOne(Customer::class, 'customer_id', 'customer_id');
     }
 
+    /*  include extra where condication in every select query for this model   */
+    public function newQuery($auth = true) {
+        return parent::newQuery($auth)->where([
+                'transaction_mode'=> session()->get('mode') 
+            ]);
+    }
+
+    
 }

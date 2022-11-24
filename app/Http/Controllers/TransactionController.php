@@ -57,10 +57,8 @@ class TransactionController extends Controller
                 $query->where('amount', '>=', $min)->where('amount', '<=', $max);
             }
 
-<<<<<<< HEAD
-        $data = Payment::with(['payment_details'])->get();
-=======
->>>>>>> b3a1d88f651ca31895de13a6b8a865103f40e811
+
+            /*$data = Payment::with(['payment_details'])->get();*/
 
             $result = $query->paginate(10);
             $data = $result;

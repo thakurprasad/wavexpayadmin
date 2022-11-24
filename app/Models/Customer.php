@@ -35,4 +35,13 @@ class Customer extends Model
      */
     protected $fillable = ['customer_name', 'mobile', 'mobile_2', 'address', 'locality','status', 'created_at', 'updated_at'];
     public $sortable = ['customer_name', 'mobile', 'mobile_2', 'address','locality','status','created_at', 'updated_at'];
+
+
+    /*  include extra where condication in every select query for this model   */
+    public function newQuery($auth = true) {
+        return parent::newQuery($auth)->where([
+                'transaction_mode'=> session()->get('mode') 
+            ]);
+    }
+
 }
