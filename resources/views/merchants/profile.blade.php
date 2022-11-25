@@ -184,7 +184,39 @@
                   </div>
 
                   <div class="tab-pane" id="tab2">
-                  	<h1>Tab2</h1>
+                  	@php 
+                    $get_merchant_address = Helpers::get_merchant_address($data->id);
+                    @endphp
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Address Type</th>
+                          <th>Address 1</th>
+                          <th>Address 2</th>
+                          <th>State</th>
+                          <th>City</th>
+                          <th>Country</th>
+                          <th>Zip</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      @if(!empty($get_merchant_address))
+                      @foreach($get_merchant_address as $address)
+                      <tr>
+                        <td>{{$address->address_type}}</td>
+                        <td>{{$address->line_1}}</td>
+                        <td>{{$address->line_2}}</td>
+                        <td>{{$address->state}}</td>
+                        <td>{{$address->city}}</td>
+                        <td>{{$address->country}}</td>
+                        <td>{{$address->zip}}</td>
+                      </tr>
+                      @endforeach
+                      @else 
+                      <tr><td colspan="6">No Item Found</td></tr>
+                      @endif
+                      </tbody>
+                    </table>
                   </div>
 
                    <div class="tab-pane" id="tab3">

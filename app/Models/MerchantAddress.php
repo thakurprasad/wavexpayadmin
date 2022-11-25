@@ -10,6 +10,8 @@ class MerchantAddress extends Model
 {
     use HasFactory; use SoftDeletes;
 
+    protected $table = 'merchant_addresses';
+
    
     protected $fillable = [
         'merchant_id',

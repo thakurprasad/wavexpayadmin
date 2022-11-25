@@ -4,6 +4,7 @@ use DB;
 use App\Models\ApiKeyCategory;
 use App\Models\WavexpayApiKey;
 use App\Models\MerchantKey;
+use App\Models\MerchantAddress;
 
 class Helpers
 {
@@ -115,6 +116,11 @@ class Helpers
         }
 
           return "<span class='badge badge-".$class."'>$string</span>";
+    }
+
+    public static function get_merchant_address($id){
+        $address = DB::table('merchant_addresses')->where('merchant_id',$id)->get();
+        return $address;
     }
 
 

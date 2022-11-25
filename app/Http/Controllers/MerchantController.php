@@ -10,6 +10,7 @@ use App\Models\MerchantKey;
 use App\Models\MerchantUser;
 use App\Models\WavexpayApiKey;
 use App\Models\MerchantAddress;
+use Helpers;
 
 class MerchantController extends Controller
 {
