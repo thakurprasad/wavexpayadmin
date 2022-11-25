@@ -38,7 +38,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-
+            <?php //print_r($data); exit; ?>
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
@@ -200,8 +200,8 @@
                         </tr>
                       </thead>
                       <tbody>
-                      @if(!empty($get_merchant_address))
-                      @foreach($get_merchant_address as $address)
+                      @if(!empty($data->MerchantAddresses))
+                      @foreach($data->MerchantAddresses as $address)
                       <tr>
                         <td>{{$address->address_type}}</td>
                         <td>{{$address->line_1}}</td>
