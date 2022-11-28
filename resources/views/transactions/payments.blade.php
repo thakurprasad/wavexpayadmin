@@ -31,36 +31,36 @@
 
 
 	<div class="container">
-		<x-filter-component form_id="search_form" action="payments" method="POST" status="payments"> 
+		<x-filter-component form_id="search_form" action="payments" method="GET" status="payments"> 
 			@section('advance_filters')
 			<div class="col-sm-3">
 					<div class="form-group">
 						<label for="payment_id">Payment Id</label>
-						<input type="text" name="payment_id" class="form-control" id="payment_id" placeholder="Payment Id">
+						<input type="text" name="payment_id" value="{{ app('request')->input('payment_id') }}" class="form-control" id="payment_id" placeholder="Payment Id">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Email</label>
-						<input type="text" name="email" type="email" class="form-control" id="email" placeholder="Email">
+						<input type="text" name="email" value="{{ app('request')->input('email') }}" type="email" class="form-control" id="email" placeholder="Email">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Contact</label>
-						<input type="text" name="contact" type="text" class="form-control" id="contact" placeholder="Contact">
+						<input type="text" name="contact" value="{{ app('request')->input('contact') }}" type="text" class="form-control" id="contact" placeholder="Contact">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Payment Method</label>
-						<input type="text" name="payment_method" type="text" class="form-control" id="payment_method" placeholder="Payment Method">
+						<input type="text" name="payment_method" value="{{ app('request')->input('payment_method') }}" type="text" class="form-control" id="payment_method" placeholder="Payment Method">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Amount Range</label>
-						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<input type="text" value="{{ app('request')->input('amount_range') }}" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
 						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
 						<p style="color:red;" id="onkeyup_msg"></p>
 					</div>

@@ -123,6 +123,17 @@ class Helpers
         return $address;
     }
 
+    public static function get_payment_data($id,$status){
+        $get_data = DB::table('payments')->where('merchant_id',$id)->where('status',$status)->get();
+        $amount = 0;
+        if(isset($get_data) && count($get_data)>0){
+            foreach($get_data as $data){
+                $amount+=$data->amount;
+            }
+        }
+        return $amount;
+    }
+
 
 }
 

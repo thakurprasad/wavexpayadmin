@@ -39,57 +39,37 @@
         </div>
 
 		<div class="card-body">
-            <form class="col s12" method="POST" id="search_form" action="<?php url('/') ?>/searchinvoice">
-                @csrf
-                <input type="hidden" id="hidden_merchant_id" name="hidden_merchant_id">
-                <div class="row">
-                    <div class="col-lg-3">
+            <x-filter-component form_id="search_form" action="invoice" method="POST" status="invoices"> 
+                @section('advance_filters')
+                    <div class="col-sm-3">
                         <div class="form-group">
-                            @php 
-                            $get_all_merchants = Helpers::get_all_merchants();
-                            @endphp
-                            @if(!empty($get_all_merchants))
-                            <select class="form-control" id="header_merchant_id" onchange="get_table_data()">
-                            <option value="">Select Merchant</option>
-                            @foreach($get_all_merchants as $merchants)
-                            <option value="{{$merchants->id}}">{{$merchants->merchant_name}}</option>
-                            @endforeach
-                            </select>
-                            @endif
+                            <label for="first_name">Invoice Id</label>
+                            <input placeholder="Invoice ID" name="invoice_id" id="invoice_id" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <input placeholder="Invoice ID" name="invoice_id" id="invoice_id" type="text" class="form-control">
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="first_name">Reciept No</label>
+                            <input placeholder="Reciept No" name="reciept_number" id="reciept_number" type="text" class="form-control">
+                        </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <input placeholder="Reciept No" name="reciept_number" id="reciept_number" type="text" class="form-control">
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="input-field col s3">
+                        <label for="first_name">Customer Contact</label>
                         <input placeholder="Customer Contact" name="customer_contact" id="customer_contact" type="text" class="form-control">
                     </div>
 
-                    <div class="col-md-3">
-                        <input placeholder="Customer Email" name="customer_email" id="customer_email" type="text" class="form-control">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="first_name">Customer Email</label>
+                            <input placeholder="Customer Email" name="customer_email" id="customer_email" type="text" class="form-control">
+                        </div>
                     </div>
+                @endsection
+            </x-filter-component>
 
-                    <div class="col-md-3">
-                        <input placeholder="Notes" name="notes" id="notes" type="text" class="form-control">
-                    </div>
-                    
-                    <div class="col-md-1">                          
-                        <button class="btn btn-sm btn-info" type="button" name="action" onclick="search_invoice()">Submit</button>
-                    </div>
 
-                    <div class="col-md-3">                          
-                        <button class="btn btn-sm btn-default" type="button" name="action" onclick="reload_page()">Reset
-                        </button>
-                    </div>
-
-                </div>
-            </form>
-			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable1">
                 <thead>
                     <tr>

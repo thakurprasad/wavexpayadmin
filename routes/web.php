@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth']], function() {
 
     //Invoice
     Route::get('invoice','InvoiceController@invoices')->name('invoice.index');
+    Route::post('invoice','InvoiceController@invoices')->name('searchinvoice');
     Route::post('getinvoicedata','InvoiceController@getinvoicedata')->name('getinvoicedata');
     Route::get('invoice/{id}','InvoiceController@showInvoice');
     Route::post('searchinvoice','InvoiceController@searchInvoice')->name('searchinvoice');

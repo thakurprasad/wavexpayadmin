@@ -35,25 +35,25 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="first_name">Refund Id</label>
-                        <input placeholder="Refund Id" name="refund_id" id="refund_id" type="text" class="form-control">
+                        <input placeholder="Refund Id" name="refund_id" value="{{ app('request')->input('refund_id') }}" id="refund_id" type="text" class="form-control">
                     </div>
                 </div>
 				<div class="col-sm-3">
                     <div class="form-group">
                         <label for="first_name">Payment Id</label>
-                        <input placeholder="Payment Id" name="payment_id" id="payment_id" type="text" class="form-control">
+                        <input placeholder="Payment Id" name="payment_id" value="{{ app('request')->input('payment_id') }}" id="payment_id" type="text" class="form-control">
                     </div>
                 </div>
 				<div class="col-sm-3">
                     <div class="form-group">
                         <label for="first_name">Receipt</label>
-                        <input placeholder="Receipt" name="receipt" id="receipt" type="text" class="form-control">
+                        <input placeholder="Receipt" name="receipt" value="{{ app('request')->input('receipt') }}" id="receipt" type="text" class="form-control">
                     </div>
                 </div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Amount Range</label>
-						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<input type="text" name="amount_range" value="{{ app('request')->input('amount_range') }}" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
 						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
 						<p style="color:red;" id="onkeyup_msg"></p>
 					</div>
