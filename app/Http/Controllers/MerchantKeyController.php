@@ -31,7 +31,7 @@ class MerchantKeyController extends Controller
     public function index(Request $request)
     {
         $data = MerchantKey::select('merchant_keys.*','merchant_name')
-                ->leftJoin('merchants','merchants.id','merchant_keys.merchnat_id')
+                ->leftJoin('merchants','merchants.id','merchant_keys.merchant_id')
                 ->orderBy('merchant_name','ASC')->get();
         return view('merchant-keys.index',compact('data'));
     }
@@ -57,14 +57,14 @@ class MerchantKeyController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'merchnat_id' => 'required',
+            'merchant_id' => 'required',
             'api_title' => 'required',
             'api_key' => 'required',
         ]);
 
         $data = MerchantKey::updateOrCreate(
             ['api_key' => $request->api_key],
-            ['merchnat_id' => $request->merchnat_id, 'api_title' => $request->api_title]
+            ['merchant_id' => $request->merchant_id, 'api_title' => $request->api_title]
         );
 
         return redirect()->route('merchant-keys.index')
@@ -93,7 +93,7 @@ class MerchantKeyController extends Controller
     public function edit($id)
     {
         $data = MerchantKey::select('merchant_keys.*','merchant_name')
-                    ->leftJoin('merchants','merchants.id','merchant_keys.merchnat_id')
+                    ->leftJoin('merchants','merchants.id','merchant_keys.merchant_id')
                     ->find($id);
         $merchants = Merchant::orderBy('merchant_name','ASC')->get();
         return view('merchant-keys.edit',compact('data'));
