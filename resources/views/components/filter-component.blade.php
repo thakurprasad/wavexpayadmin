@@ -1,3 +1,17 @@
+@php 
+$payment_id = app('request')->input('payment_id');
+$email = app('request')->input('email');
+$contact = app('request')->input('contact');
+$payment_method = app('request')->input('payment_method');
+$amount_range = app('request')->input('amount_range');
+
+$receipt = app('request')->input('receipt');
+$refund_id = app('request')->input('refund_id');
+
+$order_id = app('request')->input('order_id');
+
+$dispute_id = app('request')->input('dispute_id');
+@endphp
 <form  method="{{ $method }}" action="{{$action}}" id="{{ $form_id }}">
   
         @csrf 
@@ -13,11 +27,20 @@
             </div>
           
             <div class="col-md-12"> 
+                @if((isset($payment_id) && $payment_id!='') || (isset($email) && $email!='') || (isset($contact) && $contact!='') || (isset($payment_method) && $payment_method!='') || (isset($amount_range) && $amount_range!='') || (isset($receipt) && $receipt!='') || (isset($refund_id) && $refund_id!='') || (isset($order_id) && $order_id!='') || (isset($dispute_id) && $dispute_id!=''))
+                <input type="button" onclick="show_hide('hide')" name="advance-filters" class="btn btn-link btn-sm hide-advance-filters" value="Hide Advance Filters">
+                <input type="button" onclick="show_hide('show')" name="advance-filters" class="btn btn-link btn-sm show-advance-filters" value="Show Advance Filters" style="display: none;">
+                @else
                 <input type="button" onclick="show_hide('show')" name="advance-filters" class="btn btn-link btn-sm show-advance-filters" value="Show Advance Filters">
                 <input type="button" onclick="show_hide('hide')" name="advance-filters" class="btn btn-link btn-sm hide-advance-filters" value="Hide Advance Filters" style="display: none;">
+                @endif
             </div>
+            @if((isset($payment_id) && $payment_id!='') || (isset($email) && $email!='') || (isset($contact) && $contact!='') || (isset($payment_method) && $payment_method!='') || (isset($amount_range) && $amount_range!='') || (isset($receipt) && $receipt!='') || (isset($refund_id) && $refund_id!='') || (isset($order_id) && $order_id!='') || (isset($dispute_id) && $dispute_id!=''))
+            <div class="advance-filters">
+            @else 
             <div class="advance-filters" style="display:none;">
-                <div class="row col-md-12">                   
+            @endif
+                <div class="row col-md-12">                  
                     @yield('advance_filters')
                 </div>
             </div>

@@ -44,19 +44,19 @@
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="first_name">Order Id</label>
-						<input placeholder="Order Id" name="order_id" id="order_id" type="text" class="form-control">
+						<input placeholder="Order Id" name="order_id" value="{{ app('request')->input('order_id') }}" id="order_id" type="text" class="form-control">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="first_name">Reciept</label>
-						<input placeholder="Reciept" name="reciept" id="reciept" type="text" class="form-control">
+						<input placeholder="Reciept" name="reciept" value="{{ app('request')->input('reciept') }}" id="reciept" type="text" class="form-control">
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Amount Range</label>
-						<input type="text" name="amount_range" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
+						<input type="text" name="amount_range" value="{{ app('request')->input('amount_range') }}" onkeyup="check_range()" class="form-control" id="amount_range" placeholder="Amount Range">
 						<p style="color:green;">Ex: 200-400 (min-200 max-400)</p>
 						<p style="color:red;" id="onkeyup_msg"></p>
 					</div>

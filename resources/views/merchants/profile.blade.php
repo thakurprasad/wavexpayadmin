@@ -49,22 +49,24 @@
                 </div>
 
                 <h3 class="profile-username text-center">{{$data->merchant_name}}</h3>
+                <h3 class="profile-username text-center">{{$data->MerchantUsers->email}}</h3>
+                <h3 class="profile-username text-center">{{$data->contact_phone}}</h3>
 
-                <p class="text-muted text-center">Software Engineer</p>
+                <p class="text-muted text-center">{{$data->MerchantUsers->display_name}}</p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Followers</b> <a class="float-right">1,322</a>
+                    <b>Pending</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'pending')}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Following</b> <a class="float-right">543</a>
+                    <b>Success</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'captured')}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Friends</b> <a class="float-right">13,287</a>
+                    <b>Failure</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'failed')}}</a>
                   </li>
                 </ul>
 
-                <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+                <!--<a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>-->
               </div>
               <!-- /.card-body -->
             </div>
@@ -72,11 +74,13 @@
 
             <!-- About Me Box -->
             <div class="card card-primary">
-              <div class="card-header">
+              <!--<div class="card-header">
                 <h3 class="card-title">About Me</h3>
-              </div>
+              </div>-->
               <!-- /.card-header -->
-              <div class="card-body">
+              
+              
+              <!--<div class="card-body">
                 <strong><i class="fas fa-book mr-1"></i> Education</strong>
 
                 <p class="text-muted">
@@ -106,7 +110,9 @@
                 <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
 
                 <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
-              </div>
+              </div>-->
+
+
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -187,7 +193,7 @@
                   	@php 
                     $get_merchant_address = Helpers::get_merchant_address($data->id);
                     @endphp
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="datatable1">
                       <thead>
                         <tr>
                           <th>Address Type</th>
@@ -220,7 +226,7 @@
                   </div>
 
                    <div class="tab-pane" id="tab3">
-                    <table class="table table-striped table-bordered table-responsive">
+                    <table class="table table-striped table-bordered table-responsive" id="datatable2">
                       <thead>
                         <tr>
                           <th>Payment Link Id</th>
@@ -258,7 +264,7 @@
                     <table class="table table-striped table-bordered">
                       <thead><strong>Invoice No:</strong>{{$invoices->invoice_id}}     <strong>Date:</strong> {{date('j F,Y',strtotime($invoices->created_at))}}</thead>
                       <tbody>
-                        <table class="table table-striped table-bordered">
+                        <table class="table table-striped table-bordered" id="datatable3">
                           <thead>
                             <tr>
                               <th>Item</th>
@@ -289,7 +295,7 @@
                   </div>
 
                   <div class="tab-pane" id="tab5">
-                    <table class="table table-striped table-bordered table-responsive">
+                    <table class="table table-striped table-bordered table-responsive" id="datatable4">
                       <thead>
                         <tr>
                           <th>Payment Id</th>
@@ -320,7 +326,7 @@
                   </div>
 
                   <div class="tab-pane" id="tab6">
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="datatable5">
                       <thead>
                         <tr>
                           <th>Item Id</th>
@@ -362,4 +368,19 @@
 
 	</div> <!-- end of card -->
 
+@endsection
+
+
+@section('js')
+<script>
+$(document).ready(function() {
+  $('#datatable1').DataTable();
+
+  $('#datatable2').DataTable();
+
+  $('#datatable4').DataTable();
+
+  $('#datatable5').DataTable();
+});
+</script>
 @endsection
