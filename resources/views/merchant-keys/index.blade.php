@@ -59,16 +59,11 @@
 					<td>{{ $value->api_key }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->updated_at)) }}">{{ date('d-m-Y',strtotime($value->updated_at)) }}</td>
 					<td class="text-center">
-						@can('setting-edit')
+						
 						<a class="btn btn-primary btn-sm" href="{{ route('merchant-keys.edit',$value->id) }}"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-						@can('setting-delete')
-						<form method="post" action="{{ route('merchant-keys.destroy',$value->id) }}" style='display:inline' >
-        				@csrf
-                  		@method('DELETE')
-						<button type="submit"  onclick="return confirm('Are you sure to Delete the data?');" class="btn btn-danger btn-sm"  title="Delete" ><i class="fas fa-trash"></i></button>
-						</form>
-						@endcan
+						
+						
+						
 					</td>
 				</tr>
 				@endforeach

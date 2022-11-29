@@ -70,40 +70,50 @@
             </x-filter-component>
 
 
-			<table class="table table-bordered table-sm" id="datatable1">
-                <thead>
-                    <tr>
-                    <th scope="col">Invoice Id</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Reciept No</th>
-                    <th scope="col">Created At</th>
-                    <th scope="col">Customer</th>
-                    <th scope="col">Payment Links</th>
-                    <th scope="col">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="table_container">
-                    @if(!empty($data->items))
-                    @foreach($data->items as $invoice)
-                    <tr>
-                        <td><a href="{{ url('/invoice',$invoice->id) }}">{{$invoice->id}}</a></th>
-                        <td>{{number_format(($invoice->line_items[0]->net_amount)/100,2)}}</td>
-                        <td>{{$invoice->receipt}}</td>
-                        <td>{{date('Y-m-d',$invoice->created_at)}}</td>
-                        <td>{{$invoice->customer_details->name}} ({{$invoice->customer_details->contact}} / {{$invoice->customer_details->email}})	</td>
-                        <td>{{$invoice->short_url}}</td>
-                        <td>
-                            @if($invoice->status=='cancelled')
-                            <span class="new badge red">{{$invoice->status}}</span>
-                            @else
-                            <span class="new badge blue">{{$invoice->status}}</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                    @endif
-                </tbody>
-			</table>
+			    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Invoice Id</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Reciept</th>
+                            <th scope="col">Created At</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Payment Links</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_container">
+                        @if(!empty($all_invoices))
+                        @foreach($all_invoices as $invoice)
+                        <?php
+
+                            if(count($invoice->invoice_items)>0 ) {
+                                 $amount = $invoice->invoice_items->sum('amount');
+                            }else{
+                                $amount = 0;
+                            }
+                                                        
+                            if($invoice->customer){
+                                $c = $invoice->customer;
+                                $customer_details = $c->name .' | ' . $c->contact . ' | ' . $c->email;
+                            }else{
+                                $customer_details = '';
+                            }
+
+                        ?>
+                        <tr>
+                            <td><a style="color: blue;" href="{{ url('/invoice',$invoice->invoice_id) }}">{{ $invoice->invoice_id }}</a></td>
+                            <td>{{ number_format($amount,2) }}</td>
+                            <td>{{ $invoice->reciept }}</td>
+                            <td>{{ $invoice->created_at }}</td>
+                            <td>{{ $customer_details }}</td>
+                            <td>{{$invoice->short_url}}</td>
+                            <td>{!! Helpers::badge($invoice->status) !!}</td>
+                        </tr>
+                        @endforeach
+                        @endif
+                    </tbody>                        
+                </table>
 		</div>
 	</div>
 

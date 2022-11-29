@@ -8,6 +8,7 @@ use DB;
 use App\Models\Merchant;
 use App\Models\MerchantKey;
 use App\Models\MerchantUser;
+use App\Models\Invoice;
 use Razorpay\Api\Api;
 use DateTime;
 class InvoiceController extends Controller
@@ -29,12 +30,31 @@ class InvoiceController extends Controller
      */
     public function invoices(Request $request)
     {
-        $api = new Api('rzp_test_YRAqXZOYgy9uyf', 'uSaaMQw3jHK0MPtOnXCSSg51');
-        $data = $api->invoice->all();
-        $data->items = [];
-        //Pageheader set true for breadcrumbs
-        $pageConfigs = ['pageHeader' => true];
-        return view('invoice.index',compact('data'));
+        try{
+            $query = Invoice::with(['invoice_items', 'customer']);
+            if(isset($request->merchant_id) && $request->merchant_id!=''){
+                $query->where('merchant_id',$request->merchant_id);
+            }if(isset($request->invoice_id) && $request->invoice_id!=''){
+                $query->where('invoice_id',$request->invoice_id);
+            }if(isset($request->reciept_number) && $request->reciept_number!=''){
+                $query->where('reciept',$request->reciept_number);
+            }if(isset($request->customer_email) && $request->customer_email!=''){
+                $query->where('customer_email',$request->customer_email);
+            }if(isset($request->customer_contact) && $request->customer_contact!=''){
+                $query->where('customer_contact',$request->customer_contact);
+            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
+                $query->where('status',$request->status);
+            }if(isset($request->daterangepicker) && $request->daterangepicker!='' && isset($request->start_date) && $request->start_date!='' && isset($request->end_date) && $request->end_date!=''){
+                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
+            }
+            $result = $query->get();
+            $all_invoices = $result;
+
+            return view('invoice.index',compact('all_invoices'));
+        }catch(\Exception $e){
+            $msg = $e->getMessage();
+            return $this->sendError($msg);
+        }
     }
 
     public function showInvoice($invoiceId){

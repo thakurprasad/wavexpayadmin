@@ -92,16 +92,10 @@
 					<td class="text-center"> <input data-partner="{{$value->id}}" class="toggle-class partner-toggle btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="yes" data-off="no" {{ ($value->is_partner=="yes")? "checked" : "" }} data-size="xs"> </td>
 					<td class="text-center">
 						<a class="btn btn-info btn-sm" href="{{ url('merchants/profile/'.$value->id) }}" title="View"><i class="fas fa-eye"></i></a>
-						@can('setting-edit')
+						
 						<a class="btn btn-primary btn-sm" href="{{ route('merchants.edit',$value->id) }}"  title="Edit"><i class="fas fa-edit"></i></a>
-						@endcan
-						@can('setting-delete')
-						<form method="post" action="{{ route('merchants.destroy',$value->id) }}" style='display:inline' >
-        				@csrf
-                  		@method('DELETE')
-						<button type="submit"  onclick="return confirm('Are you sure to Delete the data?');" class="btn btn-danger btn-sm"  title="Delete" ><i class="fas fa-trash"></i></button>
-						</form>
-						@endcan
+						
+						
 					</td>
 				</tr>
 				@endforeach

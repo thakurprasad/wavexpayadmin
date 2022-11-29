@@ -17,10 +17,7 @@ class MerchantKeyController extends Controller
     */
     function __construct()
     {
-         $this->middleware('permission:merchant-list');
-         $this->middleware('permission:merchant-create', ['only' => ['create','store']]);
-         $this->middleware('permission:merchant-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:merchant-delete', ['only' => ['destroy']]);
+        
     }
 
     /**
@@ -31,7 +28,7 @@ class MerchantKeyController extends Controller
     public function index(Request $request)
     {
         $data = MerchantKey::select('merchant_keys.*','merchant_name')
-                ->leftJoin('merchants','merchants.id','merchant_keys.merchnat_id')
+                ->leftJoin('merchants','merchants.id','merchant_keys.merchant_id')
                 ->orderBy('merchant_name','ASC')->get();
         return view('merchant-keys.index',compact('data'));
     }

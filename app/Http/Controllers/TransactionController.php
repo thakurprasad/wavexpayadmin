@@ -88,7 +88,7 @@ class TransactionController extends Controller
                 $query->where('receipt',$request->receipt);
             }if(isset($request->status) && $request->status!='' && $request->status!='all'){
                 $query->where('status',$request->status);
-            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
+            }if(isset($request->daterangepicker) && $request->daterangepicker!='' && isset($request->start_date) && $request->start_date!='' && isset($request->end_date) && $request->end_date!=''){
                 $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
             }if(isset($request->amount_range) && $request->amount_range!=''){
                 $amount = explode('-',$request->amount_range);
