@@ -63,6 +63,7 @@
 				
 					<div class="col-md-3"> 
 						<button class="btn btn-sm btn-info" onclick="search_merchant()" type="button" name="action">Submit</button>
+						<a class="btn btn-default btn-sm" href="{{ url('merchants') }}">Reset</a>
 					</div>
 				</div>
 			</form>
@@ -73,6 +74,7 @@
 						<th>Merchant Name</th>
 						<th>Contact Person</th>
 						<th>Phone</th>
+						<th>Email</th>
 						<th>Status</th>
 						<th>Payment Method</th>
 						<th>Updated At</th>
@@ -86,6 +88,7 @@
 					<td>{{ $value->merchant_name }}</td>
 					<td>{{ $value->contact_name }}</td>
 					<td>{{ $value->contact_phone }} </td>
+					<td>{{ (!empty($value->MerchantUsers) ? $value->MerchantUsers->email : '' ) }} </td>
 					<td class="text-center"> <input data-id="{{$value->id}}" class="toggle-class  btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ ($value->status=="Active")? "checked" : "" }} data-size="xs"> </td>
 					<td class="text-center">{{ ucwords($value->merchant_payment_method) }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->updated_at)) }}">{{ date('d-m-Y',strtotime($value->updated_at)) }}</td>

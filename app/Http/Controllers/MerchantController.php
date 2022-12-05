@@ -56,7 +56,7 @@ class MerchantController extends Controller
     public function index(Request $request)
     {
         $all_api_keys = WavexpayApiKey::all();
-        $data = Merchant::orderBy('merchant_name','ASC')->get();
+        $data = Merchant::with(['MerchantUsers'])->orderBy('merchant_name','ASC')->get();
         return view('merchants.index',compact('data','all_api_keys'));
     }
 
@@ -322,16 +322,17 @@ class MerchantController extends Controller
 
 
         $html = '';
-        $query = Merchant::where('id',$merchant_id);
+        $query = Merchant::select("*")->with(['MerchantUsers']);
         if($status!=''){
             $query->where('status',$status);
-        }if($contact_person!=''){
-            $query->where('contact_name',$contact_person);
-        }if($phone!=''){
+        }
+        if($contact_person!=''){
+            $query->where('contact_name','LIKE','%'.$contact_person.'%');
+        }
+        if($phone!=''){
             $query->where('contact_phone',$phone);
         }
         $result = $query->get();
-        
 
         if(!empty($result)){
             foreach($result as $value){
