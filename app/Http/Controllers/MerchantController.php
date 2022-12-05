@@ -55,9 +55,30 @@ class MerchantController extends Controller
 
     public function index(Request $request)
     {
+        #\DB::enableQueryLog(); // Enable query log
         $all_api_keys = WavexpayApiKey::all();
-        $data = Merchant::with(['MerchantUsers'])->orderBy('merchant_name','ASC')->get();
-        return view('merchants.index',compact('data','all_api_keys'));
+        $data = Merchant::with(['MerchantUsers']);
+
+        if($request->filled('contact_name')){
+            $data = $data->where('contact_name', 'LIKE', '%'.$request->contact_name.'%');
+        }
+        
+        if($request->filled('merchant_name')){
+            $data = $data->where('merchant_name', 'LIKE', '%'.$request->merchant_name.'%');
+        }
+
+        if($request->filled('contact_phone')){
+            $data = $data->where('contact_phone', 'LIKE', '%'.$request->contact_phone.'%');
+        }
+
+        if($request->filled('status')){
+            $data = $data->where('status',$request->status);
+        }
+
+        $data = $data->orderBy('merchant_name','ASC')->get();
+        #dd(\DB::getQueryLog()); // Show
+        $get = $request->input();
+        return view('merchants.index',compact('data','all_api_keys', 'get'));
     }
 
     /**

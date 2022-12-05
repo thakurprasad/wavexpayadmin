@@ -41,32 +41,34 @@
         </div>
 
 		<div class="card-body">
-			<form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant">
+			<!-- <form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant"> -->
+
+				 {!! Form::model($get, ['method' => 'GET', 'id' => 'search_form' ]) !!}
 				@csrf
 				<div class="row">
-					<x-merchant-key-component />
-					<div class="col-md-3">
-						<input placeholder="Contact Person" id="contact_person" name="contact_person" type="text" class="form-control">
+					<!-- <x-merchant-key-component/> -->
+					<div class="col-md-3"> 
+						{!! Form::text('contact_name', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'contact_person')) !!}    
 					</div>
 					<div class="col-md-3">
-						<select class="form-control" name="status">
-							<option value="">Select Status</option>
-							<option value="authorized">Authorized</option>
-							<option value="captured">Captured</option>
-							<option value="refunded">Refunded</option>
-							<option value="failed">Failed</option>
-						</select>
+						<?php $status_arr = [
+								''=> 'Select Status', 
+								'Active'=>'Active', 
+								'Inactive'=>'Inactive'
+								]; 
+						?>
+						  {!! Form::select('status', $status_arr , null, array('class' => 'form-control', 'id'=>'status' )) !!}
 					</div>
 					<div class="col-md-3">
-						<input placeholder="Phone" id="phone" name="phone" type="text" class="form-control">
+						{!! Form::text('contact_phone', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'phone')) !!}  
 					</div>
 				
 					<div class="col-md-3"> 
-						<button class="btn btn-sm btn-info" onclick="search_merchant()" type="button" name="action">Submit</button>
+						<button class="btn btn-sm btn-info" onclick="search_merchant()" type="submit" name="action">Submit</button>
 						<a class="btn btn-default btn-sm" href="{{ url('merchants') }}">Reset</a>
 					</div>
 				</div>
-			</form>
+			{!! Form::close() !!}
 			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
