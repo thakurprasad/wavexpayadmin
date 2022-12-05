@@ -44,7 +44,7 @@
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle"
-                       src="{{ url('bower_components/admin-lte/dist/img/user2-160x160.jpg') }}"
+                       src="{{ asset('bower_components/admin-lte/dist/img/user2-160x160.jpg') }}"
                        alt="User profile picture">
                 </div>
 
