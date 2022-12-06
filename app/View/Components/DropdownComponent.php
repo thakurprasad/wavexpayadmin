@@ -50,6 +50,9 @@ class DropdownComponent extends Component
         if($this->status == 'invoices'){
             $options = ['draft'=>'Draft', 'issued'=>'Issued','partially_paid'=>'Partially Paid','paid'=>'Paid','cancelled'=>'Cancelled','expired'=>'Expired','deleted'=>'Deleted'];
         }
+        if($this->status == 'merchant_status'){
+            $options = ['Active'=>'Active', 'Inactive'=>'Inactive'];
+        }
         return view('components.dropdown-component', ['options'=> $options]);
     }
 }

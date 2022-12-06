@@ -37,7 +37,7 @@ class WavexpayApiKey extends Model
         ->join('api_key_categories', 'api_key_categories.id', '=', 'wavexpay_api_keys.category_id')->get();
         $DATA[''] = '-- Select --';
         foreach ($rows as $key => $row) {
-            $DATA[$row->id] = $row->test_api_key . ' -'. $row->category_name . ' - '.$row->key_description;
+            $DATA[$row->id] = ucfirst($row->category_name) . ' - '.$row->key_description;
         }
         return $DATA;
     }

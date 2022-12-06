@@ -1,14 +1,32 @@
-<div class="form-group">
+<!-- <div class="form-group">
     <div id="{{$daterangepicker_id}}">&nbsp;
         <group>
         <i class="fa fa-calendar"></i>&nbsp;
         <span class="selected_filter"></span>&nbsp; 
         <i class="fa fa-caret-down"></i> &nbsp;
         </group>
-        <span class="selected_date"></span>
-        <input type="text" name="{{$daterangepicker_id}}" id="_{{$daterangepicker_id}}" style="display: none;">
+        <span class="selected_date" style="display:none;"></span>
+        <input class="form-control" type="text" name="{{$daterangepicker_id}}" id="_{{$daterangepicker_id}}" style="width:50%">
     </div>
 </div>
+ -->
+<div class="input-group">
+
+    <div id="{{$daterangepicker_id}}">&nbsp;
+        <group>
+        <i class="fa fa-calendar"></i>&nbsp;
+        <span class="selected_filter"></span>&nbsp; 
+        <i class="fa fa-caret-down"></i> &nbsp;
+        </group>
+        <span class="selected_date" style="display:none;"></span>
+    </div>
+      <div class="form-outline">
+         <input class="form-control" type="text" name="{{$daterangepicker_id}}" id="_{{$daterangepicker_id}}">
+     </div>
+
+</div>
+
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -17,6 +35,7 @@ $(function() {
     var ranges = 'None';
 
     function cb(start, end, ranges) {
+        //alert("start " + start + " end: " +end + " ranges : " + ranges);
         if(ranges == 'None'){
             $('#{{$daterangepicker_id}} span.selected_date').html('');    
 
@@ -56,15 +75,19 @@ $(function() {
 <style type="text/css">
 
 #{{$daterangepicker_id}} group {
-    background-color: #F69321;
-    padding: 6px 14px;
+   background-color: #F69321;
+    padding: 8px 15px;
     color: white;
-    margin-left: -13px;
+    margin-left: -11px;
     border-radius: 8px 0px 0px 7px;
-    margin-right: 14px;
+    margin-right: -1px;
 }
 #{{$daterangepicker_id}} {
-    cursor: pointer;padding: 5px 10px;border: 1px solid #ccc;padding-left: 0px;
+    cursor: pointer;
+    padding: 5px 0px;
+    /*padding: 5px 10px;*/
+    border: 1px solid #ccc;
+    padding-left: 0px;
 }
  
 </style>

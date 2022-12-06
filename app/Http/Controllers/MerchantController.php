@@ -55,7 +55,8 @@ class MerchantController extends Controller
 
     public function index(Request $request)
     {
-        #\DB::enableQueryLog(); // Enable query log
+        
+       # \DB::enableQueryLog(); // Enable query log
         $all_api_keys = WavexpayApiKey::all();
         $data = Merchant::with(['MerchantUsers']);
 
@@ -74,6 +75,22 @@ class MerchantController extends Controller
         if($request->filled('status')){
             $data = $data->where('status',$request->status);
         }
+        if($request->filled('wavexpay_api_key_id')){
+            $data = $data->where('wavexpay_api_key_id', $request->wavexpay_api_key_id);
+        }
+
+        if($request->filled('daterangepicker')){
+            $date_arr =  explode(" - " , $request->daterangepicker);
+            if(count($date_arr)>1){
+              $from_date =  date('Y-m-d', strtotime($date_arr[0]));
+              $to_date   =  date('Y-m-d', strtotime($date_arr[1]));
+              $data = $data->whereBetween('created_at', [$from_date, $to_date." 23:59:59"]);
+            }           
+        }
+
+
+       
+
 
         $data = $data->orderBy('merchant_name','ASC')->get();
         #dd(\DB::getQueryLog()); // Show

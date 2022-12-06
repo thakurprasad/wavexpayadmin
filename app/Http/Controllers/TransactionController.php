@@ -36,6 +36,7 @@ class TransactionController extends Controller
      */
     public function payments(Request $request)
     {
+
         try{
             $query = Payment::query();
             if(isset($request->payment_id) && $request->payment_id!=''){
@@ -50,9 +51,9 @@ class TransactionController extends Controller
                 $query->where('contact',$request->contact);
             }if(isset($request->payment_method) && $request->payment_method!=''){
                 $query->where('payment_method',$request->payment_method);
-            }if($request->daterangepicker!='' && $request->start_date!='' && $request->end_date!=''){
-                $query->whereBetween('created_at', [$request->start_date." 00:00:00", $request->end_date." 23:59:59"]);
-            }if(isset($request->amount_range) && $request->amount_range!=''){
+            }
+
+            if(isset($request->amount_range) && $request->amount_range!=''){
                 $amount = explode('-',$request->amount_range);
                 $min = $amount[0];
                 $max = $amount[1];
@@ -61,6 +62,15 @@ class TransactionController extends Controller
 
 
             /*$data = Payment::with(['payment_details'])->get();*/
+
+             if($request->filled('daterangepicker')){
+                $date_arr =  explode(" - " , $request->daterangepicker);
+                if(count($date_arr)>1){
+                  $from_date =  date('Y-m-d', strtotime($date_arr[0]));
+                  $to_date   =  date('Y-m-d', strtotime($date_arr[1]));
+                 $query->whereBetween('created_at', [$from_date, $to_date." 23:59:59"]);
+                }           
+            }
 
             $result = $query->paginate(10);
             $data = $result;

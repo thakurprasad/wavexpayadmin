@@ -41,34 +41,30 @@
         </div>
 
 		<div class="card-body">
-			<!-- <form class="col s12" id="search_form" method="POST" action="<?php url('/') ?>/merchants/searchmerchant"> -->
 
-				 {!! Form::model($get, ['method' => 'GET', 'id' => 'search_form' ]) !!}
-				@csrf
-				<div class="row">
-					<!-- <x-merchant-key-component/> -->
-					<div class="col-md-3"> 
-						{!! Form::text('contact_name', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'contact_person')) !!}    
+			<x-filter-component form_id="search_form" action="merchants" method="GET" status="merchant_status"> 
+			@section('advance_filters') 
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Contact Name</label>
+						{!! Form::text('contact_name', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'contact_person')) !!} 
 					</div>
-					<div class="col-md-3">
-						<?php $status_arr = [
-								''=> 'Select Status', 
-								'Active'=>'Active', 
-								'Inactive'=>'Inactive'
-								]; 
-						?>
-						  {!! Form::select('status', $status_arr , null, array('class' => 'form-control', 'id'=>'status' )) !!}
+				</div> 
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Email</label>
+						{!! Form::text('email', null, array('placeholder' => 'Email', 'class' => 'form-control', 'id'=>'email')) !!} 
 					</div>
-					<div class="col-md-3">
+				</div> 
+				<div class="col-sm-3">
+					<div class="form-group">
+						<label>Mobile</label>
 						{!! Form::text('contact_phone', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'phone')) !!}  
 					</div>
-				
-					<div class="col-md-3"> 
-						<button class="btn btn-sm btn-info" onclick="search_merchant()" type="submit" name="action">Submit</button>
-						<a class="btn btn-default btn-sm" href="{{ url('merchants') }}">Reset</a>
-					</div>
-				</div>
-			{!! Form::close() !!}
+				</div>  
+			@endsection
+		</x-filter-component> 
+
 			<br clear="all"><br clear="all">
 			<table class="table table-bordered table-sm" id="datatable">
 				<thead>
@@ -79,7 +75,7 @@
 						<th>Email</th>
 						<th>Status</th>
 						<th>Payment Method</th>
-						<th>Updated At</th>
+						<th>Created At</th>
 						<th>Is Partner?</th>
 						<th>Action</th>
 					</tr>
@@ -93,7 +89,7 @@
 					<td>{{ (!empty($value->MerchantUsers) ? $value->MerchantUsers->email : '' ) }} </td>
 					<td class="text-center"> <input data-id="{{$value->id}}" class="toggle-class  btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ ($value->status=="Active")? "checked" : "" }} data-size="xs"> </td>
 					<td class="text-center">{{ ucwords($value->merchant_payment_method) }} </td>
-					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->updated_at)) }}">{{ date('d-m-Y',strtotime($value->updated_at)) }}</td>
+					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d/m/Y',strtotime($value->created_at)) }}</td>
 					<td class="text-center"> <input data-partner="{{$value->id}}" class="toggle-class partner-toggle btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="yes" data-off="no" {{ ($value->is_partner=="yes")? "checked" : "" }} data-size="xs"> </td>
 					<td class="text-center">
 						<a class="btn btn-info btn-sm" href="{{ url('merchants/profile/'.$value->id) }}" title="View"><i class="fas fa-eye"></i></a>
