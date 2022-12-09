@@ -7,14 +7,12 @@ use App\Models\Payment;
 use App\Models\Order;
 use App\Models\Refund;
 use App\Models\Dispute;
-use App\Models\DashboardHeader;
+use App\Models\DashBoardHeader;
 use App\Models\User;
 use DB;
 use Carbon\Carbon;
 use Auth;
 use Helpers;
-
-
 
 
 class HomeController extends Controller
@@ -62,7 +60,7 @@ class HomeController extends Controller
             ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Pages"], ['name' => "Blank Page"],
         ];
 
-        $dashboard_header = DashboardHeader::select('*')->first();
+        $dashboard_header = DashBoardHeader::select('*')->first();
 
 
         $merchant_id = '';

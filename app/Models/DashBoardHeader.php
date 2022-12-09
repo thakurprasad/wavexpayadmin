@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DashBoardHeader extends Model
+class DashBoardHeader extends Model 
 {
     protected $table = 'dashboardheader';
     protected $primaryKey = 'id';
