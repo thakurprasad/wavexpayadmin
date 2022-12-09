@@ -13,21 +13,20 @@
         </div>
 
         <x-merchant-key-component />
-
         <x-dropdown-component status="{{$status}}" />
     </div>
   
-    <div class="col-md-12"> 
+   <!--  <div class="col-md-12"> 
         <input type="button" onclick="show_hide('show')" name="advance-filters" class="btn btn-link btn-sm show-advance-filters" value="Show Advance Filters">
         <input type="button" onclick="show_hide('hide')" name="advance-filters" class="btn btn-link btn-sm hide-advance-filters" value="Hide Advance Filters" style="display: none;">
-    </div>
+    </div>  -->
     <div class="advance-filters" style="display:none;" id="advance_filters_section">
-        <div class="row col-md-12">                  
+        <div class="row col-md-12">                
             @yield('advance_filters')
         </div>
     </div>
 
-      <div class="row col-md-12" style="padding-left: 10px;">
+    <div class="row col-md-12" style="padding-left: 10px;">
         <div class="col-md-8"> </div>
         <div class="col-md-2 col-sm-2">
             <div class="form-group pad-30">
@@ -39,7 +38,7 @@
                 <button type="button" class="btn btn-secondary btn-block"  onclick="reset_page()" id="filter_reset_btn">Reset</button>
             </div>
         </div>
-    </div>
+    </div> 
 
 {!! Form::close() !!}
 

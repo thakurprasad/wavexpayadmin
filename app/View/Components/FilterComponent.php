@@ -15,11 +15,13 @@ class FilterComponent extends Component
     public $method = "POST";
     public $action = "";
     public $status = '';
-    public function __construct($form_id="search_form", $method = 'POST', $action = '', $status = '')
+    public $advance_filters = 'show';
+    public function __construct($form_id="search_form", $method = 'GET', $action = '', $status = '', $advancefilters)
     {
         $this->form_id = $form_id;
         $this->method  = $method;
         $this->status  = $status;
+        $this->advance_filters  = $advancefilters;
         $this->action  = url($action);
     }
 
@@ -30,6 +32,11 @@ class FilterComponent extends Component
      */
     public function render()
     {
-        return view('components.filter-component');
+        if($this->advance_filters == 'show'){
+            return view('components.filter-component');
+        }else{
+            return view('components.filter-component-2');    
+        }
+        
     }
 }

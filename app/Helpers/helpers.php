@@ -134,6 +134,45 @@ class Helpers
         return $amount;
     }
 
+    public static function business_type_arr(){
+        return [
+            ''=> '-- Select --',
+            'registered'=>'Registered',
+            'notregistered'=>'Not Yet Registered'
+        ];
+    }
+
+    public static function registerd_business_arr(){
+        return [
+            ''=> '-- Select --',
+            'proprietorship' => 'Proprietorship',
+            'partnership' => 'Partnership',
+            'privatelimited' => 'Private Limited',
+            'publiclimited' => 'Public Limited',
+            'llp' => 'LLP',
+            'trust' => 'Trust'
+        ];
+    }
+
+    public static function payment_method_arr(){
+        return [
+            ''=> '-- Select --',
+            'card' => 'Card',
+            'upi' => 'UPI',
+            'netbanking' => 'Netbanking',
+            'wallet' => 'Wallet'
+
+        ];
+    }
+
+    public static function is_partner_arr(){
+        return [
+            '' => '-- Select --',
+            'no' => 'No',
+            'yes' => 'Yes'
+        ];
+    }
+
 
 }
 

@@ -44,6 +44,8 @@
 
 			<x-filter-component form_id="search_form" action="merchants" method="GET" status="merchant_status"> 
 			@section('advance_filters') 
+				
+
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label>Contact Name</label>
@@ -62,6 +64,43 @@
 						{!! Form::text('contact_phone', null, array('placeholder' => 'Contact Person', 'class' => 'form-control', 'id'=>'phone')) !!}  
 					</div>
 				</div>  
+				<div class="col-md-3">
+				 <div class="form-group">
+				    <label>Is Partner</label>
+					{!! Form::select('is_partner', Helpers::is_partner_arr() , null, array('class' => 'form-control', 'id'=>'is_partner' )) !!}
+					</div>
+				</div>	
+
+				<div class="col-md-3">
+				 <div class="form-group">
+				    <label>Business Type</label>
+					{!! Form::select('business_type', Helpers::business_type_arr() , null, array('class' => 'form-control', 'id'=>'business_type' )) !!}
+					</div>
+				</div>
+
+				<div class="col-md-3">
+				 <div class="form-group">
+				    <label>Business Category</label>
+					{!! Form::select('business_category', Helpers::registerd_business_arr() , null, array('class' => 'form-control', 'id'=>'business_category' )) !!}
+					</div>
+				</div>	
+
+<?php 
+$colums = ['business_description','display_name', 'email',  'pan_holder_name', 'billing_label', 'billing_address', 'billing_pincode', 'billing_city', 'billing_state', 'aadhar_no', 'gst_no' ];
+      
+        foreach($colums as $key => $col) { 
+        	$label = ucwords(str_replace("_", " ", $col) );
+        	?>
+             <div class="col-sm-3">
+					<div class="form-group">
+						<label>{{$label}}</label>
+						{!! Form::text($col, null, array('placeholder' => $label, 'class' => 'form-control', 'id'=>$col )) !!}  
+					</div>
+				</div> 
+        <?php }
+
+?>
+
 			@endsection
 		</x-filter-component> 
 
@@ -86,7 +125,7 @@
 					<td>{{ $value->merchant_name }}</td>
 					<td>{{ $value->contact_name }}</td>
 					<td>{{ $value->contact_phone }} </td>
-					<td>{{ (!empty($value->MerchantUsers) ? $value->MerchantUsers->email : '' ) }} </td>
+					<td>{{ $value->email }} </td>
 					<td class="text-center"> <input data-id="{{$value->id}}" class="toggle-class  btn-xs" type="checkbox" data-onstyle="success" data-offstyle="danger" data-toggle="toggle" data-on="Active" data-off="Inactive" {{ ($value->status=="Active")? "checked" : "" }} data-size="xs"> </td>
 					<td class="text-center">{{ ucwords($value->merchant_payment_method) }} </td>
 					<td class="text-center" data-sort="{{ date('d-m-Y',strtotime($value->created_at)) }}">{{ date('d/m/Y',strtotime($value->created_at)) }}</td>

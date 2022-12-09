@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Payment;
+use App\Models\Order;
+use App\Models\Refund;
+use App\Models\Dispute;
+use App\Models\DashboardHeader;
+use App\Models\User;
 use DB;
 use Carbon\Carbon;
 use Auth;
@@ -28,14 +34,35 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        
+        \DB::enableQueryLog(); // Enable query log
+       
+        $status_wise_payments = Payment::select(
+            'status', 
+            DB::raw('sum(amount) as TotalAmount'), 
+            DB::raw('count(1) as ct')
+        )->groupBy('status')
+        ->get();
+
+         $payment_method_wise_payments = Payment::select(
+            'payment_method', 
+            DB::raw('sum(amount) as TotalAmount'), 
+            DB::raw('count(1) as ct')
+        )->groupBy('payment_method')
+        ->get();
+
+        /*
+        echo json_encode($status_wise_payments);
+        echo json_encode($payment_method_wise_payments);
+        dd(\DB::getQueryLog()); */
+
+
         $breadcrumbs = [
             ['link' => "/", 'name' => "Home"], ['link' => "javascript:void(0)", 'name' => "Pages"], ['name' => "Blank Page"],
         ];
 
-        $dashboard_header = DB::table('dashboardheader')->first();
+        $dashboard_header = DashboardHeader::select('*')->first();
 
 
         $merchant_id = '';
@@ -44,20 +71,19 @@ class HomeController extends Controller
         {
             $merchant_id = $get_all_merchants[0]->id;
         }
-        
 
-        $payments = DB::table('payments')->get();
-        $orders = DB::table('orders')->get();
-        $disputes = DB::table('disputes')->get();
-        $refunds = DB::table('refunds')->get();
-        $users = DB::table('users')->get();
+        $payments = Payment::all();
+        $orders = Order::all();
+        $disputes = Dispute::all();
+        $refunds = Refund::all();
+        $users = User::all();
 
 
         if($merchant_id!=''){
-            $payments = DB::table('payments')->where('merchant_id',$merchant_id)->get();
-            $orders = DB::table('orders')->where('merchant_id',$merchant_id)->get();
-            $disputes = DB::table('disputes')->where('merchant_id',$merchant_id)->get();
-            $refunds = DB::table('refunds')->where('merchant_id',$merchant_id)->get();
+            $payments = Payment::where('merchant_id',$merchant_id)->get();
+            $orders = Order::where('merchant_id',$merchant_id)->get();
+            $disputes = Dispute::where('merchant_id',$merchant_id)->get();
+            $refunds = Refund::where('merchant_id',$merchant_id)->get();
         }
 
 
@@ -65,7 +91,7 @@ class HomeController extends Controller
         
 
         /*****************payment value calculation for payment line graph***********************/
-        $query = DB::table('payments')->whereMonth('payment_created_at', date('m'));
+        $query = Payment::whereMonth('payment_created_at', date('m'));
         if(isset($merchant_id) && $merchant_id!='')
         {
             $query->where('merchant_id',$merchant_id);
@@ -75,7 +101,7 @@ class HomeController extends Controller
         $payment_current_month_data = $query->get(['amount','payment_created_at']);
 
         //print_r($payment_current_month_data);exit;
-        $query2 = DB::table('payments')->orderBy('amount', 'desc');
+        $query2 = Payment::orderBy('amount', 'desc');
         if(isset($merchant_id) && $merchant_id!='')
         {
             $query2->where('merchant_id',$merchant_id);
@@ -85,7 +111,7 @@ class HomeController extends Controller
 
 
 
-        $query3 = DB::table('payments')->orderBy('amount', 'asc');
+        $query3 =  Payment::orderBy('amount', 'asc');
         if(isset($merchant_id) && $merchant_id!='')
         {
             $query3->where('merchant_id',$merchant_id);
@@ -116,7 +142,7 @@ class HomeController extends Controller
 
 
         /*****************order value calculation for total line graph***********************/
-        $query4 = DB::table('orders')->whereMonth('order_created_at', date('m'));
+        $query4 = Order::whereMonth('order_created_at', date('m'));
         if(isset($merchant_id) && $merchant_id!='')
         {
             $query4->where('merchant_id',$merchant_id);
@@ -125,7 +151,7 @@ class HomeController extends Controller
         $order_current_month_data = $query4->get(['amount','order_created_at']);
 
 
-        $query5 = DB::table('orders')->whereMonth('order_created_at', date('m'));
+        $query5 = Order::whereMonth('order_created_at', date('m'));
         if(isset($merchant_id) && $merchant_id!='')
         {
             $query5->where('merchant_id',$merchant_id);
@@ -231,7 +257,7 @@ class HomeController extends Controller
 
 
         if($status_filter=='' || $status_filter=='all'){
-            $query = DB::table('payments')->select(
+            $query = Payment::select(
                 DB::raw("(SUM(amount)) as total_amount"),
                 DB::raw("DATE(payment_created_at) as date")
             );
@@ -269,7 +295,7 @@ class HomeController extends Controller
 
 
 
-        $order_query = DB::table('orders')->select(
+        $order_query = Order::select(
             DB::raw("(SUM(amount)) as total_amount"),
             DB::raw("DATE(order_created_at) as date")
         );
@@ -308,10 +334,10 @@ class HomeController extends Controller
         $orderyvalue1=rtrim($orderyvalue1,",");
 
         //success percentage calculation
-        $payments = DB::table('payments')->whereBetween('payment_created_at', [$start_date, $end_date])->get();
-        $orders = DB::table('orders')->whereBetween('order_created_at', [$start_date, $end_date])->get();
-        $disputes = DB::table('disputes')->whereBetween('created_at', [$start_date, $end_date])->get();
-        $refunds = DB::table('refunds')->whereBetween('created_at', [$start_date, $end_date])->get();
+        $payments = Payment::whereBetween('payment_created_at', [$start_date, $end_date])->get();
+        $orders = Order::whereBetween('order_created_at', [$start_date, $end_date])->get();
+        $disputes = Dispute::whereBetween('created_at', [$start_date, $end_date])->get();
+        $refunds = Refund::whereBetween('created_at', [$start_date, $end_date])->get();
 
         if(count($payments)>0)
         {

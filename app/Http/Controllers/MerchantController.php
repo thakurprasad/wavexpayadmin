@@ -56,40 +56,55 @@ class MerchantController extends Controller
     public function index(Request $request)
     {
         
-       # \DB::enableQueryLog(); // Enable query log
+       \DB::enableQueryLog(); // Enable query log
         $all_api_keys = WavexpayApiKey::all();
-        $data = Merchant::with(['MerchantUsers']);
+        $data = Merchant::select('merchants.*', 'merchant_users.email')
+        ->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id');
+        
+       if($request->filled('daterangepicker')){
+            $date_arr =  explode(" - " , $request->daterangepicker);
+            if(count($date_arr)>1){
+              $from_date =  date('Y-m-d', strtotime($date_arr[0]));
+              $to_date   =  date('Y-m-d', strtotime($date_arr[1]));
+              $data = $data->whereBetween('merchants.created_at', [$from_date, $to_date." 23:59:59"]);
+            }           
+        }
+
+        if($request->filled('wavexpay_api_key_id')){
+            $data = $data->where('merchants.wavexpay_api_key_id', $request->wavexpay_api_key_id);
+        }
+
+        if($request->filled('merchant_id')){
+            $data = $data->where('merchants.id',$request->merchant_id);
+        }
+
+        if($request->filled('status')){
+            $data = $data->where('merchants.status',$request->status);
+        }
+        if($request->filled('is_partner')){
+            $data = $data->where('merchants.is_partner',$request->is_partner);
+        }
 
         if($request->filled('contact_name')){
             $data = $data->where('contact_name', 'LIKE', '%'.$request->contact_name.'%');
         }
         
         if($request->filled('merchant_name')){
-            $data = $data->where('merchant_name', 'LIKE', '%'.$request->merchant_name.'%');
+            $data = $data->where('merchants.merchant_name', 'LIKE', '%'.$request->merchant_name.'%');
         }
 
         if($request->filled('contact_phone')){
-            $data = $data->where('contact_phone', 'LIKE', '%'.$request->contact_phone.'%');
+            $data = $data->where('merchants.contact_phone', 'LIKE', '%'.$request->contact_phone.'%');
         }
 
-        if($request->filled('status')){
-            $data = $data->where('status',$request->status);
+        
+        $colums = ['display_name', 'email', 'business_type', 'business_category', 'business_description', 'pan_holder_name', 'billing_label', 'billing_address', 'billing_pincode', 'billing_city', 'billing_state', 'aadhar_no', 'gst_no', ];
+      
+        foreach($colums as $key => $col) {
+             if($request->filled($col)){
+                 $data = $data->where('merchant_users.'. $col, 'LIKE', '%'.$request->input($col).'%');
+            }
         }
-        if($request->filled('wavexpay_api_key_id')){
-            $data = $data->where('wavexpay_api_key_id', $request->wavexpay_api_key_id);
-        }
-
-        if($request->filled('daterangepicker')){
-            $date_arr =  explode(" - " , $request->daterangepicker);
-            if(count($date_arr)>1){
-              $from_date =  date('Y-m-d', strtotime($date_arr[0]));
-              $to_date   =  date('Y-m-d', strtotime($date_arr[1]));
-              $data = $data->whereBetween('created_at', [$from_date, $to_date." 23:59:59"]);
-            }           
-        }
-
-
-       
 
 
         $data = $data->orderBy('merchant_name','ASC')->get();
@@ -336,14 +351,22 @@ class MerchantController extends Controller
     public function getmerchantbykey(Request $request){
         try{
             $key_id = $request->key_id;
-            $merchants = Merchant::select('id','merchant_name')->where('wavexpay_api_key_id',$key_id)->get();
-            /*$html='<option value="">Select Merchant</option>
-            <option value="all">All</option>';
-            if(count($merchants)>0){
-                foreach($merchants as $merchant){
-                    $html.='<option value="'.$merchant->id.'">'.$merchant->merchant_name.'</option>';
-                }
-            }*/
+            $merchants = Merchant::select(
+                'merchants.id',
+                'merchants.merchant_name', 
+                'merchants.contact_phone', 
+                'merchant_users.email'
+            )
+            ->join('merchant_users', 'merchant_users.merchant_id', '=', 'merchants.id')
+            ->where([
+                'wavexpay_api_key_id'=>$key_id,
+                'is_partner'=>'no',
+                'status' => 'Active'
+                ])
+            ->whereNotNull('wavexpay_api_key_id')
+            ->orderBy('merchant_name', 'ASC')
+            ->get();
+        
             return $this->sendResponse($merchants,'Merchant Recieved Successfully');
         }catch(\Exception $e){
             $msg = $e->getMessage();

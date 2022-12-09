@@ -21,9 +21,14 @@
 <section class="content">
   <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
+        <x-filter-component form_id="search_form" action="home" method="GET" status="payments" advancefilters="hide" /> 
+    </div>
+
+    <div class="card">
+     <!--    <div class="card-header">
           <div class="row">
-            <div class="col-md-4">
+
+            <div class="col-md-4">              
               @php 
               $get_all_merchants = Helpers::get_all_merchants();
               @endphp
@@ -55,7 +60,7 @@
             </div>
           </div>
         </div>
-
+ -->
         <div class="card-body">
           <!-- Small boxes (Stat box) -->
           <div class="row">            
@@ -114,6 +119,10 @@
             </div>
           </div>
           <!-- /.row -->
+
+          <div class="row">
+            <x-heigh-chart get="{{ json_encode(Request::all()) }}" />
+          </div>
 
           <div class="row" style="margin-top: 30px;">            
             <div class="col-lg-6 col-6">

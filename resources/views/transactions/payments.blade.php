@@ -54,7 +54,7 @@
 				<div class="col-sm-3">
 					<div class="form-group">
 						<label for="email">Payment Method</label>
-						<input type="text" name="payment_method" value="{{ app('request')->input('payment_method') }}" type="text" class="form-control" id="payment_method" placeholder="Payment Method">
+						{!! Form::select('payment_method', Helpers::payment_method_arr() , null, array('class' => 'form-control', 'id'=>'payment_method' )) !!}
 					</div>
 				</div>
 				<div class="col-sm-3">

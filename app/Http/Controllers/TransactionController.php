@@ -38,42 +38,54 @@ class TransactionController extends Controller
     {
 
         try{
-            $query = Payment::query();
-            if(isset($request->payment_id) && $request->payment_id!=''){
-                $query->where('payment_id',$request->payment_id);
-            }if(isset($request->merchant_id) && $request->merchant_id!='' && $request->merchant_id!='all'){
-                $query->where('merchant_id',$request->merchant_id);
-            }if(isset($request->email) && $request->email!=''){
-                $query->where('email',$request->email);
-            }if(isset($request->status) && $request->status!='' && $request->status!='all'){
-                $query->where('status',$request->status);
-            }if(isset($request->contact) && $request->contact!=''){
-                $query->where('contact',$request->contact);
-            }if(isset($request->payment_method) && $request->payment_method!=''){
-                $query->where('payment_method',$request->payment_method);
-            }
+            
+            $query = Payment::select('payments.*')
+                    ->join('merchants', 'merchants.id', '=', 'payments.merchant_id');
 
-            if(isset($request->amount_range) && $request->amount_range!=''){
-                $amount = explode('-',$request->amount_range);
-                $min = $amount[0];
-                $max = $amount[1];
-                $query->where('amount', '>=', $min)->where('amount', '<=', $max);
-            }
-
-
-            /*$data = Payment::with(['payment_details'])->get();*/
-
-             if($request->filled('daterangepicker')){
+            if($request->filled('daterangepicker')){
                 $date_arr =  explode(" - " , $request->daterangepicker);
                 if(count($date_arr)>1){
                   $from_date =  date('Y-m-d', strtotime($date_arr[0]));
                   $to_date   =  date('Y-m-d', strtotime($date_arr[1]));
-                 $query->whereBetween('created_at', [$from_date, $to_date." 23:59:59"]);
+                $query = $query->whereBetween('payments.created_at', [$from_date, $to_date." 23:59:59"]);
                 }           
             }
 
-            $result = $query->paginate(10);
-            $data = $result;
+            if($request->filled('wavexpay_api_key_id')){
+                $query = $query->where('merchants.wavexpay_api_key_id', $request->wavexpay_api_key_id);
+            }
+
+            if($request->filled('merchant_id')){
+                $query = $query->where('payments.merchant_id',$request->merchant_id);
+            }
+
+            if($request->filled('status')){
+                $query = $query->where('payments.status',$request->status);
+            }
+
+
+            if(isset($request->payment_id) && $request->payment_id!=''){
+                $query = $query->where('payments.payment_id',$request->payment_id);
+            }
+
+            if(isset($request->email) && $request->email!=''){
+                $query = $query->where('payments.email',$request->email);
+            }
+            if(isset($request->contact) && $request->contact!=''){
+                $query = $query->where('payments.contact',$request->contact);
+            }
+            if(isset($request->payment_method) && $request->payment_method!=''){
+                $query = $query->where('payments.payment_method',$request->payment_method);
+            }
+ 
+            if(isset($request->amount_range) && $request->amount_range!=''){
+                $amount = explode('-',$request->amount_range);
+                $min = $amount[0];
+                $max = $amount[1];
+                $query = $query->where('payments.amount', '>=', $min)->where('payments.amount', '<=', $max);
+            }
+
+            $data =  $query->paginate(10);
 
             $pageConfigs = ['pageHeader' => true];
             return view('transactions.payments',compact('data'));
