@@ -86,7 +86,7 @@
 				</div>	
 
 <?php 
-$colums = ['business_description','display_name', 'email',  'pan_holder_name', 'billing_label', 'billing_address', 'billing_pincode', 'billing_city', 'billing_state', 'aadhar_no', 'gst_no' ];
+$colums = ['business_description','display_name',  'pan_holder_name', 'billing_label', 'billing_address', 'billing_pincode', 'billing_city', 'billing_state', 'aadhar_no', 'gst_no' ];
       
         foreach($colums as $key => $col) { 
         	$label = ucwords(str_replace("_", " ", $col) );

@@ -56,13 +56,13 @@
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
-                    <b>Pending</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'pending')}}</a>
+                    <b>Pending</b> <a class="float-right">₹ {{Helpers::get_payment_data($data->id,'pending')}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Success</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'captured')}}</a>
+                    <b>Success</b> <a class="float-right">₹ {{Helpers::get_payment_data($data->id,'captured')}}</a>
                   </li>
                   <li class="list-group-item">
-                    <b>Failure</b> <a class="float-right">₹{{Helpers::get_payment_data($data->id,'failed')}}</a>
+                    <b>Failure</b> <a class="float-right">₹ {{Helpers::get_payment_data($data->id,'failed')}}</a>
                   </li>
                 </ul>
 
@@ -134,60 +134,71 @@
               <div class="card-body">
                 <div class="tab-content">
                   
-                  <div class="active tab-pane" id="tab1">
-                    <div class="row">
+                  <div class="active tab-pane merchant-profile-section" id="tab1">
 
+                    <div class="section">
+                      <h4>Merchant Profile Deatils </h4>
+                      <div class="col-md-12 row">
+                         <div class="col-md-6">
+                           <p><label><strong>Name: </strong></label> {{$data->MerchantUsers->name}}</p>
+                           <p><label><strong>Mobile: </strong></label> {{$data->contact_phone}}</p>
+                           <p><label><strong>Email: </strong></label> {{$data->MerchantUsers->email}}</p>
+                           <p><label><strong>Email Verified At: </strong></label> {{$data->MerchantUsers->email_verified_at}}</p>
+                           <p><label><strong>Status: </strong></label> {{$data->status }}</p>
+                           <p><label><strong>is_partner: </strong></label> {{$data->is_partner}}</p>
+                         </div>
+                         <div class="col-md-6">                           
+                           <p><label><strong>Merchant Logo: </strong></label> {{$data->merchant_logo}}</p>
+                           <p><label><strong>Display Name: </strong></label> {{$data->MerchantUsers->display_name}}</p>
+                           <p><label><strong>Assign Wavexpay Account: </strong></label> {{$data->wavexpay_api_key_id}}</p>
+                           <p><label><strong>Referred By: </strong></label> {{$data->referred_by}}</p>
+                           <p><label><strong>Created At: </strong></label> {{$data->created_at}}</p>                           
+                         </div>
+                      </div>
+                    </div>
 
-                      <div class="col-md-4">
-                        <label><strong>Name : </strong></label> {{$data->merchant_name}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Contact Name : </strong></label> {{$data->contact_name}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Email : </strong></label>  {{$data->MerchantUsers->email}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Contact Phone : </strong></label> {{$data->contact_phone}}
-                      </div>
-
-
-                      <div class="col-md-4"></div>
-                      <div class="col-md-4"></div>
-                      <br><br>
-
-
-                      <div class="col-md-4">
-                        <label><strong>Beneficiary Name : </strong></label> {{$data->MerchantUsers->beneficiary_name}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>IFSC Code : </strong></label> {{$data->MerchantUsers->ifsc_code}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Account Number : </strong></label>  {{$data->MerchantUsers->account_number}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Pan Holder Name : </strong></label>  {{$data->MerchantUsers->pan_holder_name}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Aadhar No : </strong></label>  {{$data->MerchantUsers->aadhar_no}}
-                      </div>
-                      
-                      <div class="col-md-4"></div>
-                      <br><br>
-                      
-                      <div class="col-md-4">
-                        <label><strong>Business Category : </strong></label> {{$data->MerchantUsers->business_category}}
-                      </div>
-                      <div class="col-md-4">
-                        <label><strong>Business Description : </strong></label> {{$data->MerchantUsers->business_description}}
-                      </div>
-
-                      <div class="col-md-4"></div>
-                      <br><br>
-
+                    <div class="section">
+                      <h4>Business Details </h4>
+                      <div class="col-md-12 row">
+                        <div class="col-md-6"> 
+                           <p><label><strong>GST No.: </strong></label> {{$data->MerchantUsers->gst_no}}</p>
+                           <p><label><strong>Business Type: </strong></label> {{$data->MerchantUsers->business_type}}</p>
+                           <p><label><strong>Business Category: </strong></label> {{$data->MerchantUsers->business_category}}</p>
+                           <p><label><strong>Business Description: </strong></label> {{$data->MerchantUsers->business_description}}</p>
+                        </div>                        
                     </div>
                   </div>
+
+                    <div class="section">
+                      <h4>Bank Account Details </h4>
+                      <div class="col-md-12 row">
+                        <div class="col-md-6">
+                           <p><label><strong>Beneficiary Name:</strong></label> {{$data->MerchantUsers->beneficiary_name}}</p>
+                           <p><label><strong>IFSC Code: </strong></label> {{$data->MerchantUsers->ifsc_code}}</p>
+                           <p><label><strong>Account Number: </strong></label> {{$data->MerchantUsers->account_number}}</p>
+                        </div>                        
+                    </div>
+                  </div>
+
+                  <div class="section">
+                      <h4>Documents</h4>
+                      <div class="col-md-12 row">
+                        <div class="col-md-6">
+                  <p><label><strong>Aadhar_no: </strong></label> {{$data->MerchantUsers->aadhar_no }}</p>
+                  <p><label><strong>Address_proof: </strong></label> {{$data->MerchantUsers->address_proof }}</p>
+                  <p><label><strong>Aadhar_front_image: </strong></label> {{$data->MerchantUsers->aadhar_front_image }}</p>
+                  <p><label><strong>Aadhar_back_image: </strong></label> {{$data->MerchantUsers->aadhar_back_image }}</p>
+                  <p><label><strong>Aadhar_front_image_status: </strong></label> {{$data->MerchantUsers->aadhar_front_image_status }}</p>
+                  <p><label><strong>Aadhar_back_image_status: </strong></label> {{$data->MerchantUsers->aadhar_back_image_status }}</p>
+                  <p><label><strong>Aadhar_front_image_reject_reason: </strong></label> {{$data->MerchantUsers->Aadhar_front_image_reject_reason }}</p>
+                  <p><label><strong>Aadhar_back_image_reject_reason: </strong></label> {{$data->MerchantUsers->Aadhar_back_image_reject_reason }}</p>
+                  <p><label><strong>pan_holder_name: </strong></label> {{$data->MerchantUsers->pan_holder_name }}</p>
+                        </div>                        
+                    </div>
+                  </div>
+
+                    
+              </div>
 
                   <div class="tab-pane" id="tab2">
                   	@php 
@@ -370,6 +381,19 @@
 
 @endsection
 
+@section('css')
+<style type="text/css">
+  .merchant-profile-section p {
+      margin-bottom: 0;
+      /*border-bottom: 1px solid #ccc;*/
+  }
+  .merchant-profile-section .section {
+      border-bottom: 1px solid #ccc;
+      margin: 10px 0px;
+      padding: 10px 0;
+  }
+  </style>
+@endsection
 
 @section('js')
 <script>

@@ -43,7 +43,16 @@ class HeighChart extends Component
 
         
         $get = $this->get;
-        \DB::enableQueryLog();
+        $datediff = strtotime($this->to_date) - strtotime($this->from_date);
+        $days =  round($datediff / (60 * 60 * 24));
+        if($days <= 31) 
+        {
+            $get_date_format = "%d %b %Y";
+        }else{
+            $get_date_format = "%b %Y";    
+        }
+
+       # \DB::enableQueryLog(); 
 /*
     SELECT
         DATE_FORMAT(wxp_payments.payment_created_at, "%b %Y") AS Dates,
@@ -65,7 +74,7 @@ class HeighChart extends Component
 
          $data = Payment::select(
             DB::raw('sum(wxp_payments.amount) as Amounts'),
-            DB::raw('DATE_FORMAT(wxp_payments.payment_created_at, "%b %Y") as Dates')
+            DB::raw('DATE_FORMAT(wxp_payments.payment_created_at, "'.$get_date_format.'") as Dates')
 
         )->join('merchants', function($join) use($method){
             $join = $join->on( 'merchants.id', '=', 'payments.merchant_id');
@@ -100,7 +109,7 @@ class HeighChart extends Component
       #  dd(\DB::getQueryLog()); // Show
 
       $date_list = DateList::select(
-            DB::raw('DATE_FORMAT(date_col, "%b %Y") as Dates')
+            DB::raw('DATE_FORMAT(date_col, "'.$get_date_format.'") as Dates')
         )->whereBetween('date_col', [$this->from_date, $this->to_date])->distinct()->get();
         $DATES = [];
         $AMOUNTS = [];
@@ -128,21 +137,6 @@ class HeighChart extends Component
 
     public function render()
     {
-      
-      $status_wise_payments = Payment::select(
-                                    'status', 
-                                    DB::raw('sum(amount) as TotalAmount'), 
-                                    DB::raw('count(1) as ct')
-                                )->groupBy('status')
-                                ->get();
-
-         $payment_method_wise_payments = Payment::select(
-                                            'payment_method', 
-                                            DB::raw('sum(amount) as TotalAmount'), 
-                                            DB::raw('count(1) as ct')
-                                        )->groupBy('payment_method')
-                                        ->get();
-
           $total      = $this->getData('all');
           $card       = $this->getData('card');
           $upi        = $this->getData('upi');

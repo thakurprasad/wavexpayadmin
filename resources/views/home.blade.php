@@ -18,6 +18,9 @@
 
 
 @section('content')
+
+@include('layouts.partials.global-heigh-chart-functions')
+
 <section class="content">
   <div class="container-fluid">
     <div class="card">
@@ -121,9 +124,12 @@
           <!-- /.row -->
 
           <div class="row">
-            <x-heigh-chart get="{{ json_encode(Request::all()) }}" />
+            <x-heigh-chart />
           </div>
 
+          <div class="row">
+            <x-heigh-chart-for-wavexpay-account />
+          </div>
           <div class="row" style="margin-top: 30px;">            
             <div class="col-lg-6 col-6">
               <div class="row">

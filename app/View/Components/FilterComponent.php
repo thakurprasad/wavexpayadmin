@@ -16,7 +16,7 @@ class FilterComponent extends Component
     public $action = "";
     public $status = '';
     public $advance_filters = 'show';
-    public function __construct($form_id="search_form", $method = 'GET', $action = '', $status = '', $advancefilters)
+    public function __construct($form_id="search_form", $method = 'GET', $action = '', $status = '', $advancefilters = 'show')
     {
         $this->form_id = $form_id;
         $this->method  = $method;

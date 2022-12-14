@@ -1,6 +1,8 @@
 // Data retrieved https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
-function Highcharts_1(xAxis1, total_amounts, upi_amounts, wallet_amounts, netbanking_amounts, card_amounts){
-    Highcharts.chart('highchart_container', {
+
+//function Highcharts_1(xAxis1, total_amounts, upi_amounts, wallet_amounts, netbanking_amounts, card_amounts){
+function Highcharts_1(xAxis1, series_list, highchart_container_id){
+    Highcharts.chart(highchart_container_id, {
         chart: {
             type: 'spline'
         },
@@ -39,7 +41,7 @@ function Highcharts_1(xAxis1, total_amounts, upi_amounts, wallet_amounts, netban
                 }
             }
         },
-        series: [{
+        series: series_list /* [{
             name: 'Totals',
             marker: {
                 symbol: 'square'
@@ -75,12 +77,11 @@ function Highcharts_1(xAxis1, total_amounts, upi_amounts, wallet_amounts, netban
             },
             data:  card_amounts
         }
+        ]*/
 
-
-
-
-        ]
     });
 }
 
-Highcharts_1(xAxis1, total_amounts, upi_amounts, wallet_amounts, netbanking_amounts, card_amounts)
+function stringToInt(item, index, arr) {
+  arr[index] = parseInt(item);
+}

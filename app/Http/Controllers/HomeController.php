@@ -34,7 +34,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        \DB::enableQueryLog(); // Enable query log
+       # \DB::enableQueryLog(); // Enable query log
        
         $status_wise_payments = Payment::select(
             'status', 
@@ -233,7 +233,6 @@ class HomeController extends Controller
         {
             $success_perc = 0;
         }
-
         return view('home', compact('payments','orders','disputes','refunds','users','success_perc','paymentxvalue1','paymentyvalue1','paymentmaxValue','paymentminValue','ordermaxValue','orderminValue','orderxvalue1','orderyvalue1','new_pie_chart_volume_data','xValue','yValue','dashboard_header'));
     }
 
