@@ -70,7 +70,10 @@ class HeighChartForWavexpayAccount extends Component
         }*/
          
         if($this->from_date && $this->to_date){
-            $data = $data->whereBetween('payments.payment_created_at', [$this->from_date, $this->to_date]);
+            $data = $data->whereBetween(
+                        DB::raw('date(wxp_payments.payment_created_at)'),
+                        [$this->from_date, $this->to_date]
+                    );
         }
 
         if(isset($get['status'])) {
