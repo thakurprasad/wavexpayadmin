@@ -52,6 +52,7 @@
 				<li class="menu2"><a data-toggle="tab" href="#menu2">Business Overview</a></li>
 				<li class="menu3"><a data-toggle="tab" href="#menu3">Business Details</a></li>
 				<li class="menu4"><a data-toggle="tab" href="#menu4">Documents</a></li>
+				<li class="menu5"><a data-toggle="tab" href="#menu5">Transaction Process</a></li>
 			</ul>
 
 			<div class="tab-content" style="padding-left:20px;">
@@ -201,6 +202,35 @@
 						
 					</div>
 				</div>
+
+				<div id="menu5" class="tab-pane fade">
+					<div class="row" style="margin-top:10px;">			
+					<?php $charges = App\Models\TransactionChargesMaster::all() ?>	
+						@foreach($charges as $key=>$val)			
+						<?php 
+						if($data->transaction_charges_master_id == $val->id){
+							$s = 'checked';
+						}else{
+							$s = '';
+						}
+						?>			
+						<div class="col-md-3 text-center">	
+							<div class=" charges-box {{ $s }}">
+								<H5>{{ $val->interval }}</H5>
+								<H2>{{ $val->charges }}%</H2><br>
+								<div class="status-radio-button">
+								<label>
+									<input {{ $s }} type="radio" name="transaction_charges_master_id" value="{{ $val->id }}">	Selete
+								</label>
+								</div>
+							</div>
+						</div>
+
+						@endforeach
+
+					</div>
+				</div>
+
 				<div id="menu4" class="tab-pane fade">
 					<div class="row" style="margin-top:10px;">
 						<div class="col-md-6">
@@ -214,18 +244,24 @@
 							</div>
 												
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6" id="aadhar_upload_section">
 						<div class="form-group">
 								<label for="contact_name">Aadhar Front</label>
 								<input type="file" name="aadhar_front" accept="image/*" class="form-control" id="aadhar_front_image">
 								@if(isset($data->aadhar_front_image) && $data->aadhar_front_image!='')
-								<img id="blah" src="{{url('/')}}/uploads/aadharimage/{{$data->aadhar_front_image}}" alt="your image"  style="height:100px; width:100px;" />
+								<img id="blah" src="{{$data->aadhar_front_image}}" alt="your image"  style="height:250px; width:400px;" />
 								@else 
 								<img id="blah" src="#" alt="your image"  style="height:100px; width:100px;" />
 								@endif
-								<input type="radio" name="aadhar_front_image_status" value="approved" onclick="show_reason('front','')" @if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='approved') checked @endif>Approved
+								<br>
+								<div class="status-radio-button">
+								<label><input type="radio" name="aadhar_front_image_status" value="approved" onclick="show_reason('front','')" @if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='approved') checked @endif>Approved</label>
+								<label>
 								<input type="radio" name="aadhar_front_image_status" value="pending" onclick="show_reason('front','')" @if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='pending') checked @endif>Pending
-								<input type="radio" name="aadhar_front_image_status" value="rejected" onclick="show_reason('front','reject')" @if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='rejected') checked @endif>Rejected
+								</label>
+								<label>
+								<input type="radio" name="aadhar_front_image_status" value="rejected" onclick="show_reason('front','reject')" @if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='rejected') checked @endif>Rejected</label>
+							</div>
 								<br>
 								<textarea class="form-control" name="aadhar_front_image_reject_reason" id="aadhar_front_image_reject_reason" style="display:@if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='rejected') block; @else none; @endif" placeholder="Reject Reason">@if(isset($data->aadhar_front_image_status) && $data->aadhar_front_image_status=='rejected') {{$data->aadhar_front_image_reject_reason}} @endif</textarea>
 							</div>
@@ -233,19 +269,52 @@
 								<label for="contact_name">Aadhar Back</label>
 								<input type="file" name="aadhar_back" accept="image/*" id="aadhar_back_image" class="form-control">
 								@if(isset($data->aadhar_back_image) && $data->aadhar_back_image!='')
-								<img id="blah2" src="{{url('/')}}/uploads/aadharimage/{{$data->aadhar_back_image}}" alt="your image"  style="height:100px; width:100px;" />
+								<img id="blah2" src="{{$data->aadhar_back_image}}" alt="your image"  style="height:250px; width:400px;" />
 								@else 
 								<img id="blah2" src="#" alt="your image"  style="height:100px; width:100px;" />
 								@endif
+								<br>
+								<div class="status-radio-button">
+								<label>
 								<input type="radio" name="aadhar_back_image_status" value="approved" onclick="show_reason('back','')" @if(isset($data->aadhar_back_image_status) && $data->aadhar_back_image_status=='approved') checked @endif>Approved
+								</label>
+								<label>
 								<input type="radio" name="aadhar_back_image_status" value="pending" onclick="show_reason('back','')" @if(isset($data->aadhar_back_image_status) && $data->aadhar_back_image_status=='pending') checked @endif>Pending
+								</label>
+								<label>
 								<input type="radio" name="aadhar_back_image_status" value="rejected" onclick="show_reason('back','reject')" @if(isset($data->aadhar_back_image_status) && $data->aadhar_back_image_status=='rejected') checked @endif>Rejected
+								</label>
+							</div>
 								<br>
 								<textarea class="form-control" name="aadhar_back_image_reject_reason" id="aadhar_back_image_reject_reason" style="display:@if(isset($data->aadhar_back_image_status) && $data->aadhar_back_image_status=='rejected') block; @else none; @endif" placeholder="Reject Reason">@if(isset($data->aadhar_back_image_status) && $data->aadhar_back_image_status=='rejected') {{$data->aadhar_back_image_reject_reason}} @endif</textarea>
-								<small id="nameHelp" class="form-text text-muted">JPG/PNG of max size 2mb or pdf of max size 4mb.</small>
+								<small id="nameHelp" class="form-text text-muted">JPG/PNG of max size 2MB</small>
 							</div>		
 						</div>
-						
+										
+<div class="col-md-6" id="other_doc_upload_section" style="display: _none;">
+	<div class="form-group">
+			<label for="contact_name">Uplaod Docment's image file</label>
+			<input type="file" name="other_doc" accept="image/*" class="form-control" id="other_doc">
+			@if(isset($data->other_doc) && $data->other_doc!='')
+			<img id="blah" src="{{$data->other_doc}}" alt="your image"  style="height:250px; width:400px;" />
+			@else 
+			<img id="blah" src="#" alt="your image"  style="height:100px; width:100px;" />
+			@endif
+			<br>
+		<div class="status-radio-button">
+			<label><input type="radio" name="other_doc_status" value="approved" onclick="show_reason_other_doc('approved')" @if(isset($data->other_doc_status) && $data->other_doc_status=='approved') checked @endif>Approved</label>
+			<label>
+			<input type="radio" name="other_doc_status" value="pending" onclick="show_reason_other_doc('pending')" @if(isset($data->other_doc_status) && $data->other_doc_status=='pending') checked @endif>Pending
+			</label>
+			<label>
+			<input type="radio" name="other_doc_status" value="rejected" onclick="show_reason_other_doc('rejected')" @if(isset($data->other_doc_status) && $data->other_doc_status=='rejected') checked @endif>Rejected</label>
+		</div>
+			<br>
+			<textarea class="form-control" name="other_doc_reject_reason" id="other_doc_reject_reason" style="display:@if(isset($data->other_doc_status) && $data->other_doc_status=='rejected') block; @else none; @endif" placeholder="Reject Reason">@if(isset($data->other_doc_status) && $data->other_doc_status=='rejected') {{$data->other_doc_reject_reason}} @endif</textarea>
+	</div>
+</div>
+
+
 					</div>
 				</div>
 			</div>
@@ -260,6 +329,17 @@
 @section('css')
 <link href="{{ asset('/css/bootstrap-toggle.min.css') }}" rel="stylesheet">
 <style>
+.charges-box {
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 30px 10px;
+}
+
+.charges-box.checked {
+    border: 5px solid green;
+    background: aliceblue;
+}
+
 .nav-tabs {
   list-style-type: none;
   margin: 0;
@@ -288,12 +368,42 @@
   background-color: #4e73df;
 }
 
+.status-radio-button label {
+    padding-right: 13px;
+    background: #17a2b8;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 
 </style>
 @endsection
 @section('js')
-<script src="{{ asset("/js/bootstrap-toggle.min.js") }}"></script>
+<script src="{{ asset('js/bootstrap-toggle.min.js') }}"></script>
 <script>
+ <?php if($data->address_proof=='aadhar'){ ?>
+ 		$("#aadhar_upload_section").show(100);
+    	$("#other_doc_upload_section").hide(100);
+ <?php }else{ ?>
+ 	 $("#aadhar_upload_section").hide(100);
+    $("#other_doc_upload_section").show(100);
+ <?php } ?>
+
+$("#address_proof").on('change', function(){
+  if(this.value == 'aadhar'){
+    $("#aadhar_upload_section").show(100);
+    $("#other_doc_upload_section").hide(100);
+  }else{
+    $("#aadhar_upload_section").hide(100);
+    $("#other_doc_upload_section").show(100);
+  }
+});
+
+
 $(document).ready(function() {
     $("#gsettingclick").click();
 });
@@ -348,6 +458,14 @@ function show_reason(type,action)
 	else 
 	{
 		$("#aadhar_"+type+"_image_reject_reason").hide();
+	}
+}
+
+function show_reason_other_doc(val){
+	if(val == 'rejected'){
+		$("#other_doc_reject_reason").show();
+	}else{
+		$("#other_doc_reject_reason").hide();
 	}
 }
 </script>

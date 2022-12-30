@@ -204,6 +204,9 @@ class MerchantController extends Controller
     'gst_no',
     'razorpay_gst_no',
     'address_proof',
+    'other_doc',
+    'other_doc_status',
+    'other_doc_reject_reason',
     'aadhar_front_image',
     'aadhar_back_image',
     'aadhar_front_image_status',
@@ -226,7 +229,8 @@ class MerchantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //return $id;
+
+        #return $request->input();
         $this->validate($request, [
             'merchant_name' => 'required|max:200',
             'access_salt' => 'required',
@@ -252,6 +256,7 @@ class MerchantController extends Controller
         $merchant_input['merchant_payment_method'] = $input['merchant_payment_method'];
         $merchant_input['wavexpay_api_key_id'] = $input['wavexpay_api_key_id'];
         $merchant_input['status'] = $input['status'];
+        $merchant_input['transaction_charges_master_id'] = $input['transaction_charges_master_id'];
         #return $merchant_input;
         Merchant::where('id',$id)->update($merchant_input);
 
@@ -272,6 +277,15 @@ class MerchantController extends Controller
         $merchant_users_input['address_proof'] = $input['address_proof'];
         $merchant_users_input['aadhar_front_image_status'] = $input['aadhar_front_image_status'];
         $merchant_users_input['aadhar_back_image_status'] = $input['aadhar_back_image_status'];
+
+        if(isset($input['other_doc_reject_reason'])){
+            $merchant_users_input['other_doc_reject_reason'] = $input['other_doc_reject_reason'];    
+        }
+        if(isset($input['other_doc_status'])){
+            $merchant_users_input['other_doc_status'] = $input['other_doc_status'];    
+        }
+        
+
         if(isset($input['aadhar_front_image_reject_reason']))
         {
             $merchant_users_input['aadhar_front_image_reject_reason'] = $input['aadhar_front_image_reject_reason'];
@@ -281,21 +295,33 @@ class MerchantController extends Controller
             $merchant_users_input['aadhar_back_image_reject_reason'] = $input['aadhar_back_image_reject_reason'];
         }
 
-
+        $UPLOADS = 'uploads/documents/aadhar';
         if ($request->hasFile('aadhar_front')){
             $file2 = $request->file('aadhar_front');
             $filename2 = date('YmdHi').$file2->getClientOriginalName();
-            $image_path2 = public_path().'/uploads/aadharimage/';
+            $image_path2 = public_path($UPLOADS) ; # '/uploads/aadharimage/';
             $file2->move($image_path2, $filename2);
-            $merchant_users_input['aadhar_front_image'] = $filename2;
+            $url_2 = asset($UPLOADS.'/'.$filename2);
+            $merchant_users_input['aadhar_front_image'] = $url_2;
         }
         if ($request->hasFile('aadhar_back')){
             $file3 = $request->file('aadhar_back');
             $filename3 = date('YmdHi').$file3->getClientOriginalName();
-            $image_path3 = public_path().'/uploads/aadharimage/';
+            $image_path3 = public_path($UPLOADS); #'/uploads/aadharimage/';
             $file3->move($image_path3, $filename3);
-            $merchant_users_input['aadhar_back_image'] = $filename3;
+            $url_3 = asset($UPLOADS. '/'.$filename3);
+            $merchant_users_input['aadhar_back_image'] = $url_3;
         }
+
+        if ($request->hasFile('other_doc')){
+            $file4 = $request->file('other_doc');
+            $filename4 = date('YmdHi').$file4->getClientOriginalName();
+            $image_path4 = public_path($UPLOADS); #'/uploads/aadharimage/';
+            $file4->move($image_path4, $filename4);
+            $url_4 = asset($UPLOADS. '/'.$filename4);
+            $merchant_users_input['other_doc'] = $url_4;
+        }
+
         MerchantUser::where('merchant_id',$id)->update($merchant_users_input);
 
 

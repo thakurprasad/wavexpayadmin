@@ -183,16 +183,37 @@
                   <div class="section">
                       <h4>Documents</h4>
                       <div class="col-md-12 row">
+                        
                         <div class="col-md-6">
-                  <p><label><strong>Aadhar_no: </strong></label> {{$data->MerchantUsers->aadhar_no }}</p>
-                  <p><label><strong>Address_proof: </strong></label> {{$data->MerchantUsers->address_proof }}</p>
-                  <p><label><strong>Aadhar_front_image: </strong></label> {{$data->MerchantUsers->aadhar_front_image }}</p>
-                  <p><label><strong>Aadhar_back_image: </strong></label> {{$data->MerchantUsers->aadhar_back_image }}</p>
-                  <p><label><strong>Aadhar_front_image_status: </strong></label> {{$data->MerchantUsers->aadhar_front_image_status }}</p>
-                  <p><label><strong>Aadhar_back_image_status: </strong></label> {{$data->MerchantUsers->aadhar_back_image_status }}</p>
-                  <p><label><strong>Aadhar_front_image_reject_reason: </strong></label> {{$data->MerchantUsers->Aadhar_front_image_reject_reason }}</p>
-                  <p><label><strong>Aadhar_back_image_reject_reason: </strong></label> {{$data->MerchantUsers->Aadhar_back_image_reject_reason }}</p>
+                          <label>Aadhar Front </label><br>
+                          <img src="{{ $data->MerchantUsers->aadhar_front_image }}">
+                        </div>
+
+                        <div class="col-md-6">
+                          <label>Aadhar Back</label><br>
+                          <img src="{{$data->MerchantUsers->aadhar_back_image }}">
+                        </div>
+
+                        <div class="col-md-12">
+
+                  <p><label><strong>Address Proof: </strong></label> {{$data->MerchantUsers->address_proof }}</p>
+
+                  <p><label><strong>Aadhar no: </strong></label> {{$data->MerchantUsers->aadhar_no }}</p>
+                  
+                  <p><label><strong>Aadhar front image status: </strong></label> {{  $data->MerchantUsers->aadhar_front_image_status }}</p>
+                  
+                  @if($data->MerchantUsers->aadhar_front_image_status != 'approved')
+                     <p><label><strong>Aadhar front image reject reason: </strong>
+                     </label> {{ $data->MerchantUsers->aadhar_front_image_reject_reason }}</p>
+                  @endif
+                  
+                  <p><label><strong>Aadhar back image status: </strong></label> {{$data->MerchantUsers->aadhar_back_image_status }}</p>
+                  @if($data->MerchantUsers->aadhar_back_image_status != 'approved')
+                    <p><label><strong>Aadhar back image reject reason: </strong></label> {{$data->MerchantUsers->aadhar_back_image_reject_reason }}</p>
+                  @endif
+                  <br>
                   <p><label><strong>pan_holder_name: </strong></label> {{$data->MerchantUsers->pan_holder_name }}</p>
+
                         </div>                        
                     </div>
                   </div>
@@ -363,7 +384,7 @@
                     </table>
                   </div>
 
-
+ 
                 </div>
                 <!-- /.tab-content -->
               </div><!-- /.card-body -->
@@ -392,6 +413,9 @@
       margin: 10px 0px;
       padding: 10px 0;
   }
+  .merchant-profile-section img {
+    width: 100%;
+}
   </style>
 @endsection
 
